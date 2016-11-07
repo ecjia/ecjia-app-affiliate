@@ -6,6 +6,12 @@
 <!-- {/block} -->
 <!-- {block name="main_content"} -->
 
+<div>
+	<h3 class="heading">
+		<!-- {if $ur_here}{$ur_here}{/if} -->
+	</h3>
+</div>
+
 <!-- {if $config.on eq 0} -->
 <div class="alert alert-info">	
 	<strong>{lang key='affiliate::affiliate.notice'}</strong>
