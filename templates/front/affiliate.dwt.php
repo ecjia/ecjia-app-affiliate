@@ -13,7 +13,7 @@
 <body>
 	<div class="affiliate-body">
 		<div class="affiliate-img">
-			<img width="70%" src="{RC_App::apps_url('affiliate/statics/front/images/tuijian.png')}" />
+			<img width="70%" src="{$front_url}/images/tuijian.png" />
 		</div>
 		<div class="affiliate-note">{$note}</div>
 		<div class="affiliate-note2">{$affiliate_note}</div>

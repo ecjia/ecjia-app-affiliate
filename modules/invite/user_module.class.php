@@ -27,10 +27,10 @@ class user_module extends api_front implements api_interface
 		
 		$invite_info = array(
 				'invite_code'			=> $user_invite_code,
-				'invite_qrcode_image'	=> RC_Uri::url('affiliate/mobile/qrcode_image', array('invite_code' => $user_invite_code)),
+				'invite_qrcode_image'	=> RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=qrcode_image&invite_code='. $user_invite_code,
 				'invite_template'		=> $invite_template,
 				'invite_explain'		=> ecjia::config('invite_explain'),
-				'invite_url'			=> RC_Uri::url('affiliate/mobile/init', 'invite_code='.$user_invite_code),
+				'invite_url'			=> RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $user_invite_code
 				
 		);
 		

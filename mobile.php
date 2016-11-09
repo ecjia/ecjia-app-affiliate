@@ -5,9 +5,10 @@ class mobile extends ecjia_front {
 
 	public function __construct() {	
 		parent::__construct();	
-		
+		$front_url = RC_App::apps_url('statics/front', __FILE__);
+		$front_url = str_replace('sites/api/', '', $front_url);
   		/* js与css加载路径*/
-  		$this->assign('front_url', RC_App::apps_url('statics/front', __FILE__));
+  		$this->assign('front_url', $front_url);
   		$this->assign('title', ecjia::config('shop_name'). '邀请好友注册得奖励');
 	}
 	
