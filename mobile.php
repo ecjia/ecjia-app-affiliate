@@ -142,7 +142,7 @@ class mobile extends ecjia_front {
 	public function qrcode_image()
 	{
 		$code = $_GET['invite_code'];
-		$value = RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $user_invite_code;
+		$value = RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $code;
 		
 		// 二维码
 		// 纠错级别：L、M、Q、H
