@@ -126,9 +126,9 @@ class mobile extends ecjia_front {
 		}
 	
 		if (stripos($_SERVER['HTTP_USER_AGENT'], "iPhone")) {
-			$url = ecjia::config('shop_iphone_download');
+			$url = ecjia::config('mobile_iphone_download');
 		} elseif (stripos($_SERVER['HTTP_USER_AGENT'], "Android")) {
-			$url = ecjia::config('shop_android_download');
+			$url = ecjia::config('mobile_android_download');
 		}
 		
 		$urlscheme = ecjia::config('mobile_shop_urlscheme');
