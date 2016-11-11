@@ -42,10 +42,10 @@ class admin_separate extends ecjia_admin {
 	}
 	
 	/**
-	 * 分成页
+	 * 分成管理列表页
 	 */
 	public function init() {
-		$this->admin_priv('affiliate_ck_manage');
+		$this->admin_priv('affiliate_ck_manage', ecjia::MSGTYPE_JSON);
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('affiliate::affiliate.sharing_management')));
 		$this->assign('ur_here', RC_Lang::get('affiliate::affiliate.sharing_management'));
@@ -70,7 +70,7 @@ class admin_separate extends ecjia_admin {
 	 * 分成
 	 */
 	public function admin_separate() {
-		$this->admin_priv('affiliate_ck_update');
+		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
 	
 		$affiliate = unserialize(ecjia::config('affiliate'));
 		empty($affiliate) && $affiliate = array();
@@ -162,7 +162,7 @@ class admin_separate extends ecjia_admin {
 	 * 取消分成，不再能对该订单进行分成
 	 */
 	public function cancel() {
-		$this->admin_priv('affiliate_ck_update');
+		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
 		
 		$oid = (int)$_GET['id'];
 		$info = $this->db_order_info->order_info_find(array('order_id' => $oid));
@@ -181,7 +181,7 @@ class admin_separate extends ecjia_admin {
 	 * 撤销某次分成，将已分成的收回来
 	 */
 	public function rollback() {
-		$this->admin_priv('affiliate_ck_update');
+		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
 		
 		$logid = (int)$_GET['id'];
 		$stat = $this->db_affiliate_log->affiliate_log_find(array('log_id' => $logid));

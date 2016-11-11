@@ -36,10 +36,10 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 * 分成管理页
+	 *推荐设置
 	 */
 	public function init() {
-		$this->admin_priv('affiliate_manage');
+		$this->admin_priv('affiliate_manage', ecjia::MSGTYPE_JSON);
 		
 		RC_Style::enqueue_style('affiliate-css', RC_App::apps_url('statics/css/affiliate.css', __FILE__));
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('affiliate::affiliate.affiliate_set')));
@@ -67,7 +67,7 @@ class admin extends ecjia_admin {
 	 * 增加下线分配方案
 	 */
 	public function add() {
-		$this->admin_priv('affiliate_update');
+		$this->admin_priv('affiliate_update', ecjia::MSGTYPE_JSON);
 		
 		//检查输入值是否正确
 		if (empty($_POST['level_point'])) {
@@ -133,7 +133,7 @@ class admin extends ecjia_admin {
 	 * 修改配置
 	 */
 	public function update() {
-		$this->admin_priv('affiliate_update');
+		$this->admin_priv('affiliate_update', ecjia::MSGTYPE_JSON);
 
 		$config = unserialize(ecjia::config('affiliate'));
 
@@ -223,7 +223,7 @@ class admin extends ecjia_admin {
 	 * 编辑积分分成百分比
 	 */
 	public function edit_point() {
-		$this->admin_priv('affiliate_update');
+		$this->admin_priv('affiliate_update', ecjia::MSGTYPE_JSON);
 		
 		$config = unserialize(ecjia::config('affiliate'));
 		/* 取得参数 */
@@ -269,7 +269,7 @@ class admin extends ecjia_admin {
 	 * 编辑现金分成百分比
 	 */
 	public function edit_money() {
-		$this->admin_priv('affiliate_update');
+		$this->admin_priv('affiliate_update', ecjia::MSGTYPE_JSON);
 		
 		$config = unserialize(ecjia::config('affiliate'));
 		$key = trim($_POST['pk']) - 1;
@@ -313,7 +313,7 @@ class admin extends ecjia_admin {
 	 * 删除分成
 	 */
 	public function remove() {
-		$this->admin_priv('affiliate_delete');
+		$this->admin_priv('affiliate_delete', ecjia::MSGTYPE_JSON);
 		
 		$config = unserialize(ecjia::config('affiliate'));
 		$key = trim($_GET['id']) - 1;
@@ -338,9 +338,7 @@ class admin extends ecjia_admin {
 		
 		$this->showmessage(RC_Lang::get('affiliate::affiliate.remove_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 		
-	}
-	
-	
+	}	
 }
 
 //end
