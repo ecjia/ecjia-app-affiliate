@@ -123,7 +123,7 @@ class admin_separate extends ecjia_admin {
 							'pay_points'	=> 0,
 							'change_desc'	=> $info
 						);
-						RC_Api::api('user', 'user_account_change_log', $arr);
+						RC_Api::api('user', 'account_change_log', $arr);
 						$this->db_affiliate_log->write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
 					}
 				}
@@ -142,7 +142,7 @@ class admin_separate extends ecjia_admin {
 						'pay_points'	=> 0,
 						'change_desc'	=> $info
 					);
-					RC_Api::api('user', 'user_account_change_log', $arr);
+					RC_Api::api('user', 'account_change_log', $arr);
 					
 					$this->db_affiliate_log->write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
 				} else {
@@ -201,7 +201,7 @@ class admin_separate extends ecjia_admin {
 				'pay_points'	=> 0,
 				'change_desc'	=> RC_Lang::get('affiliate::affiliate_ck.loginfo.cancel')
 			);
-			RC_Api::api('user', 'user_account_change_log', $arr);
+			RC_Api::api('user', 'account_change_log', $arr);
 			$data = array(
 				'separate_type' => $flag
 			);
