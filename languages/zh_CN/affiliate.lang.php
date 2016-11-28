@@ -70,6 +70,7 @@ return array(
 	'edit_level_point'	=> '编辑积分分成百分比',
 	'edit_level_money'	=> '编辑现金分成百分比',
 	
+	'affiliate_config'		=> '推荐邀请设置',
 	'affiliate_manage'		=> '推荐管理',
 	'affiliate_set'			=> '推荐设置',
 	'sharing_management'	=> '分成管理',
