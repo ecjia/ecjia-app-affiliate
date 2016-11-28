@@ -4,13 +4,11 @@
 	ecjia.admin.affiliate.init();
 </script>
 <!-- {/block} -->
+
+
+
 <!-- {block name="main_content"} -->
 
-<div>
-	<h3 class="heading">
-		<!-- {if $ur_here}{$ur_here}{/if} -->
-	</h3>
-</div>
 
 <!-- {if $config.on eq 0} -->
 <div class="alert alert-info">	
@@ -21,266 +19,186 @@
 <div class="row-fluid edit-page" style="min-height:500px;">
 	<form method="post" class="form-horizontal" action="{$form_action}" name="theForm" enctype="multipart/form-data">
 		<div class="span12">
-			<div class="tabbable tabs-left">
-				<ul class="nav nav-tabs tab_merchants_nav">
-					<li class="active"><a href="#tab1" data-toggle="tab">推荐基本设置</a></li>
-					<li><a href="#invite" data-toggle="tab">邀请人奖励设置</a></li>
-					<li><a href="#invitee" data-toggle="tab">受邀人奖励设置</a></li>
-					<li><a href="#add_separate" data-toggle="tab">{$add_separate}</a></li>
-				</ul>
-				<div class="tab-content tab_merchants">
-					<div class="tab-pane active" id="tab1">
-						<div class="control-group formSep">
-							<label class="control-label">{lang key='affiliate::affiliate.is_on'}：</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="on" value="1" {if $config.on eq 1} checked="true" {/if}>
-								<span>{lang key='affiliate::affiliate.on'}</span>
-								<input type="radio" name="on" value="0" {if !$config.on || $config.on eq 0} checked="true" {/if}>
-								<span>{lang key='affiliate::affiliate.off'}</span>
-							</div>
-						</div>
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.affiliate_type'}</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="separate_by" value="0" checked="true" {if $config.on eq 0}disabled{/if}>
-								<span>{lang key='affiliate::affiliate.separate_by.0'}</span>
-								<input type="radio" name="separate_by" value="1" {if $config.config.separate_by eq '1'} checked{/if} {if $config.on eq 0}disabled{/if}>
-								<span>{lang key='affiliate::affiliate.separate_by.1'}</span>
-							</div>
-						</div>
-						
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.expire'}</label>
-							<div class="controls">
-								<input class="f_l" type="text" name="expire" maxlength="150" size="10" value="{$config.config.expire}" {if $config.on eq 0}readonly{/if}/>
-								<span class="f_l">&nbsp;</span>
-								<select class="w70" name="expire_unit" {if $config.on eq 0}disabled{/if}>
-		                            <!--{html_options options=$unit selected=$config.config.expire_unit}-->
-		                        </select>
-		                        <div class="clear"></div>
-								<div class="help-block">{lang key='affiliate::affiliate.help_expire'}</div>
-							</div>
-						</div>
-							
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.level_point_all'}</label>
-							<div class="controls">
-								<input type="text" name="level_point_all" maxlength="150" size="10" value="{$config.config.level_point_all}" {if $config.on eq 0}readonly{/if}/>
-								<div class="help-block">{lang key='affiliate::affiliate.help_lpa'}</div>
-							</div>
-						</div>
-							
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.level_money_all'}</label>
-							<div class="controls">
-								<input type="text" name="level_money_all" maxlength="150" size="10" value="{$config.config.level_money_all}" {if $config.on eq 0}readonly{/if}/>
-								<div class="help-block">{lang key='affiliate::affiliate.help_lma'}</div>
-							</div>
-						</div>
-							
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.level_register_all'}</label>
-							<div class="controls">
-								<input type="text" name="level_register_all" maxlength="150" size="10" value="{$config.config.level_register_all}" {if $config.on eq 0}readonly{/if}/>
-								<div class="help-block">{lang key='affiliate::affiliate.help_lra'}</div>
-							</div>
-						</div>
-							
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.level_register_up'}</label>
-							<div class="controls">
-								<input type="text" name="level_register_up" maxlength="150" size="10" value="{$config.config.level_register_up}" {if $config.on eq 0}readonly{/if}/>
-								<div class="help-block">{lang key='affiliate::affiliate.help_lru'}</div>
-							</div>
-						</div>
-						
-						<div class="control-group formSep formSep1">
-							<label class="control-label">{lang key='affiliate::affiliate.level_register_up'}</label>
-							<div class="controls">
-								<input type="text" name="level_register_up" maxlength="150" size="10" value="{$config.config.level_register_up}" {if $config.on eq 0}readonly{/if}/>
-								<div class="help-block">{lang key='affiliate::affiliate.help_lru'}</div>
-							</div>
-						</div>
-						
-						<div class="control-group formSep formSep1">
-							<label class="control-label">推荐邀请分享内容：</label>
-							<div class="controls">
-								<textarea name='invite_template' class="span7">{$invite_template}</textarea>
-							</div>
-						</div>
-						
-						<div class="control-group formSep formSep1">
-							<label class="control-label">推荐邀请分享说明：</label>
-							<div class="controls">
-								<textarea name='invite_explain' class="span7">{$invite_explain}</textarea>
-							</div>
-						</div>
-						
-						<div class="control-group">
-							<div class="controls">
-								<input type="submit" value="{lang key='system::system.button_submit'}" class="btn btn-gebo" />
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane padding_b500" id="invite">
-						<div class="control-group formSep formSep1">
-							<label class="control-label">奖励发放时间：</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="intive_reward_by" value="orderpay" checked="true" {if $config.on eq 0}disabled{/if}>
-								首次下单成交后
-								<input type="radio" name="intive_reward_by" value="signup" {if $config.intvie_reward.intive_reward_by eq 'signup'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								注册时
-							</div>
-						</div>
-						<div class="control-group formSep formSep1">
-							<label class="control-label">奖励方式：</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="intive_reward_type" value="bonus" checked="true" {if $config.on eq 0}disabled{/if}>
-								红包
-								<input type="radio" name="intive_reward_type" value="integral" {if $config.intvie_reward.intive_reward_type eq 'integral'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								积分
-								<input type="radio" name="intive_reward_type" value="balance" {if $config.intvie_reward.intive_reward_type eq 'balance'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								现金
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_bonus {if $config.intvie_reward.intive_reward_type neq 'bonus' && $config.intvie_reward.intive_reward_type}ecjiaf-dn{/if}" >
-							<label class="control-label">选择奖励的红包：</label>
-							<div class="controls chk_radio">
-								<select name="intive_reward_type_bonus" {if $config.on eq 0}disabled{/if}>
-									<option value="0">请选择</option>
-									<!-- {foreach from=$bonus_type_list item=list} -->
-										<option value="{$list.type_id}" {if $config.intvie_reward.intive_reward_value eq $list.type_id && $config.intvie_reward.intive_reward_type eq 'bonus'}selected="true"{/if}>{$list.type_name}</option>	
-									<!-- {/foreach} -->
-								</select>
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_integral  {if $config.intvie_reward.intive_reward_type neq 'integral'}ecjiaf-dn{/if}">
-							<label class="control-label">奖励积分数量：</label>
-							<div class="controls chk_radio">
-								<input type="text" name="intive_reward_type_integral" {if $config.on eq 0}disabled{/if} {if $config.intvie_reward.intive_reward_type eq 'integral'}value="{$config.intvie_reward.intive_reward_value}"{/if}/>
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_balance  {if $config.intvie_reward.intive_reward_type neq 'balance'}ecjiaf-dn{/if}">
-							<label class="control-label">奖励现金数量：</label>
-							<div class="controls chk_radio">
-								<input type="text" name="intive_reward_type_balance" {if $config.on eq 0}disabled{/if} {if $config.intvie_reward.intive_reward_type eq 'balance'}value="{$config.intvie_reward.intive_reward_value}"{/if}/>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="controls">
-								<input type="submit" value="{lang key='system::system.button_submit'}" class="btn btn-gebo" />
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane padding_b500" id="invitee">
-						<div class="control-group formSep formSep1">
-							<label class="control-label">奖励发放时间：</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="intivee_reward_by" value="orderpay" checked="true" {if $config.on eq 0}disabled{/if}>
-								首次下单成交后
-								<input type="radio" name="intivee_reward_by" value="signup"  {if $config.intviee_reward.intivee_reward_by eq 'signup'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								注册时
-							</div>
-						</div>
-						<div class="control-group formSep formSep1">
-							<label class="control-label">奖励方式：</label>
-							<div class="controls chk_radio">
-								<input type="radio" name="intivee_reward_type" value="bonus" checked="true" {if $config.on eq 0}disabled{/if}>
-								红包
-								<input type="radio" name="intivee_reward_type" value="integral" {if $config.intviee_reward.intivee_reward_type eq 'integral'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								积分
-								<input type="radio" name="intivee_reward_type" value="balance"  {if $config.intviee_reward.intivee_reward_type eq 'balance'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
-								现金
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_bonus {if $config.intviee_reward.intivee_reward_type neq 'bonus'  && $config.intviee_reward.intivee_reward_type}ecjiaf-dn{/if}">
-							<label class="control-label">选择奖励的红包：</label>
-							<div class="controls chk_radio">
-								<select name="intivee_reward_type_bonus" {if $config.on eq 0}disabled{/if}>
-									<option value="0">请选择</option>
-									<!-- {foreach from=$bonus_type_list item=list} -->
-										<option value="{$list.type_id}" {if $config.intviee_reward.intivee_reward_value eq $list.type_id && $config.intviee_reward.intivee_reward_type eq 'bonus'}selected="true"{/if}>{$list.type_name}</option>	
-									<!-- {/foreach} -->
-								</select>
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_integral {if $config.intviee_reward.intivee_reward_type neq 'integral'}ecjiaf-dn{/if}">
-							<label class="control-label">奖励积分数量：</label>
-							<div class="controls chk_radio">
-								<input type="text" name="intivee_reward_type_integral" {if $config.on eq 0}disabled{/if} {if $config.intviee_reward.intivee_reward_type eq 'integral'}value="{$config.intviee_reward.intivee_reward_value}"{/if}/>
-							</div>
-						</div>
-						<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_balance {if $config.intviee_reward.intivee_reward_type neq 'balance'}ecjiaf-dn{/if}">
-							<label class="control-label">奖励现金数量：</label>
-							<div class="controls chk_radio">
-								<input type="text" name="intivee_reward_type_balance" {if $config.on eq 0}disabled{/if} {if $config.intviee_reward.intivee_reward_type eq 'balance'}value="{$config.intviee_reward.intivee_reward_value}"{/if}/>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="controls">
-								<input type="submit" value="{lang key='system::system.button_submit'}" class="btn btn-gebo" />
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane" id="add_separate">
-						<div class="control-group formSep formSep1">
-							<!-- {if count($config.item) lt 5} -->
-							<div class="row-fluid formSep1 formSep2">
-								<form class="form-horizontal" method="post" action="{RC_Uri::url('affiliate/admin/add')}" name="affiliate_form">
-									{lang key='affiliate::affiliate.label_level_point'}<input type="text" name="level_point" {if $config.on eq 0 || $config.config.separate_by eq 1}readonly{/if}/>
-									<span>&nbsp;</span>
-									{lang key='affiliate::affiliate.label_level_money'}<input type="text" name="level_money" {if $config.on eq 0 || $config.config.separate_by eq 1}readonly{/if}/>
-									<input type="button" class="btn btn-gebo add_affiliate" value="{lang key='system::system.button_submit'}" {if $config.on eq 0 ||$config.config.separate_by eq 1}disabled{/if}/>
-								</form>
-							</div>
-							<!-- {/if} -->
-							
-							<div class="row-fluid formSep1 formSep2">
-								<table class="table table-striped" id="smpl_tbl">
-									<thead>
-										<tr style="border-bottom:1px solid #ddd;">
-												<th>{lang key='affiliate::affiliate.levels'}</th>
-												<th>{lang key='affiliate::affiliate.level_point'}</th>
-												<th>{lang key='affiliate::affiliate.level_money'}</th>
-												<th>{lang key='system::system.handler'}</th>
-											</tr>
-										</thead>
-										<tbody>
-							                <!-- {foreach from=$config.item key=key item=val} -->
-										<tr>
-											<td>{$key+1}</td>
-											<td align="left">
-												{if $config.on eq 1 && $config.config.separate_by eq 0}
-												<span class="cursor_pointer editable-click" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_point')}" data-name="level_point" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_point'}">{$val.level_point}</span>
-												{else}
-												<span>{$val.level_point}</span>
-												{/if}
-											</td>
-											<td align="left">
-												{if $config.on eq 1 && $config.config.separate_by eq 0}
-												<span class="cursor_pointer editable-click" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_money')}" data-name="level_money" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_money'}">{$val.level_money}</span>
-												{else}
-												<span>{$val.level_money}</span>
-												{/if}
-											</td>
-											<td align="left">
-												{if $config.on eq 1 && $config.config.separate_by eq 0}
-												<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="{lang key='system::system.confirm_delete'}" href='{url path="affiliate/admin/remove" args="id={$key+1}"}' title="{lang key='system::system.drop'}">{lang key='system::system.drop'}</a>
-												{else}
-												<span class="dft_color">{lang key='system::system.drop'}</span>
-												{/if}
-											</td>
-										</tr>
-									   	<!-- {foreachelse} -->
-										<tr>
-											<td class="dataTables_empty" colspan="4">{lang key='system::system.no_records'}</td>
-										</tr>
-							        	<!-- {/foreach} -->
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
+			<h3 class="heading">推荐基本设置</h3>
+			<div class="control-group formSep">
+				<label class="control-label">{lang key='affiliate::affiliate.is_on'}：</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="on" value="1" {if $config.on eq 1} checked="true" {/if}>
+					<span>{lang key='affiliate::affiliate.on'}</span>
+					<input type="radio" name="on" value="0" {if !$config.on || $config.on eq 0} checked="true" {/if}>
+					<span>{lang key='affiliate::affiliate.off'}</span>
+				</div>
+			</div>
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.affiliate_type'}</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="separate_by" value="0" checked="true" {if $config.on eq 0}disabled{/if}>
+					<span>{lang key='affiliate::affiliate.separate_by.0'}</span>
+					<input type="radio" name="separate_by" value="1" {if $config.config.separate_by eq '1'} checked{/if} {if $config.on eq 0}disabled{/if}>
+					<span>{lang key='affiliate::affiliate.separate_by.1'}</span>
+				</div>
+			</div>
+				
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.expire'}</label>
+				<div class="controls">
+					<input class="f_l" type="text" name="expire" maxlength="150" size="10" value="{$config.config.expire}" {if $config.on eq 0}readonly{/if}/>
+					<span class="f_l">&nbsp;</span>
+					<select class="w70" name="expire_unit" {if $config.on eq 0}disabled{/if}>
+						<!--{html_options options=$unit selected=$config.config.expire_unit}-->
+					</select>
+					<div class="clear"></div>
+					<div class="help-block">{lang key='affiliate::affiliate.help_expire'}</div>
+				</div>
+			</div>
+					
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.level_point_all'}</label>
+				<div class="controls">
+					<input type="text" name="level_point_all" maxlength="150" size="10" value="{$config.config.level_point_all}" {if $config.on eq 0}readonly{/if}/>
+					<div class="help-block">{lang key='affiliate::affiliate.help_lpa'}</div>
+				</div>
+			</div>
+					
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.level_money_all'}</label>
+				<div class="controls">
+					<input type="text" name="level_money_all" maxlength="150" size="10" value="{$config.config.level_money_all}" {if $config.on eq 0}readonly{/if}/>
+					<div class="help-block">{lang key='affiliate::affiliate.help_lma'}</div>
+				</div>
+			</div>
+					
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.level_register_all'}</label>
+				<div class="controls">
+					<input type="text" name="level_register_all" maxlength="150" size="10" value="{$config.config.level_register_all}" {if $config.on eq 0}readonly{/if}/>
+					<div class="help-block">{lang key='affiliate::affiliate.help_lra'}</div>
+				</div>
+			</div>
+					
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.level_register_up'}</label>
+				<div class="controls">
+					<input type="text" name="level_register_up" maxlength="150" size="10" value="{$config.config.level_register_up}" {if $config.on eq 0}readonly{/if}/>
+					<div class="help-block">{lang key='affiliate::affiliate.help_lru'}</div>
+				</div>
+			</div>
+			
+			<div class="control-group formSep formSep1">
+				<label class="control-label">{lang key='affiliate::affiliate.level_register_up'}</label>
+				<div class="controls">
+					<input type="text" name="level_register_up" maxlength="150" size="10" value="{$config.config.level_register_up}" {if $config.on eq 0}readonly{/if}/>
+					<div class="help-block">{lang key='affiliate::affiliate.help_lru'}</div>
+				</div>
+			</div>
+			
+			<div class="control-group formSep formSep1">
+				<label class="control-label">推荐邀请分享内容：</label>
+				<div class="controls">
+					<textarea name='invite_template' class="span7">{$invite_template}</textarea>
+				</div>
+			</div>
+			
+			<div class="control-group formSep formSep1">
+				<label class="control-label">推荐邀请分享说明：</label>
+				<div class="controls">
+					<textarea name='invite_explain' class="span7">{$invite_explain}</textarea>
+				</div>
+			</div>
+			
+			<h3 class="heading">邀请人奖励设置</h3>
+			<div class="control-group formSep formSep1">
+				<label class="control-label">奖励发放时间：</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="intive_reward_by" value="orderpay" checked="true" {if $config.on eq 0}disabled{/if}>
+					首次下单成交后
+					<input type="radio" name="intive_reward_by" value="signup" {if $config.intvie_reward.intive_reward_by eq 'signup'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					注册时
+				</div>
+			</div>
+			<div class="control-group formSep formSep1">
+				<label class="control-label">奖励方式：</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="intive_reward_type" value="bonus" checked="true" {if $config.on eq 0}disabled{/if}>
+					红包
+					<input type="radio" name="intive_reward_type" value="integral" {if $config.intvie_reward.intive_reward_type eq 'integral'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					积分
+					<input type="radio" name="intive_reward_type" value="balance" {if $config.intvie_reward.intive_reward_type eq 'balance'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					现金
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_bonus {if $config.intvie_reward.intive_reward_type neq 'bonus' && $config.intvie_reward.intive_reward_type}ecjiaf-dn{/if}" >
+				<label class="control-label">选择奖励的红包：</label>
+				<div class="controls chk_radio">
+					<select name="intive_reward_type_bonus" {if $config.on eq 0}disabled{/if}>
+						<option value="0">请选择</option>
+						<!-- {foreach from=$bonus_type_list item=list} -->
+						<option value="{$list.type_id}" {if $config.intvie_reward.intive_reward_value eq $list.type_id && $config.intvie_reward.intive_reward_type eq 'bonus'}selected="true"{/if}>{$list.type_name}</option>	
+						<!-- {/foreach} -->
+					</select>
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_integral  {if $config.intvie_reward.intive_reward_type neq 'integral'}ecjiaf-dn{/if}">
+				<label class="control-label">奖励积分数量：</label>
+				<div class="controls chk_radio">
+					<input type="text" name="intive_reward_type_integral" {if $config.on eq 0}disabled{/if} {if $config.intvie_reward.intive_reward_type eq 'integral'}value="{$config.intvie_reward.intive_reward_value}"{/if}/>
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intive_reward_type intive_reward_type_balance  {if $config.intvie_reward.intive_reward_type neq 'balance'}ecjiaf-dn{/if}">
+				<label class="control-label">奖励现金数量：</label>
+				<div class="controls chk_radio">
+					<input type="text" name="intive_reward_type_balance" {if $config.on eq 0}disabled{/if} {if $config.intvie_reward.intive_reward_type eq 'balance'}value="{$config.intvie_reward.intive_reward_value}"{/if}/>
+				</div>
+			</div>
+			
+			
+			<h3 class="heading">受邀人奖励设置</h3>
+			<div class="control-group formSep formSep1">
+				<label class="control-label">奖励发放时间：</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="intivee_reward_by" value="orderpay" checked="true" {if $config.on eq 0}disabled{/if}>
+					首次下单成交后
+					<input type="radio" name="intivee_reward_by" value="signup"  {if $config.intviee_reward.intivee_reward_by eq 'signup'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					注册时
+				</div>
+			</div>
+			<div class="control-group formSep formSep1">
+				<label class="control-label">奖励方式：</label>
+				<div class="controls chk_radio">
+					<input type="radio" name="intivee_reward_type" value="bonus" checked="true" {if $config.on eq 0}disabled{/if}>
+					红包
+					<input type="radio" name="intivee_reward_type" value="integral" {if $config.intviee_reward.intivee_reward_type eq 'integral'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					积分
+					<input type="radio" name="intivee_reward_type" value="balance"  {if $config.intviee_reward.intivee_reward_type eq 'balance'}checked="true"{/if} {if $config.on eq 0}disabled{/if}>
+					现金
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_bonus {if $config.intviee_reward.intivee_reward_type neq 'bonus'  && $config.intviee_reward.intivee_reward_type}ecjiaf-dn{/if}">
+				<label class="control-label">选择奖励的红包：</label>
+				<div class="controls chk_radio">
+					<select name="intivee_reward_type_bonus" {if $config.on eq 0}disabled{/if}>
+						<option value="0">请选择</option>
+						<!-- {foreach from=$bonus_type_list item=list} -->
+							<option value="{$list.type_id}" {if $config.intviee_reward.intivee_reward_value eq $list.type_id && $config.intviee_reward.intivee_reward_type eq 'bonus'}selected="true"{/if}>{$list.type_name}</option>	
+						<!-- {/foreach} -->
+					</select>
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_integral {if $config.intviee_reward.intivee_reward_type neq 'integral'}ecjiaf-dn{/if}">
+				<label class="control-label">奖励积分数量：</label>
+				<div class="controls chk_radio">
+					<input type="text" name="intivee_reward_type_integral" {if $config.on eq 0}disabled{/if} {if $config.intviee_reward.intivee_reward_type eq 'integral'}value="{$config.intviee_reward.intivee_reward_value}"{/if}/>
+				</div>
+			</div>
+			<div class="control-group formSep formSep1 intivee_reward_type intivee_reward_type_balance {if $config.intviee_reward.intivee_reward_type neq 'balance'}ecjiaf-dn{/if}">
+				<label class="control-label">奖励现金数量：</label>
+				<div class="controls chk_radio">
+					<input type="text" name="intivee_reward_type_balance" {if $config.on eq 0}disabled{/if} {if $config.intviee_reward.intivee_reward_type eq 'balance'}value="{$config.intviee_reward.intivee_reward_value}"{/if}/>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type="submit" value="{lang key='system::system.button_submit'}" class="btn btn-gebo" />
 				</div>
 			</div>
 		</div>
