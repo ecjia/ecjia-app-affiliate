@@ -57,7 +57,7 @@ class admin extends ecjia_admin {
 		$this->assign('config', $config);
 		$this->assign('invite_template', ecjia::config('invite_template'));
 		$this->assign('invite_explain', ecjia::config('invite_explain'));
-		
+		$this->assign('current_code', 'affiliate');
 		$this->assign('form_action', RC_Uri::url('affiliate/admin/update'));
 		
 		$this->display('affiliate_list.dwt');
