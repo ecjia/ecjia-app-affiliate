@@ -5,17 +5,15 @@
 </script>
 <!-- {/block} -->
 
-
-
-<!-- {block name="main_content"} -->
-
-
+<!-- {block name="alert-info"} -->
 <!-- {if $config.on eq 0} -->
 <div class="alert alert-info">	
 	<strong>{lang key='affiliate::affiliate.notice'}</strong>
 </div>
 <!-- {/if} -->
+<!-- {/block} -->
 
+<!-- {block name="admin_config_form"} -->
 <div class="row-fluid edit-page" style="min-height:500px;">
 	<form method="post" class="form-horizontal" action="{$form_action}" name="theForm" enctype="multipart/form-data">
 		<div class="span12">
@@ -204,5 +202,4 @@
 		</div>
 	</form>
 </div>
-
 <!-- {/block} -->
