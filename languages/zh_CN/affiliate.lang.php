@@ -29,6 +29,7 @@ return array(
 	'edit_ok' 				=> '操作成功',
 	'level_error'		 	=> '最多可以设5个级别！',
 	'levels' 				=> '推荐人级别',
+	'label_levels'			=> '推荐人级别：',
 		
 	'js_languages' => array(
 		'lang_removeconfirm' 	=> '您确定要删除这个等级么？',
@@ -55,6 +56,10 @@ return array(
 	'is_on'				=> '是否开启',
 	'label_is_on'		=> '是否开启：',
 	'add_affiliate'		=> '添加分成',
+	'affiliate_percent'	=> '分成比例',
+	'add_affiliate_percent'	=> '添加分成比例',
+	'update_affiliate_percent' => '编辑分成比例',
+	'affiliate_percent_list' => '分成比例列表',
 	'level_point_empty'	=> '请输入积分分成百分比',
 	'level_point_wrong'	=> '积分分成百分比格式不正确，应为数字类型',
 	'level_money_empty'	=> '请输入现金分成百分比',
@@ -77,6 +82,9 @@ return array(
 	'affiliate_set_manage'	=> '推荐设置管理',
 	'affiliate_set_update'	=> '推荐设置更新',
 	'affiliate_set_drop'	=> '推荐设置删除',
+	'affiliate_percent_manage'	=> '分成比例管理',
+	'affiliate_percent_update'	=> '分成比例更新',
+	'affiliate_percent_drop'	=> '分成比例删除',
 	'recommend_management'	=> '推荐分成管理',
 	'recommend_update'		=> '推荐分成更新',
 	'affiliate'				=> '推荐分成',
