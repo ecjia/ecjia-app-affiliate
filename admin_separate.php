@@ -146,7 +146,7 @@ class admin_separate extends ecjia_admin {
 					
 					$this->db_affiliate_log->write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
 				} else {
-					$this->showmessage(RC_Lang::get('affiliate::affiliate_ck.edit_fail'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+					return $this->showmessage(RC_Lang::get('affiliate::affiliate_ck.edit_fail'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 				}
 			}
 			$data = array(
@@ -155,7 +155,7 @@ class admin_separate extends ecjia_admin {
 			ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate_ck.order_sn_is').$order_sn, 'do', 'affiliate');
 			$this->db_order_info->order_info_update(array('order_id' => $oid), $data);
 		}
-		$this->showmessage(RC_Lang::get('affiliate::affiliate_ck.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage(RC_Lang::get('affiliate::affiliate_ck.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**
@@ -174,7 +174,7 @@ class admin_separate extends ecjia_admin {
 			ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate_ck.order_sn_is').$info['order_sn'], 'cancel', 'affiliate');
 			$this->db_order_info->order_info_update(array('order_id' => $oid), $data);
 		}
-		$this->showmessage(RC_Lang::get('affiliate::affiliate_ck.cancel_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage(RC_Lang::get('affiliate::affiliate_ck.cancel_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**
@@ -210,7 +210,7 @@ class admin_separate extends ecjia_admin {
 			
 			$this->db_affiliate_log->affiliate_log_update(array('log_id' => $logid), $data);
 		}
-		$this->showmessage(RC_Lang::get('affiliate::affiliate_ck.rollback_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage(RC_Lang::get('affiliate::affiliate_ck.rollback_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**

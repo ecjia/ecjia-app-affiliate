@@ -71,28 +71,28 @@ class admin_config extends ecjia_admin {
 		
 // 		//检查输入值是否正确
 // 		if (empty($_POST['level_point'])) {
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 		} else {
 // 			if (substr($_POST['level_point'], -1, 1) == '%') {
 // 				$intval = substr($_POST['level_point'], 0, strlen($_POST['level_point'])-1);
 // 				if (!preg_match("/^[0-9]+$/", $intval)) {
-// 					$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 					return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 				}
 // 			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_point'])) {
-// 				$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 				return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 			}
 // 		}
 		
 // 		if (empty($_POST['level_money'])) {
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 		} else {
 // 			if (substr($_POST['level_money'], -1, 1) == '%') {
 // 				$intval = substr($_POST['level_money'], 0, strlen($_POST['level_money'])-1);
 // 				if (!preg_match("/^[0-9]+$/", $intval)) {
-// 					$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 					return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 				}
 // 			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_money'])) {
-// 				$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 				return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 			}
 // 		}
 		
@@ -122,10 +122,10 @@ class admin_config extends ecjia_admin {
 // 			ecjia_config::instance()->write_config('affiliate', serialize($config));
 // 			ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$_POST['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$_POST['level_money'], 'add', 'affiliate');
 			
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.add_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin/init')));
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.add_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 			
 // 		} else {
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.level_error'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_error'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 		}
 // 	}
 	
@@ -216,7 +216,7 @@ class admin_config extends ecjia_admin {
 		ecjia_config::instance()->write_config('invite_explain', $invite_explain);
 		ecjia_admin::admin_log(RC_Lang::get('system::system.affiliate'), 'edit', 'config');
 		
-		$this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_config/init')));
+		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_config/init')));
 	}
 	
 	/**
@@ -232,15 +232,15 @@ class admin_config extends ecjia_admin {
 		
 // 		//检查输入值是否正确
 // 		if (empty($_POST['value'])) {
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 		} else {
 // 			if (substr($_POST['value'], -1, 1) == '%') {
 // 				$intval = substr($_POST['value'], 0, strlen($_POST['value'])-1);
 // 				if (!preg_match("/^[0-9]+$/", $intval)) {
-// 					$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 					return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 				}
 // 			} elseif (!preg_match("/^[0-9]+$/", $_POST['value'])) {
-// 				$this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 				return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_point_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 			}
 // 		}
 		
@@ -262,7 +262,7 @@ class admin_config extends ecjia_admin {
 // 		$config['on'] = 1;
 		
 // 		ecjia_config::instance()->write_config('affiliate', serialize($config));
-// 		$this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
+// 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 // 	}
 	
 	/**
@@ -277,15 +277,15 @@ class admin_config extends ecjia_admin {
 		
 // 		//检查输入值是否正确
 // 		if (empty($_POST['value'])) {
-// 			$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 		} else {
 // 			if (substr($_POST['value'], -1, 1) == '%') {
 // 				$intval = substr($_POST['value'], 0, strlen($_POST['value'])-1);
 // 				if (!preg_match("/^[0-9]+$/", $intval)) {
-// 					$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 					return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 				}
 // 			} elseif (!preg_match("/^[0-9]+$/", $_POST['value'])) {
-// 				$this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 				return $this->showmessage(RC_Lang::get('affiliate::affiliate.level_money_wrong'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 // 			}
 // 		}
 		
@@ -306,7 +306,7 @@ class admin_config extends ecjia_admin {
 // 		$config['on'] = 1;
 		
 // 		ecjia_config::instance()->write_config('affiliate', serialize($config));
-// 		$this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
+// 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 // 	}
 	
 	/**
@@ -336,7 +336,7 @@ class admin_config extends ecjia_admin {
 // 		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$info['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$info['level_money'], 'remove', 'affiliate');
 		
 		
-// 		$this->showmessage(RC_Lang::get('affiliate::affiliate.remove_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+// 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.remove_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 		
 // 	}	
 }

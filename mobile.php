@@ -75,7 +75,7 @@ class mobile extends ecjia_front {
 			
 			$count = RC_Model::model('affiliate/affiliate_users_model')->where(array('mobile_phone' => $mobile_phone))->count();
 			if ( $count > 0) {
-				ecjia_front::$controller->showmessage('该手机号已注册！', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON);
+				return ecjia_front::$controller->showmessage('该手机号已注册！', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON);
 			}
 			
 			if (!empty($invite_code) && !empty($mobile_phone)) {
@@ -110,7 +110,7 @@ class mobile extends ecjia_front {
 											'expire_time'	=> array('gt' => RC_Time::gmtime())
 											))->find();
 					if (!empty($is_invitee)) {
-						ecjia_front::$controller->showmessage('您已被邀请过，请勿重复提交！', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON);
+						return ecjia_front::$controller->showmessage('您已被邀请过，请勿重复提交！', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON);
 					}
 					RC_Model::model('affiliate/invitee_record_model')->insert(array(
 																					'invite_id'		=> $invite_id,
@@ -135,7 +135,7 @@ class mobile extends ecjia_front {
 		$app_url = $urlscheme."app?open_type=signup&invite_code=".$invite_code;
 			
 		
-		ecjia_front::$controller->showmessage('提交成功！', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, array('url' => $url, 'app' => $app_url));
+		return ecjia_front::$controller->showmessage('提交成功！', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, array('url' => $url, 'app' => $app_url));
 	
 	}
 	
