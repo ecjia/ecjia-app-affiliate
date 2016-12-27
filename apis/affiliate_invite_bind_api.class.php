@@ -17,11 +17,11 @@ class affiliate_invite_bind_api extends Component_Event_Api {
 	        || (!isset($options['invite_code']))) {
 	        return new ecjia_error('invalid_parameter', RC_Lang::get('system::system.invalid_parameter'));
 	    }
-
+	    /* 统一转为大写*/
+	    $options['invite_code'] = strtoupper($options['invite_code']);
 	    /* 推荐处理 */
 	    $affiliate = unserialize(ecjia::config('affiliate'));
 	    if (isset($affiliate['on']) && $affiliate['on'] == 1) {
-	    	
 	    	if (!empty($options['mobile'])) {
 	    		$invite_info = RC_Model::model('affiliate/invitee_record_model')->where(array('invitee_phone' => $options['mobile'], 'expire_time' => array('gt' => RC_Time::gmtime())))->order(array('id' => 'asc'))->find();
 	    		$invite_id = isset($invite_info['invite_id']) ? intval($invite_info['invite_id']) : 0;
