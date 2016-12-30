@@ -14,7 +14,7 @@ class admin_separate extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
-		RC_Loader::load_app_func('global');
+		RC_Loader::load_app_func('admin_affiliate');
 		assign_adminlog_content();
 		
 		$this->db_order_info 		= RC_Loader::load_app_model('affiliate_order_info_model');

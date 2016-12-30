@@ -12,7 +12,7 @@ class admin_config extends ecjia_admin {
 		parent::__construct();
 		
 		$this->db_shop_config = RC_Loader::load_app_model('affiliate_shop_config_model');
-		RC_Loader::load_app_func('global');
+		RC_Loader::load_app_func('admin_affiliate');
 		assign_adminlog_content();
 		
 		/* 加载所有全局 js/css */
