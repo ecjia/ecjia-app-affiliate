@@ -29,10 +29,7 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 	    	/* 是否允许奖励*/
 	    	$is_reward = true;
 	    	if ($options['invite_type'] == 'orderpay') {
-	    		$reward_record = RC_Model::model('affiliate/invite_reward_model')->where(array(
-									    									'invite_id'		=> $invite_id,
-																    		'invitee_id'	=> $options['user_id'],
-																    	))->find();
+	    		$reward_record = RC_Model::model('affiliate/invite_reward_model')->where(array('invite_id' => $invite_id, 'invitee_id' => $options['user_id']))->find();
 	    		if (!empty($reward_record)) {
 	    			$is_reward = false;
 	    		}
@@ -44,17 +41,17 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 		    		$reward_type = 'bonus';
 		    	} elseif ($affiliate['intvie_reward']['intive_reward_type'] == 'integral') {
 		    		$option = array(
-		    				'user_id'		=> $invite_id,
-		    				'pay_points'	=> $affiliate['intvie_reward']['intive_reward_value'],
-		    				'change_desc'	=> '邀请送积分'
+	    				'user_id'		=> $invite_id,
+	    				'pay_points'	=> $affiliate['intvie_reward']['intive_reward_value'],
+	    				'change_desc'	=> '邀请送积分'
 		    		);
 		    		$result = RC_Api::api('user', 'account_change_log', $option);
 		    		$reward_type = 'integral';
 		    	} elseif ($affiliate['intvie_reward']['intive_reward_type'] == 'balance') {
 		    		$option = array(
-		    				'user_id'		=> $invite_id,
-		    				'user_money'	=> $affiliate['intvie_reward']['intive_reward_value'],
-		    				'change_desc'	=> '邀请送余额'
+	    				'user_id'		=> $invite_id,
+	    				'user_money'	=> $affiliate['intvie_reward']['intive_reward_value'],
+	    				'change_desc'	=> '邀请送余额'
 		    		);
 		    		$result = RC_Api::api('user', 'account_change_log', $option);
 		    		$reward_type = 'balance';
@@ -62,13 +59,13 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 		    	 
 		    	if ($affiliate['intvie_reward']['intive_reward_value'] > 0) {
 		    		RC_Model::model('affiliate/invite_reward_model')->insert(array(
-																	    		'invite_id'		=> $invite_id,
-																	    		'invitee_id'	=> $options['user_id'],
-																	    		'invitee_name'	=> $invitee_name,
-																	    		'reward_type'	=> $reward_type,
-																	    		'reward_value'	=> $affiliate['intvie_reward']['intive_reward_value'],
-																	    		'add_time'		=> RC_Time::gmtime(),
-																    		));
+			    		'invite_id'		=> $invite_id,
+			    		'invitee_id'	=> $options['user_id'],
+			    		'invitee_name'	=> $invitee_name,
+			    		'reward_type'	=> $reward_type,
+			    		'reward_value'	=> $affiliate['intvie_reward']['intive_reward_value'],
+			    		'add_time'		=> RC_Time::gmtime(),
+		    		));
 		    	}
 		    }
 		    
@@ -86,16 +83,16 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 		    		RC_Model::model('affiliate/affiliate_user_bonus_model')->insert(array('bonus_type_id' => $affiliate['intviee_reward']['intivee_reward_value'], 'user_id' => $options['user_id']));
 		    	} elseif ($affiliate['intviee_reward']['intivee_reward_type'] == 'integral') {
 		    		$option = array(
-		    				'user_id'		=> $options['user_id'],
-		    				'pay_points'	=> $affiliate['intviee_reward']['intivee_reward_value'],
-		    				'change_desc'	=> '邀请送积分'
+	    				'user_id'		=> $options['user_id'],
+	    				'pay_points'	=> $affiliate['intviee_reward']['intivee_reward_value'],
+	    				'change_desc'	=> '邀请送积分'
 		    		);
 		    		$result = RC_Api::api('user', 'account_change_log', $option);
 		    	} else {
 		    		$option = array(
-		    				'user_id'		=> $options['user_id'],
-		    				'user_money'	=> $affiliate['intviee_reward']['intivee_reward_value'],
-		    				'change_desc'	=> '邀请送余额'
+	    				'user_id'		=> $options['user_id'],
+	    				'user_money'	=> $affiliate['intviee_reward']['intivee_reward_value'],
+	    				'change_desc'	=> '邀请送余额'
 		    		);
 		    		$result = RC_Api::api('user', 'account_change_log', $option);
 		    	}
@@ -103,8 +100,6 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 	    }
 	    return true;
 	}
-	
-	
 }
 
 // end

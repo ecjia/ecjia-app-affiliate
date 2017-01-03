@@ -18,15 +18,15 @@ class affiliate_user_invite_code_api extends Component_Event_Api {
 	    }
 
 	    $invite_code_data = array(
-	    		'object_type'	=> 'ecjia.affiliate',
-	    		'object_group'	=> 'user_invite_code',
-	    		'object_id'		=> $_SESSION['user_id'],
-	    		'meta_key'		=> 'invite_code',
+    		'object_type'	=> 'ecjia.affiliate',
+    		'object_group'	=> 'user_invite_code',
+    		'object_id'		=> $_SESSION['user_id'],
+    		'meta_key'		=> 'invite_code',
 	    );
 	    $user_invite_code = RC_Model::model('term_meta_model')->where($invite_code_data)->get_field('meta_value');
 	    /* 生成邀请码*/
 	    if (empty($user_invite_code)) {
-	    	$charset 		= 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
+	    	$charset = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 	    	$charset_len = strlen($charset)-1;
 	    	while (true) {
 	    		$code = '';
@@ -34,10 +34,10 @@ class affiliate_user_invite_code_api extends Component_Event_Api {
 	    			$code .= $charset[rand(1, $charset_len)];
 	    		}
 	    		$code_exists = array(
-	    				'object_type'	=> 'ecjia.affiliate',
-	    				'object_group'	=> 'user_invite_code',
-	    				'meta_key'		=> 'invite_code',
-	    				'meta_value'	=> $code,
+    				'object_type'	=> 'ecjia.affiliate',
+    				'object_group'	=> 'user_invite_code',
+    				'meta_key'		=> 'invite_code',
+    				'meta_value'	=> $code,
 	    		);
 	    		/* 判断邀请码是否已存在*/
 	    		$invite_result = RC_Model::model('term_meta_model')->find($code_exists);
@@ -52,8 +52,6 @@ class affiliate_user_invite_code_api extends Component_Event_Api {
 	    
 	    return $user_invite_code;
 	}
-	
-	
 }
 
 // end

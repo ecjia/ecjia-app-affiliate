@@ -169,8 +169,6 @@
         },
         
     };
-    
-    
 })(ecjia.admin, jQuery);
  
 // end

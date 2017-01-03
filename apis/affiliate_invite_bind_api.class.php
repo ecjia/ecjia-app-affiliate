@@ -29,10 +29,10 @@ class affiliate_invite_bind_api extends Component_Event_Api {
 	    	/* 如果手机推荐人不存在，关联邀请码推荐人*/
 	    	if ($invite_id == 0 && !empty($options['invite_code'])) {
 	    		$invite_code_data = array(
-	    				'object_type'	=> 'ecjia.affiliate',
-	    				'object_group'	=> 'user_invite_code',
-	    				'meta_key'		=> 'invite_code',
-	    				'meta_value'	=> $options['invite_code']
+    				'object_type'	=> 'ecjia.affiliate',
+    				'object_group'	=> 'user_invite_code',
+    				'meta_key'		=> 'invite_code',
+    				'meta_value'	=> $options['invite_code']
 	    		);
 	    		$invite_id = RC_Model::model('term_meta_model')->where($invite_code_data)->get_field('object_id');
 	    	}
