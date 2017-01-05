@@ -24,44 +24,39 @@
 </div>
 <!-- {/if} -->
 
-<div class="row-fluid edit-page" style="min-height:500px;">
+<div class="row-fluid edit-page">
 	<div class="span12">
-		<div class="control-group formSep formSep1">
-			<div class="row-fluid formSep1 formSep2">
-				<table class="table table-striped" id="smpl_tbl">
-					<thead>
-						<tr>
-							<th>{lang key='affiliate::affiliate.levels'}</th>
-							<th>{lang key='affiliate::affiliate.level_point'}</th>
-							<th>{lang key='affiliate::affiliate.level_money'}</th>
-							<th>{lang key='system::system.handler'}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- {foreach from=$config.item key=key item=val} -->
-						<tr>
-							<td>{$key+1}</td>
-							<td align="left">
-							
-								<span class="cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_point')}" data-name="level_point" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_point'}">{$val.level_point}</span>
-							</td>
-							<td align="left">
-								<span class="cursor_pointer editable-click" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_money')}" data-name="level_money" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_money'}">{$val.level_money}</span>
-							</td>
-							<td align="left">
-								<a class="data-pjax" href='{url path="affiliate/admin/edit" args="id={$key+1}"}' title="编辑"><i class="fontello-icon-edit"></i></a>
-								<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="{lang key='system::system.confirm_delete'}" href='{url path="affiliate/admin/remove" args="id={$key+1}"}' title="{lang key='system::system.drop'}"><i class="fontello-icon-trash"></i></a>
-							</td>
-						</tr>
-					   	<!-- {foreachelse} -->
-						<tr>
-							<td class="dataTables_empty" colspan="4">{lang key='system::system.no_records'}</td>
-						</tr>
-			        	<!-- {/foreach} -->
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<table class="table table-striped" id="smpl_tbl">
+			<thead>
+				<tr>
+					<th>{lang key='affiliate::affiliate.levels'}</th>
+					<th>{lang key='affiliate::affiliate.level_point'}</th>
+					<th>{lang key='affiliate::affiliate.level_money'}</th>
+					<th>{lang key='system::system.handler'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- {foreach from=$config.item key=key item=val} -->
+				<tr>
+					<td>{$key+1}</td>
+					<td align="left">
+						<span class="cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_point')}" data-name="level_point" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_point'}">{$val.level_point}</span>
+					</td>
+					<td align="left">
+						<span class="cursor_pointer editable-click" data-trigger="editable" data-url="{RC_Uri::url('affiliate/admin/edit_money')}" data-name="level_money" data-pk="{$key+1}" data-title="{lang key='affiliate::affiliate.edit_level_money'}">{$val.level_money}</span>
+					</td>
+					<td align="left">
+						<a class="data-pjax" href='{url path="affiliate/admin/edit" args="id={$key+1}"}' title="编辑"><i class="fontello-icon-edit"></i></a>
+						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="{lang key='system::system.confirm_delete'}" href='{url path="affiliate/admin/remove" args="id={$key+1}"}' title="{lang key='system::system.drop'}"><i class="fontello-icon-trash"></i></a>
+					</td>
+				</tr>
+			   	<!-- {foreachelse} -->
+				<tr>
+					<td class="dataTables_empty" colspan="4">{lang key='system::system.no_records'}</td>
+				</tr>
+	        	<!-- {/foreach} -->
+			</tbody>
+		</table>
 	</div>
 </div>
 
