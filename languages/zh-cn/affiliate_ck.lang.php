@@ -1,10 +1,8 @@
 <?php
 
 /**
- * ECSHOP 程序说明
+ * ECJIA 程序说明
  */
-
-
 $LANG['order_id'] = '订单号';
 $LANG['affiliate_separate'] = '分成';
 $LANG['affiliate_cancel'] = '取消';

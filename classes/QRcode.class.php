@@ -3239,5 +3239,6 @@ class QRencode {
             QRtools::log($outfile, $e->getMessage());
         }
     }
-
 }
+
+//end

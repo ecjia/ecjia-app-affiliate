@@ -37,6 +37,6 @@
 <script src="{$front_url}/js/affiliate.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-ecjia.front.affiliate.init();
+	ecjia.front.affiliate.init();
 </script>
 <!-- {/nocache} -->

@@ -4,13 +4,11 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * 推荐注册绑定
  * @author will.chen
- *
  */
 class affiliate_invite_bind_api extends Component_Event_Api {
 	
     /**
      * @param  $options['invite_code'] 受邀码
-     *
      * @return array
      */
 	public function call(&$options) {	
@@ -48,11 +46,8 @@ class affiliate_invite_bind_api extends Component_Event_Api {
 	    	
 	    	RC_Api::api('affiliate', 'invite_reward', array('user_id' => $_SESSION['user_id'], 'invite_type' => 'signup'));
 	    }
-	    
 	    return true;
 	}
-	
-	
 }
 
 // end

@@ -1,11 +1,10 @@
 <?php
+defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 后台推荐设置
  * @author wutifang
- * 
  */
-defined('IN_ECJIA') or exit('No permission resources.');
-
 class admin extends ecjia_admin {
 	private $db_shop_config;
 	public function __construct() {
@@ -27,9 +26,6 @@ class admin extends ecjia_admin {
 		
 		RC_Script::enqueue_script('bootstrap-editable-script', RC_Uri::admin_url() . '/statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js', array(), false, true);
 		RC_Style::enqueue_style('bootstrap-editable-css', RC_Uri::admin_url() . '/statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css');
-		
-// 		RC_Script::enqueue_script('bootstrap-editable-script', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js'));
-// 		RC_Style::enqueue_style('bootstrap-editable-css', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css'));
 		RC_Script::enqueue_script('affiliate', RC_App::apps_url('statics/js/affiliate.js', __FILE__));
 		
 		$js_lang = array(
@@ -40,7 +36,7 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 *推荐设置
+	 * 推荐设置
 	 */
 	public function init() {
 		$this->admin_priv('affiliate_percent_manage');
@@ -374,9 +370,7 @@ class admin extends ecjia_admin {
 		ecjia_config::instance()->write_config('affiliate', serialize($config));
 		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$info['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$info['level_money'], 'remove', 'affiliate');
 		
-		
 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.remove_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-		
 	}	
 }
 

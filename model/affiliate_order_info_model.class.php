@@ -16,4 +16,5 @@ class affiliate_order_info_model extends Component_Model_Model {
 		return $this->where($where)->field($field)->find();
 	}
 }
+
 // end

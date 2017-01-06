@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * ECJIA 应用语言包
  */
-
 return array(
 	'order_id' 				=> '订单号',
 	'affiliate_separate' 	=> '分成',

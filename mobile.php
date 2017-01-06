@@ -2,7 +2,6 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 class mobile extends ecjia_front {
-
 	public function __construct() {	
 		parent::__construct();	
 		$front_url = RC_App::apps_url('statics/front', __FILE__);
@@ -43,13 +42,11 @@ class mobile extends ecjia_front {
 				$affiliate_note .= "，完成注册首次下单后，您将获得".$reward_value.$reward_type."奖励";
 			}
 		}
-		
-		
 		$data = array(
-				'object_type'	=> 'ecjia.affiliate',
-				'object_group'	=> 'user_invite_code',
-				'meta_key'		=> 'invite_code',
-				'meta_value'	=> $invite_code
+			'object_type'	=> 'ecjia.affiliate',
+			'object_group'	=> 'user_invite_code',
+			'meta_key'		=> 'invite_code',
+			'meta_value'	=> $invite_code
 		);
 		$user_id = RC_Model::model('term_meta_model')->where($data)->get_field('object_id');
 		if (!empty($user_id)) {
@@ -64,8 +61,7 @@ class mobile extends ecjia_front {
 		$this->display('affiliate.dwt');
 	}
 	
-	public function invite() 
-	{
+	public function invite() {
 		/* 推荐处理 */
 		$affiliate = unserialize(ecjia::config('affiliate'));
 		if (isset($affiliate['on']) && $affiliate['on'] == 1) {
@@ -80,10 +76,10 @@ class mobile extends ecjia_front {
 			
 			if (!empty($invite_code) && !empty($mobile_phone)) {
 				$data = array(
-						'object_type'	=> 'ecjia.affiliate',
-						'object_group'	=> 'user_invite_code',
-						'meta_key'		=> 'invite_code',
-						'meta_value'	=> $invite_code,
+					'object_type'	=> 'ecjia.affiliate',
+					'object_group'	=> 'user_invite_code',
+					'meta_key'		=> 'invite_code',
+					'meta_value'	=> $invite_code,
 				);
 				$invite_id = RC_Model::model('term_meta_model')->where($data)->get_field('object_id');
 				
@@ -105,22 +101,21 @@ class mobile extends ecjia_front {
 					
 					/* 判断在有效期内是否已被邀请*/
 					$is_invitee = RC_Model::model('affiliate/invitee_record_model')->where(array(
-											'invitee_phone' => $mobile_phone,
-											'invite_type'	=> 'signup',
-											'expire_time'	=> array('gt' => RC_Time::gmtime())
-											))->find();
+						'invitee_phone' => $mobile_phone,
+						'invite_type'	=> 'signup',
+						'expire_time'	=> array('gt' => RC_Time::gmtime())
+					))->find();
 					if (!empty($is_invitee)) {
 						return ecjia_front::$controller->showmessage('您已被邀请过，请勿重复提交！', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON);
 					}
 					RC_Model::model('affiliate/invitee_record_model')->insert(array(
-																					'invite_id'		=> $invite_id,
-																					'invitee_phone' => $mobile_phone,
-																					'invite_type'	=> 'signup',
-																					'is_registered' => 0,
-																					'expire_time'	=> $time,
-																					'add_time'		=> RC_Time::gmtime()
-																				));
-					
+						'invite_id'		=> $invite_id,
+						'invitee_phone' => $mobile_phone,
+						'invite_type'	=> 'signup',
+						'is_registered' => 0,
+						'expire_time'	=> $time,
+						'add_time'		=> RC_Time::gmtime()
+					));
 				}
 			}
 		}
@@ -133,14 +128,11 @@ class mobile extends ecjia_front {
 		
 		$urlscheme = ecjia::config('mobile_shop_urlscheme');
 		$app_url = $urlscheme."app?open_type=signup&invite_code=".$invite_code;
-			
 		
 		return ecjia_front::$controller->showmessage('提交成功！', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, array('url' => $url, 'app' => $app_url));
-	
 	}
 	
-	public function qrcode_image()
-	{
+	public function qrcode_image() {
 		$code = $_GET['invite_code'];
 		$value = RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $code;
 		
@@ -154,7 +146,6 @@ class mobile extends ecjia_front {
 
 		echo $img;
 	}
-	
 }
 
 // end

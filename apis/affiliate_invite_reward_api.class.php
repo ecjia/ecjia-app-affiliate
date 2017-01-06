@@ -1,15 +1,14 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 发放推荐注册绑定
  * @author will.chen
- *
  */
 class affiliate_invite_reward_api extends Component_Event_Api {
 	
     /**
      * @param  $options['invite_code'] 受邀码
-     *
      * @return array
      */
 	public function call(&$options) {	

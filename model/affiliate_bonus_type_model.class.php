@@ -8,4 +8,5 @@ class affiliate_bonus_type_model extends Component_Model_Model {
 		parent::__construct();
 	}
 }
+
 // end

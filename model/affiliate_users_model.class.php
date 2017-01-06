@@ -8,4 +8,5 @@ class affiliate_users_model extends Component_Model_Model {
 		parent::__construct();
 	}
 }
+
 // end

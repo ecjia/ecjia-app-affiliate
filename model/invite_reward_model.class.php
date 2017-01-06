@@ -8,4 +8,5 @@ class invite_reward_model extends Component_Model_Model {
 		parent::__construct();
 	}
 }
+
 // end

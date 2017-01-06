@@ -33,4 +33,5 @@ class affiliate_log_model extends Component_Model_Model {
 		return $this->where($where)->update($data);
 	}
 }
+
 // end

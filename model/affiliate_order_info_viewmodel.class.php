@@ -40,4 +40,5 @@ class affiliate_order_info_viewmodel extends Component_Model_View {
     	return $this->where($where)->field($field)->find();
     }
 }
+
 // end

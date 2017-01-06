@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * ECJIA Application language pack
  */
-
 return array(
 	'order_id' 				=> 'Order No.',
 	'affiliate_separate' 	=> 'Divided into',

@@ -1,11 +1,10 @@
 <?php
+defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 分成管理
  * @author wutifang
- * 
  */
-defined('IN_ECJIA') or exit('No permission resources.');
-
 class admin_separate extends ecjia_admin {
 	private $db_order_info;
 	private $db_affiliate_log;

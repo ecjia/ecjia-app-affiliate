@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECSHOP 程序说明
+ * ECJIA 程序说明
  */
 
 $LANG['on'] = '开启';

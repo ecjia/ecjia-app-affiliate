@@ -1,14 +1,12 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 推荐奖励的记录
  * @author will.chen
- *
  */
-class record_module extends api_front implements api_interface
-{
-    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
-    {	
+class record_module extends api_front implements api_interface {
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
 		$this->authSession();
 		if ($_SESSION['user_id'] <= 0 ) {
 			return new ecjia_error(100, 'Invalid session');
@@ -42,23 +40,21 @@ class record_module extends api_front implements api_interface
 			}
 			
 			$list[] = array(
-					'invitee_name'		=> $val['invitee_name'],
-					'label_reward_type'	=> '邀请'.$val['invitee_name'].'成功，奖励'.$reward_type,
-					'reward_type'		=> $val['reward_type'],
-					'give_reward'		=> $val['reward_value'],
-					'reward_time'		=> RC_Time::local_date(ecjia::config('time_format'), $val['add_time']),
+				'invitee_name'		=> $val['invitee_name'],
+				'label_reward_type'	=> '邀请'.$val['invitee_name'].'成功，奖励'.$reward_type,
+				'reward_type'		=> $val['reward_type'],
+				'give_reward'		=> $val['reward_value'],
+				'reward_time'		=> RC_Time::local_date(ecjia::config('time_format'), $val['add_time']),
 			);
 			
 		}
 		
 		$pager = array(
-				"total" => $page_row->total_records,
-				"count" => $page_row->total_records,
-				"more"	=> $page_row->total_pages <= $page ? 0 : 1,
+			"total" => $page_row->total_records,
+			"count" => $page_row->total_records,
+			"more"	=> $page_row->total_pages <= $page ? 0 : 1,
 		);
-		
 		return array('data' => $list, 'pager' => $pager);
-		
 	}
 }
 

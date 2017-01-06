@@ -48,16 +48,16 @@ class affiliate_installer extends ecjia_installer {
     	$invitee_record_table = 'invitee_record';
     	if (!RC_Model::make()->table_exists($invitee_record_table)) {
     		$schemes = array(
-    				"`id` int(11) unsigned NOT NULL AUTO_INCREMENT",
-    				"`invite_id` int(11) unsigned NOT NULL",
-    				"`invitee_phone` char(11) NOT NULL COMMENT '受邀者手机号'",
-    				"`invite_type` varchar(10) NOT NULL",
-    				"`is_registered` int(1) unsigned NOT NULL COMMENT '是否已注册'",
-    				"`expire_time` int(10) unsigned NOT NULL COMMENT '有效期'",
-    				"`add_time` int(10) unsigned NOT NULL",
-    				"PRIMARY KEY (`id`)",
-    				"KEY `invite_id` (`invite_id`)",
-    				"KEY `invite_type` (`invite_type`)"
+    			"`id` int(11) unsigned NOT NULL AUTO_INCREMENT",
+    			"`invite_id` int(11) unsigned NOT NULL",
+    			"`invitee_phone` char(11) NOT NULL COMMENT '受邀者手机号'",
+    			"`invite_type` varchar(10) NOT NULL",
+    			"`is_registered` int(1) unsigned NOT NULL COMMENT '是否已注册'",
+    			"`expire_time` int(10) unsigned NOT NULL COMMENT '有效期'",
+    			"`add_time` int(10) unsigned NOT NULL",
+    			"PRIMARY KEY (`id`)",
+    			"KEY `invite_id` (`invite_id`)",
+    			"KEY `invite_type` (`invite_type`)"
     		);
     		RC_Model::make()->create_table($invitee_record_table, $schemes);
     	}
@@ -84,9 +84,7 @@ class affiliate_installer extends ecjia_installer {
     	if (RC_Model::make()->table_exists($invitee_record_table)) {
     		RC_Model::make()->drop_table($invitee_record_table);
     	}
-    	
     }
-    
 }
 
 // end
