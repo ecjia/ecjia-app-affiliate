@@ -44,9 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-
-/* 访问控制 */
-defined('IN_ECJIA') or die('Deny Access');
+defined('IN_ECJIA') or exit('No permission resources.');
 
 /*
   //二维码内容
