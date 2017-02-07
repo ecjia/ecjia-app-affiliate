@@ -116,7 +116,7 @@ class mobile extends ecjia_front {
 			
 			$count = RC_Model::model('affiliate/affiliate_users_model')->where(array('mobile_phone' => $mobile_phone))->count();
 			
-			if (!empty($invite_code) && !empty($mobile_phone)) {
+			if (!empty($invite_code) && !empty($mobile_phone) && $count <= 0) {
 				$data = array(
 					'object_type'	=> 'ecjia.affiliate',
 					'object_group'	=> 'user_invite_code',
