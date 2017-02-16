@@ -89,7 +89,7 @@ class admin_separate extends ecjia_admin {
 	 * 分成管理列表页
 	 */
 	public function init() {
-		$this->admin_priv('affiliate_ck_manage', ecjia::MSGTYPE_JSON);
+		$this->admin_priv('affiliate_ck_manage');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('affiliate::affiliate.sharing_management')));
 		$this->assign('ur_here', RC_Lang::get('affiliate::affiliate.sharing_management'));

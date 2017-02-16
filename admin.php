@@ -189,7 +189,7 @@ class admin extends ecjia_admin {
 		}
 	}
 	
-	public function edit () {
+	public function edit() {
 		$this->admin_priv('affiliate_percent_manage');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('affiliate::affiliate.update_affiliate_percent')));
@@ -274,15 +274,15 @@ class admin extends ecjia_admin {
 			}
 			
 			$temp['intvie_reward'] = array(
-					'intive_reward_by'		=> $intive_reward_by,
-					'intive_reward_type'	=> $intive_reward_type,
-					'intive_reward_value'	=> $intive_reward_value
+				'intive_reward_by'		=> $intive_reward_by,
+				'intive_reward_type'	=> $intive_reward_type,
+				'intive_reward_value'	=> $intive_reward_value
 			);
 			
 			$temp['intviee_reward'] = array(
-					'intivee_reward_by'		=> $intivee_reward_by,
-					'intivee_reward_type'	=> $intivee_reward_type,
-					'intivee_reward_value'	=> $intivee_reward_value
+				'intivee_reward_by'		=> $intivee_reward_by,
+				'intivee_reward_type'	=> $intivee_reward_type,
+				'intivee_reward_value'	=> $intivee_reward_value
 			);
 			
 		} else {
