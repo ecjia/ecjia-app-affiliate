@@ -46,7 +46,7 @@
 				<div class="control-group">
 					<div class="controls">
 						<input type="submit" value="{t}确定{/t}" class="btn btn-gebo" />
-						<input type="hidden" name="id" value="{$id}" />
+						<input type="hidden" name="id" value="{$level}" />
 					</div>
 				</div>		
 			</fieldset>
