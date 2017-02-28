@@ -180,7 +180,7 @@ class admin extends ecjia_admin {
 			$config['config']['separate_by'] = 0;
 			
 			ecjia_config::instance()->write_config('affiliate', serialize($config));
-			ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$_POST['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$_POST['level_money'], 'add', 'affiliate');
+			ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$_POST['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$_POST['level_money'], 'add', 'affiliate_percent');
 			
 			return $this->showmessage(RC_Lang::get('affiliate::affiliate.add_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 			
@@ -275,7 +275,7 @@ class admin extends ecjia_admin {
 		$config['item'][$key]['level_money'] = $level_money;
 		
 		ecjia_config::instance()->write_config('affiliate', serialize($config));
-		ecjia_admin::admin_log(RC_Lang::get('system::system.affiliate'), 'edit', 'config');
+		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$level_point.'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$level_money, 'edit', 'affiliate_percent');
 		
 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 	}
@@ -323,6 +323,8 @@ class admin extends ecjia_admin {
 		$config['on'] = 1;
 		
 		ecjia_config::instance()->write_config('affiliate', serialize($config));
+		
+		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$val, 'edit', 'affiliate_percent');
 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 	}
 	
@@ -367,6 +369,8 @@ class admin extends ecjia_admin {
 		$config['on'] = 1;
 		
 		ecjia_config::instance()->write_config('affiliate', serialize($config));
+		
+		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_money_is').$val, 'edit', 'affiliate_percent');
 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.edit_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $val, 'pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 	}
 	
@@ -394,7 +398,7 @@ class admin extends ecjia_admin {
 		$config['config']['separate_by'] = 0;
 		
 		ecjia_config::instance()->write_config('affiliate', serialize($config));
-		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$info['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$info['level_money'], 'remove', 'affiliate');
+		ecjia_admin::admin_log(RC_Lang::get('affiliate::affiliate.level_point_is').$info['level_point'].'，'.RC_Lang::get('affiliate::affiliate.level_money_is').$info['level_money'], 'remove', 'affiliate_percent');
 		
 		return $this->showmessage(RC_Lang::get('affiliate::affiliate.remove_success'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}	
