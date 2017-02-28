@@ -260,10 +260,11 @@ class admin extends ecjia_admin {
 				$maxmoney -= $v['level_money'];
 			}
 		}
+
 		$level_point > $maxpoint && $level_point = $maxpoint;
 		$level_money > $maxmoney && $level_money = $maxmoney;
 		
-		if (!empty($level_point) && strpos($val,'%') === false) {
+		if (!empty($level_point) && strpos($level_point,'%') === false) {
 			$level_point .= '%';
 		}
 		if (!empty($level_money) && strpos($level_money,'%') === false) {
