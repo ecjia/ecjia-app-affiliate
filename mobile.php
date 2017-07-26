@@ -60,7 +60,7 @@ class mobile extends ecjia_front {
 		
 		$invite_code = isset($_GET['invite_code']) ? trim($_GET['invite_code']) : '';
 		$urlscheme = ecjia::config('mobile_shop_urlscheme');
-		if(preg_match('/ECJiaBrowse/', $_SERVER['HTTP_USER_AGENT'])) {
+		if (preg_match('/ECJiaBrowse/', $_SERVER['HTTP_USER_AGENT'])) {
 			header("location: ".$urlscheme."app?open_type=signup&invite_code=".$invite_code);
 			exit();
 		}
@@ -127,11 +127,11 @@ class mobile extends ecjia_front {
 				
 				if (!empty($invite_id)) {
 					if (!empty($affiliate['config']['expire'])) {
-						if($affiliate['config']['expire_unit'] == 'hour') {
+						if ($affiliate['config']['expire_unit'] == 'hour') {
 							$c = $affiliate['config']['expire'] * 1;
-						} elseif($affiliate['config']['expire_unit'] == 'day') {
+						} elseif ($affiliate['config']['expire_unit'] == 'day') {
 							$c = $affiliate['config']['expire'] * 24;
-						} elseif($affiliate['config']['expire_unit'] == 'week') {
+						} elseif ($affiliate['config']['expire_unit'] == 'week') {
 							$c = $affiliate['config']['expire'] * 24 * 7;
 						} else {
 							$c = 1;
