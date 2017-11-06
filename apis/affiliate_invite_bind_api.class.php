@@ -88,7 +88,7 @@ class affiliate_invite_bind_api extends Component_Event_Api {
     		
     		$invite_id = $invite_id > 0 ? intval($invite_id) : 0;
     		
-	    	RC_DB::table('affiliate_users')
+	    	RC_DB::table('users')
 	    		->where('user_id', $_SESSION['user_id'])
 	    		->update(array('parent_id' => $invite_id));
 	    	
