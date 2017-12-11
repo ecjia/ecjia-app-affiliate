@@ -96,13 +96,11 @@ class mobile extends ecjia_front {
 			
 			if ($affiliate['intviee_reward']['intivee_reward_by'] == 'signup') {
 				$affiliate_note .= "，完成注册后，您将获得".$reward_value.$reward_type."奖励";
-			} else {
+			} 
+			else {
 				$affiliate_note .= "，完成注册首次下单后，您将获得".$reward_value.$reward_type."奖励";
 			}
 			
-			if ($this->is_weixin() == true) {
-				$affiliate_note .= "完成注册后，您将获得".$reward_value.$reward_type."奖励";
-			}
 		}
 		$user_id = RC_DB::table('term_meta')
 			->where('object_type', 'ecjia.affiliate')
