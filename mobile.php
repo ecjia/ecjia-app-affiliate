@@ -201,21 +201,6 @@ class mobile extends ecjia_front {
 		return ecjia_front::$controller->showmessage('提交成功！', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, array('url' => $url, 'app' => $app_url));
 	}
 	
-	public function qrcode_image() {
-		$code = $_GET['invite_code'];
-		$value = RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $code;
-		
-		// 二维码
-		// 纠错级别：L、M、Q、H
-		$errorCorrectionLevel = 'L';
-		// 点的大小：1到10
-		$matrixPointSize = 10;
-		RC_Loader::load_app_class('QRcode', 'affiliate');
-		$img = QRcode::png($value, false, $errorCorrectionLevel, $matrixPointSize, 2);
-
-		echo $img;
-	}
-	
 	/**
 	 * 生成推广二维码图片
 	 */
