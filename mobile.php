@@ -216,6 +216,20 @@ class mobile extends ecjia_front {
 		echo $img;
 	}
 	
+	/**
+	 * 生成推广二维码图片
+	 */
+	public function qrcode()
+	{
+	    $code = $_GET['invite_code'];
+	    
+	    $img = with(new Ecjia\App\Affiliate\GenerateInviteCode($code))->createQrcode();
+	    
+	    $this->header('Content-Type', 'image/png');
+	    
+	    $this->displayContent($img);
+	}
+	
 	
 	public static function is_weixin(){
 		if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
