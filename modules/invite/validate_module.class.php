@@ -71,14 +71,7 @@ class validate_module extends api_front implements api_interface
                 ->pluck('invite_id');
 
             if (!empty($invite_id) && $invite_id > 0) {
-                $user_invite_code = RC_DB::table('term_meta')
-                    ->where('object_type', 'ecjia.affiliate')
-                    ->where('object_group', 'user_invite_code')
-                    ->where('object_id', $invite_id)
-                    ->where('meta_key', 'invite_code')
-                    ->pluck('meta_value');
-
-                $invite_info['invite_code'] = $user_invite_code;
+                $invite_info['invite_code'] = Ecjia\App\Affiliate\UserInviteCode::getCode($invite_id);
             }
         }
         return $invite_info;
