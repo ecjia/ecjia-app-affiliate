@@ -102,12 +102,8 @@ class mobile extends ecjia_front {
 			}
 			
 		}
-		$user_id = RC_DB::table('term_meta')
-			->where('object_type', 'ecjia.affiliate')
-			->where('object_group', 'user_invite_code')
-			->where('meta_key', 'invite_code')
-			->where('meta_value', $invite_code)
-			->pluck('object_id');
+		
+		$user_id = Ecjia\App\Affiliate\UserInviteCode::getUserId($invite_code);
 
 		if (!empty($user_id)) {
 			$user_name = RC_DB::table('users')->where('user_id', $user_id)->pluck('user_name');
@@ -133,12 +129,7 @@ class mobile extends ecjia_front {
 			
 			$count = RC_DB::table('users')->where('mobile_phone', $mobile_phone)->count();
 			if (!empty($invite_code) && !empty($mobile_phone) && $count <= 0) {
-				$invite_id = RC_DB::table('term_meta')
-					->where('object_type', 'ecjia.affiliate')
-					->where('object_group', 'user_invite_code')
-					->where('meta_key', 'invite_code')
-					->where('meta_value', $invite_code)
-					->pluck('object_id');
+				$invite_user_id = Ecjia\App\Affiliate\UserInviteCode::getUserId($invite_code);
 				
 				if (!empty($invite_id)) {
 					if (!empty($affiliate['config']['expire'])) {
