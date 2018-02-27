@@ -131,7 +131,7 @@ class mobile extends ecjia_front {
 			if (!empty($invite_code) && !empty($mobile_phone) && $count <= 0) {
 				$invite_user_id = Ecjia\App\Affiliate\UserInviteCode::getUserId($invite_code);
 				
-				if (!empty($invite_id)) {
+				if (!empty($invite_user_id)) {
 					if (!empty($affiliate['config']['expire'])) {
 						if ($affiliate['config']['expire_unit'] == 'hour') {
 							$c = $affiliate['config']['expire'] * 1;
@@ -156,7 +156,7 @@ class mobile extends ecjia_front {
 					
 					if (empty($is_invitee)) {
 						RC_DB::table('invitee_record')->insert(array(
-							'invite_id'		=> $invite_id,
+							'invite_id'		=> $invite_user_id,
 							'invitee_phone' => $mobile_phone,
 							'invite_type'	=> 'signup',
 							'is_registered' => 0,
