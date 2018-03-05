@@ -1,12 +1,16 @@
 
 body{
-	background:#fff; 
-	font-size:1em; 
-	font-family:"宋体",Verdana, Arial; 
-	line-height:150%; 
-	margin:20px 0 0 0; 
-	padding:0; 
-	color:#404040;
+    background: #7EC730;
+    font-size: 1em;
+    font-family: "宋体",Verdana, Arial;
+    line-height: 150%;
+    margin: 0;
+    padding: 0;
+    color: #404040;
+    position: relative;
+    height: auto;
+	max-width: 640px;
+    margin: 0 auto;
 }
 
 h1,h2,h3,h4,h5,h6,ul,li,dl,dt,dd,form,img,p{
@@ -91,3 +95,112 @@ h1,h2,h3,h4,h5,h6,ul,li,dl,dt,dd,form,img,p{
     z-index: 998;
 }
 
+.form {
+    position: absolute;
+    height: 13em;
+    width: 90%;
+    top: 38%;
+    left: 5%;
+}
+
+.invite-notice {
+    position: absolute;
+    height: auto;
+    width: 92%;
+    top: 76%;
+    left: 4%;
+    line-height: 0;
+    font-size: 14px;
+}
+
+.invite-notice ul {
+	padding: 0;
+}
+
+.invite-notice p {
+    line-height: 20px;
+    color: #fff;
+    margin: 5px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.invite-notice p i {
+	font-style: normal;
+    position: absolute;
+    left: 5px;
+    top: 0;
+}
+
+.invite-form {
+	padding: 0 20px;
+	position: relative;
+    height: 100%;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 3%;
+    border: 1px solid #eee;
+    border-radius: 20px;
+}
+
+.input-container input {
+	width: 100%;
+    padding: 0 20px 0 20px;
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+	outline: none;
+	font-size: 15px;
+}
+
+.input-container input.code_captcha {
+	padding: 0 70px 0 70px;
+}
+
+.input-container .identify_code {
+    position: absolute;
+    left: 5px;
+    height: 20px;
+    line-height: 20px;
+    top: 10px;
+    z-index: 1;
+    width: 55px;
+    text-align: center;
+    border-right: 1px solid #eee;
+	font-size: 15px;
+}
+
+.identify_code_btn {
+    position: absolute;
+    right: -1px;
+    height: 40px;
+    line-height: 40px;
+    top: 0;
+    z-index: 1;
+    width: 70px;
+    text-align: center;
+    background-color: #ED9117;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 16px;
+}
+
+.receive_btn {
+    width: 70%;
+    margin: 0 15%;
+    height: 35px;
+    color: #fff;
+    background-color: #339933;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    font-size: 16px;
+}
