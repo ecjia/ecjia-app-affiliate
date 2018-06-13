@@ -2,9 +2,9 @@
 
 namespace Ecjia\App\Affiliate;
 
-use Royalcms\Component\App\AppServiceProvider;
+use Royalcms\Component\App\AppParentServiceProvider;
 
-class AffiliateServiceProvider extends  AppServiceProvider
+class AffiliateServiceProvider extends  AppParentServiceProvider
 {
     
     public function boot()
