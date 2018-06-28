@@ -68,7 +68,7 @@ class GenerateInviteCode
         $args = [
             'invite_code'      => $this->code
         ];
-        return RC_Uri::url('affiliate/index/init', $args);
+        return RC_Uri::url('affiliate/mobile/init', $args);
     }
     
     /**
