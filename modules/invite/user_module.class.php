@@ -71,8 +71,9 @@ class user_module extends api_front implements api_interface {
 			'invite_qrcode_image'	=> RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=qrcode&invite_code='. $user_invite_code,
 			'invite_template'		=> $invite_template,
 			'invite_explain'		=> ecjia::config('invite_explain'),
-			'invite_url'			=> RC_Uri::site_url().'/index.php?m=affiliate&c=index&a=init&invite_code='. $user_invite_code
+			'invite_url'			=> RC_Uri::site_url().'/index.php?m=affiliate&c=mobile&a=init&invite_code='. $user_invite_code
 		);
+		
 		return $invite_info;
 	}
 }
