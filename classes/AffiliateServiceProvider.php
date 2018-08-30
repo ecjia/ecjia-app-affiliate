@@ -9,7 +9,7 @@ class AffiliateServiceProvider extends  AppParentServiceProvider
     
     public function boot()
     {
-        $this->package('ecjia/app-affiliate');
+        $this->package('ecjia/app-affiliate', null, dirname(__DIR__));
     }
     
     public function register()
