@@ -44,28 +44,21 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\App\Affiliate;
 
-use ecjia_admin_log;
-use RC_Lang;
+/**
+ * js语言包设置
+ */
 
-class Helper
-{
-    
-    
-    /**
-     * 添加管理员记录日志操作对象
-     */
-    public static function assign_adminlog_content() {
-        ecjia_admin_log::instance()->add_object('affiliate', __('推荐分成', 'affiliate'));
-		ecjia_admin_log::instance()->add_object('affiliate_percent', __('分成比例', 'affiliate'));
-		ecjia_admin_log::instance()->add_object('config', __('配置', 'affiliate'));
-	
-		ecjia_admin_log::instance()->add_action('do', __('执行', 'affiliate'));
-		ecjia_admin_log::instance()->add_action('cancel', __('取消', 'affiliate'));
-		ecjia_admin_log::instance()->add_action('rollback', __('撤销', 'affiliate'));
-    }
-    
-}
+defined('IN_ECJIA') or exit('No permission resources.');
 
-// end
+return array(
+
+    'affiliate_page' => array(
+        'ok'		=> __('确定', 'affiliate'),
+        'cancel'	=> __('取消', 'affiliate'),
+        'mobile_number_format'	=> __('填写的手机号码格式不正确', 'affiliate'),
+    ),
+
+
+);
+//end
