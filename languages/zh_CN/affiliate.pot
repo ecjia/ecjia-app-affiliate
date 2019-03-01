@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App affiliate 1.27.4\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-02-21 03:16:09+00:00\n"
+"POT-Creation-Date: 2019-03-01 01:40:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -152,8 +152,8 @@ msgstr ""
 msgid "推荐订单分成"
 msgstr ""
 
-#: admin_separate.php:156 mobile.php:91
-#: modules/invite/record_module.class.php:101
+#: admin_separate.php:156 apis/affiliate_invite_reward_api.class.php:83
+#: mobile.php:91 modules/invite/record_module.class.php:101
 msgid "积分"
 msgstr ""
 
@@ -231,6 +231,16 @@ msgstr ""
 
 #: apis/affiliate_invite_reward_api.class.php:64
 msgid "调用affiliate_invite_reward_api参数无效"
+msgstr ""
+
+#: apis/affiliate_invite_reward_api.class.php:93
+#: apis/affiliate_invite_reward_api.class.php:135
+msgid "邀请送"
+msgstr ""
+
+#: apis/affiliate_invite_reward_api.class.php:101
+#: apis/affiliate_invite_reward_api.class.php:142
+msgid "邀请送余额"
 msgstr ""
 
 #: apis/affiliate_user_invite_code_api.class.php:62
