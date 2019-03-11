@@ -100,6 +100,8 @@ class affiliate_order_detail_module extends api_front implements api_interface {
         	'store_name'					=> Ecjia\App\Store\StoreFranchisee::StoreName($order_info['store_id']),
         	'affiliated_amount'				=> $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? 0 : $affiliate_log['money'],
         	'formatted_affiliated_amount'	=> $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? '' : ecjia_price_format($affiliate_log['money'], false),
+        	'separate_status'				=> $order_info['is_separate'] == 1 ? 'separated' : 'await_separate',
+        	'label_separate_status'			=> $order_info['is_separate'] == 1 ? '已分成' : '待分成',
         	'goods_list'					=> $order_goods_list,
         ];
         

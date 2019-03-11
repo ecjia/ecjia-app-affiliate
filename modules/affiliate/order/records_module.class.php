@@ -111,8 +111,8 @@ class affiliate_order_records_module extends api_front implements api_interface 
 						'formatted_order_time'			=> RC_Time::local_date(ecjia::config('time_format'), $val['add_time']),
 						'affiliated_amount'				=> 0,
 						'formatted_affiliated_amount'	=> '',
-						'status'						=> $status,
-						'label_status'					=> $label_status,
+						'separate_status'				=> $status,
+						'label_separate_status'			=> $label_status,
 						'goods_list'					=> $order_goods_list
 				);
 			}
@@ -160,8 +160,8 @@ class affiliate_order_records_module extends api_front implements api_interface 
 						'formatted_order_time'			=> RC_Time::local_date(ecjia::config('time_format'), $val['add_time']),
 						'affiliated_amount'				=> $val['money'],
 						'formatted_affiliated_amount'	=> ecjia_price_format($val['money'], false),
-						'status'						=> $status,
-						'label_status'					=> $label_status,
+						'separate_status'				=> $status,
+						'label_separate_status'			=> $label_status,
 						'goods_list'					=> $order_goods_list
 				);
 			}
