@@ -50,98 +50,101 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 分成记录详情
  * @author zrl
  */
-class affiliate_order_detail_module extends api_front implements api_interface {
-    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
-    	
+class affiliate_order_detail_module extends api_front implements api_interface
+{
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
+    {
+
         //如果用户登录获取其session
         $user_id = $_SESSION['user_id'];
-    	if ($user_id <= 0) {
-    		return new ecjia_error(100, 'Invalid session');
-    	}
-    	/* 获取订单id*/
-    	$order_id = $this->requestData('order_id', '15');
-    	
+        if ($user_id <= 0) {
+            return new ecjia_error(100, 'Invalid session');
+        }
+        /* 获取订单id*/
+        $order_id = $this->requestData('order_id', '15');
+
         if (empty($order_id)) {
             return new ecjia_error('invalid_parameter', __('参数无效', 'affiliate'));
         }
-    	//分成订单信息
+        //分成订单信息
         $order_info = RC_Api::api('orders', 'order_info', ['order_id' => $order_id]);
         if (is_ecjia_error($order_info)) {
-        	return $order_info;
+            return $order_info;
         }
-        
+
         //分成订单不存在
         if (empty($order_info)) {
-        	return new ecjia_error('affiliate_order_error', __('分成订单不存在', 'affiliate'));
+            return new ecjia_error('affiliate_order_error', __('分成订单不存在', 'affiliate'));
         }
-        
+
         //订单已参与分成
         if ($order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::SEPARATED) {
-        	//获取分成记录信息
-        	$affiliate_log = RC_DB::table('affiliate_log')->where('order_id', $order_id)->where('user_id', $user_id)->first();
+            //获取分成记录信息
+            $affiliate_log = RC_DB::table('affiliate_log')->where('order_id', $order_id)->where('user_id', $user_id)->first();
         }
-        
+
         //订单商品
         $order_goods_list = $this->_get_order_goods($order_id);
-        
-		//下单用户信息
-		$user_info = RC_Api::api('user', 'user_info', ['user_id' => $order_info['user_id']]);
-		if (is_ecjia_error($user_info)) {
-			return $user_info;
-		}
-        
+
+        //下单用户信息
+        $user_info = RC_Api::api('user', 'user_info', ['user_id' => $order_info['user_id']]);
+        if (is_ecjia_error($user_info)) {
+            return $user_info;
+        }
+
         $data = [
-        	'order_id' 						=> intval($order_info['order_id']),
-        	'order_sn'						=> trim($order_info['order_sn']),
-        	'formatted_order_time'			=> RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']),
-        	'buyer'							=> $user_info['user_name'],
-        	'total_amount'					=> $order_info['total_fee'],
-        	'formatted_total_amount'		=> $order_info['formated_total_fee'],
-        	'store_name'					=> Ecjia\App\Store\StoreFranchisee::StoreName($order_info['store_id']),
-        	'affiliated_amount'				=> $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? 0 : $affiliate_log['money'],
-        	'formatted_affiliated_amount'	=> $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? '' : ecjia_price_format($affiliate_log['money'], false),
-        	'separate_status'				=> $order_info['is_separate'] == 1 ? 'separated' : 'await_separate',
-        	'label_separate_status'			=> $order_info['is_separate'] == 1 ? '已分成' : '待分成',
-        	'goods_list'					=> $order_goods_list,
+            'order_id'                    => intval($order_info['order_id']),
+            'order_sn'                    => trim($order_info['order_sn']),
+            'formatted_order_time'        => RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']),
+            'buyer'                       => $user_info['user_name'],
+            'total_amount'                => $order_info['total_fee'],
+            'formatted_total_amount'      => $order_info['formated_total_fee'],
+            'store_id'                    => $order_info['store_id'],
+            'store_name'                  => Ecjia\App\Store\StoreFranchisee::StoreName($order_info['store_id']),
+            'affiliated_amount'           => $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? 0 : $affiliate_log['money'],
+            'formatted_affiliated_amount' => $order_info['is_separate'] == Ecjia\App\Affiliate\OrderAffiliateStatus::UNSEPARATE ? '' : ecjia_price_format($affiliate_log['money'], false),
+            'separate_status'             => $order_info['is_separate'] == 1 ? 'separated' : 'await_separate',
+            'label_separate_status'       => $order_info['is_separate'] == 1 ? '已分成' : '待分成',
+            'goods_list'                  => $order_goods_list,
         ];
-        
-		return $data;
-	}
-	
-	
-	/**
-	 * 订单商品
-	 */
-	private function _get_order_goods($order_id)
-	{
-		$goods_list = [];
-		
-		$order_goods_list = RC_DB::table('order_goods as og')
-		->leftJoin('goods as g', RC_DB::raw('og.goods_id'), '=', RC_DB::raw('g.goods_id'))
-		->select(RC_DB::raw('og.*, g.goods_thumb, g.goods_img, g.original_img'))
-		->where(RC_DB::raw('og.order_id'), $order_id)->get();
-		
-		if (!empty($order_goods_list)) {
-			$goods_list = [];
-			foreach ($order_goods_list as $v) {
-				$goods_list[] = array(
-						'goods_id' 				=> intval($v['goods_id']),
-						'goods_name' 			=> !empty($v['goods_name']) ? trim($v['goods_name']) : '',
-						'goods_sn' 	 			=> !empty($v['goods_sn']) ? trim($v['goods_sn']) : '',
-						'goods_number' 			=> intval($v['goods_number']),
-						'goods_price' 			=> $v['goods_price'] > 0 ? $v['goods_price'] : 0,
-						'formatted_goods_price' => $v['goods_price'] > 0 ? price_format($v['goods_price'], false) : '',
-						'img'					=> array(
-														'small' => !empty($v['goods_img']) ? RC_Upload::upload_url($v['goods_img']) : '',
-														'thumb' => !empty($v['goods_thumb']) ? RC_Upload::upload_url($v['goods_thumb']) : '',
-														'url' => !empty($v['original_img']) ? RC_Upload::upload_url($v['original_img']) : '',
-												)
-				);
-			}
-		}
-		
-		return $goods_list;
-	}
+
+        return $data;
+    }
+
+
+    /**
+     * 订单商品
+     */
+    private function _get_order_goods($order_id)
+    {
+        $goods_list = [];
+
+        $order_goods_list = RC_DB::table('order_goods as og')
+            ->leftJoin('goods as g', RC_DB::raw('og.goods_id'), '=', RC_DB::raw('g.goods_id'))
+            ->select(RC_DB::raw('og.*, g.goods_thumb, g.goods_img, g.original_img'))
+            ->where(RC_DB::raw('og.order_id'), $order_id)->get();
+
+        if (!empty($order_goods_list)) {
+            $goods_list = [];
+            foreach ($order_goods_list as $v) {
+                $goods_list[] = array(
+                    'goods_id'              => intval($v['goods_id']),
+                    'goods_name'            => !empty($v['goods_name']) ? trim($v['goods_name']) : '',
+                    'goods_sn'              => !empty($v['goods_sn']) ? trim($v['goods_sn']) : '',
+                    'goods_number'          => intval($v['goods_number']),
+                    'goods_price'           => $v['goods_price'] > 0 ? $v['goods_price'] : 0,
+                    'formatted_goods_price' => $v['goods_price'] > 0 ? price_format($v['goods_price'], false) : '',
+                    'img'                   => array(
+                        'small' => !empty($v['goods_img']) ? RC_Upload::upload_url($v['goods_img']) : '',
+                        'thumb' => !empty($v['goods_thumb']) ? RC_Upload::upload_url($v['goods_thumb']) : '',
+                        'url'   => !empty($v['original_img']) ? RC_Upload::upload_url($v['original_img']) : '',
+                    )
+                );
+            }
+        }
+
+        return $goods_list;
+    }
 }
 
 // end
