@@ -4,16 +4,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App affiliate 1.27.4\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-01 01:40:28+00:00\n"
+"POT-Creation-Date: 2019-03-13 13:44+0800\n"
+"PO-Revision-Date: 2019-03-13 13:45+0800\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-03-06 14:32+0800\n"
-"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
-"X-Generator: Poedit 2.2\n"
-"Last-Translator: \n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_TW\n"
 
 #: admin.php:83 admin.php:85 admin.php:105 admin.php:194
 msgid "分成比例列表"
@@ -334,10 +334,16 @@ msgstr "您已被邀請過，請勿重復提交！"
 msgid "提交成功！"
 msgstr "提交成功！"
 
+#: modules/affiliate/order/detail_module.class.php:67
+#: modules/affiliate/order/records_module.class.php:70
 #: modules/affiliate/user/invite_module.class.php:63
 #: modules/invite/record_module.class.php:74
 msgid "参数无效"
 msgstr "參數無效"
+
+#: modules/affiliate/order/detail_module.class.php:77
+msgid "分成订单不存在"
+msgstr "分成訂單不存在"
 
 #: modules/affiliate/user/invite_module.class.php:78
 msgid "验证码已过期，请重新获取！"
