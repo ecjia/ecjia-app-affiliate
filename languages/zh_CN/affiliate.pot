@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App affiliate 1.28.0\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-13 05:24:21+00:00\n"
+"POT-Creation-Date: 2019-03-20 07:33:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -145,10 +145,12 @@ msgid "已撤销"
 msgstr ""
 
 #: admin_separate.php:113 admin_separate.php:115
+#: classes/Enums/AffiliateLogEnum.php:38
 msgid "推荐注册分成"
 msgstr ""
 
 #: admin_separate.php:114 admin_separate.php:116
+#: classes/Enums/AffiliateLogEnum.php:40
 msgid "推荐订单分成"
 msgstr ""
 
@@ -245,6 +247,26 @@ msgstr ""
 
 #: apis/affiliate_user_invite_code_api.class.php:62
 msgid "调用affiliate_user_invite_code_api参数无效"
+msgstr ""
+
+#: classes/Enums/AffiliateLogEnum.php:39
+msgid "推荐注册分成撤销了分成"
+msgstr ""
+
+#: classes/Enums/AffiliateLogEnum.php:41
+msgid "推荐订单分成撤销了分成"
+msgstr ""
+
+#: classes/Enums/AffiliateOrderEnum.php:39
+msgid "未参与分成"
+msgstr ""
+
+#: classes/Enums/AffiliateOrderEnum.php:40
+msgid "已参与分成"
+msgstr ""
+
+#: classes/Enums/AffiliateOrderEnum.php:41
+msgid "取消可参与分成"
 msgstr ""
 
 #: classes/Helper.php:60 configs/package.php:55
