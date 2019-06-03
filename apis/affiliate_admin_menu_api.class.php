@@ -56,8 +56,9 @@ class affiliate_admin_menu_api extends Component_Event_Api {
 		$menus = ecjia_admin::make_admin_menu('11_affiliate', __('推荐管理', 'affiliate'), '', 11);
 		
 		$submenus = array(
-			ecjia_admin::make_admin_menu('affiliate', __('分成比例', 'affiliate'), RC_Uri::url('affiliate/admin/init'), 1)->add_purview('affiliate_percent_manage'),
-			ecjia_admin::make_admin_menu('affiliate_ck', __('分成管理', 'affiliate'), RC_Uri::url('affiliate/admin_separate/init'), 2)->add_purview('affiliate_ck_manage')
+			ecjia_admin::make_admin_menu('affiliate_store', __('店铺代理', 'affiliate'), RC_Uri::url('affiliate/admin_store_agent/init'), 1)->add_purview('affiliate_store_manage'),
+			ecjia_admin::make_admin_menu('affiliate', __('分成比例', 'affiliate'), RC_Uri::url('affiliate/admin/init'), 2)->add_purview('affiliate_percent_manage'),
+			ecjia_admin::make_admin_menu('affiliate_ck', __('分成管理', 'affiliate'), RC_Uri::url('affiliate/admin_separate/init'), 3)->add_purview('affiliate_ck_manage')
 		);
 		$menus->add_submenu($submenus);
 		return $menus;

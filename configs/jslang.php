@@ -58,7 +58,11 @@ return array(
         'cancel'	=> __('取消', 'affiliate'),
         'mobile_number_format'	=> __('填写的手机号码格式不正确', 'affiliate'),
     ),
-
+		
+	'admin_store_agent_page'  => array(
+		'time_error'    => __('开始时间不能大于或等于结束时间', 'affiliate'),
+		'mobile'        => __('请输入手机号码', 'affiliate'),
+	),
 
 );
 //end
