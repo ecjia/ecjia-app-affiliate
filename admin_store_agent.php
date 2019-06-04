@@ -71,6 +71,8 @@ class admin_store_agent extends ecjia_admin
         
         RC_Script::enqueue_script('koala', RC_App::apps_url('statics/js/koala.js', __FILE__));
         
+        RC_Style::enqueue_style('store_agent', RC_App::apps_url('statics/css/store_agent.css', __FILE__), array());
+        
         RC_Script::enqueue_script('admin_store_agent', RC_App::apps_url('statics/js/admin_store_agent.js', __FILE__), array(), false, 1);
         RC_Script::localize_script('admin_store_agent', 'js_lang', config('app-affiliate::jslang.admin_store_agent_page'));
 
@@ -332,6 +334,19 @@ class admin_store_agent extends ecjia_admin
     	return $this->showmessage(__('删除成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
     
+
+    /**
+     * 批量操作
+     */
+    public function batch() {
+    	$this->admin_priv('affiliate_store_delete');
+    
+    	$ids  = explode(',', $_POST['id']);
+    	RC_DB::table('affiliate_store')->whereIn('id', $ids)->delete();
+    	
+    	return $this->showmessage(__('批量删除成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_store_agent/init')));
+    }
+    
     /**
      * 查看详情
      */
@@ -343,8 +358,10 @@ class admin_store_agent extends ecjia_admin
     	$this->assign('ur_here', __('代理商详情', 'affiliate'));
     	$this->assign('action_link', array('text' => __('代理商列表', 'affiliate'), 'href' => RC_Uri::url('affiliate/admin_store_agent/init')));
     
-    	$id = intval($_GET['id']);
-    	$data   = RC_DB::table('affiliate_store')->where('id', $id)->first();
+    	$id    = intval($_GET['id']);
+    	$data  = RC_DB::table('affiliate_store')->where('id', $id)->first();
+    	$data['mobile_phone'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->pluck('mobile_phone');
+    	$data['add_time_new']  = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
     	$this->assign('data', $data);
     	
     	$this->display('store_agent_detail.dwt');
@@ -355,34 +372,37 @@ class admin_store_agent extends ecjia_admin
      */
     private function get_list() {
     	
-    	$db_data = RC_DB::table('affiliate_store');
+    	$db_data = RC_DB::table('affiliate_store as a')
+    	->leftJoin('users as u', RC_DB::raw('a.user_id'), '=', RC_DB::raw('u.user_id'));
+    	
+    	$db_data->where(RC_DB::raw('a.agent_parent_id'), 0);
+    	
     	$filter['start_date'] = empty($_GET['start_date']) ? '' : $_GET['start_date'];
     	$filter['end_date']   = empty($_GET['end_date']) ? '' : $_GET['end_date'];
     	$filter['keywords']	 = trim($_GET['keywords']);
     	
     	if ($filter['keywords']) {
-    		$db_data ->whereRaw('(agent_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or agent_name like "%'.mysql_like_quote($filter['keywords']).'%")');
+    		$db_data ->whereRaw('(a.agent_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or u.mobile_phone like "%'.mysql_like_quote($filter['keywords']).'%")');
     	}
     	if (!empty($filter['start_date'])) {
     		$start_date = RC_Time::local_strtotime($filter['start_date']);
-    		$db_data->where('add_time', '>=', $start_date);
+    		$db_data->where(RC_DB::raw('a.add_time'), '>=', $start_date);
     	}
     	
     	if (!empty($filter['end_date'])) {
     		$end_date = RC_Time::local_strtotime($filter['end_date']);
-    		$db_data->where('add_time', '<', $end_date);
+    		$db_data->where(RC_DB::raw('a.add_time'), '<', $end_date);
     	}
         	
     	$count = $db_data->count();
     	$page = new ecjia_page($count, 10, 5);
     
     	$data = $db_data
-    	->select(RC_DB::raw('*'))
-    	->orderby(RC_DB::raw('add_time'), 'desc')
+    	->select(RC_DB::raw('a.*'),RC_DB::raw('u.mobile_phone'))
+    	->orderby(RC_DB::raw('a.add_time'), 'desc')
     	->take(10)
     	->skip($page->start_id-1)
     	->get();
-    	
     	$list = array();
     	if (!empty($data)) {
     		foreach ($data as $row) {

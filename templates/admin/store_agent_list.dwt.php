@@ -20,6 +20,16 @@
 
 <div class="row-fluid">
 	<form action="{$search_action}" name="searchForm" method="post">
+		<div class="btn-group f_l m_r5">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="fontello-icon-cog"></i>{t domain="affiliate"}批量操作{/t}
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="button_remove" data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='affiliate/admin_store_agent/batch'}" data-msg='{t domain="affiliate"}您确实要删除选中的店铺代理商吗？{/t}' data-noSelectMsg='{t domain="affiliate"}请先选中要删除的店铺代理商{/t}' data-name="id" href="javascript:;"><i class="fontello-icon-trash"></i>{t domain="affiliate"}删除店铺代理商{/t}</a></li>
+			</ul>
+		</div>
+		
 		<div class="choose_list f_r m_t10">
 			<input class="date f_l w150" name="start_date" type="text" value="{$smarty.get.start_date}" placeholder="{t domain='affiliate'}开始日期{/t}"> <span class="f_l">{t domain='affiliate'}至{/t}</span>
 			<input class="date f_l w150" name="end_date" type="text" value="{$smarty.get.end_date}" placeholder="{t domain='affiliate'}结束日期{/t}"> <input class="w180" type="text" name="keywords" value="{$list.filter.keywords}" placeholder="{t domain='affiliate'}请输入会员名称/手机号{/t}" />
@@ -33,6 +43,7 @@
 		<table class="table table-striped smpl_tbl table-hide-edit">
 			<thead>
 				<tr>
+				 	<th class="table_checkbox"><input type="checkbox" name="select_rows" data-toggle="selectall" data-children=".checkbox"/></th>
 				    <th class="w150">{t domain='affiliate'}代理商名称{/t}</th>
 				    <th class="w150">{t domain='affiliate'}手机号{/t}</th>
 				    <th class="w100">{t domain='affiliate'}推广统计{/t}</th>
@@ -42,6 +53,9 @@
 			</thead>
 			<!-- {foreach from=$data.list item=list} -->
 		    <tr>
+		    	<td>
+					<span><input type="checkbox" name="checkboxes[]" class="checkbox" value="{$list.id}"/></span>
+				</td>
 		      	<td class="hide-edit-area">
 					{$list.agent_name}
 		     	  	<div class="edit-list">
@@ -50,8 +64,11 @@
 						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate" 1={$list.agent_name}}你确定要删除【%1】吗？{/t}' href='{url path="affiliate/admin_store_agent/remove" args="id={$list.id}"}'>{t domain='affiliate'}删除{/t}</a>
 		    	  	</div>
 		      	</td>
-		      	<td>{$list.mobile}</td>
-		      	<td>0</td>
+		      	<td>{$list.mobile_phone}</td>
+		      	<td>{t domain='affiliate'}团队：{/t}
+		      	<br>
+		      	{t domain='affiliate'}店铺：{/t}
+		      	</td>
 		      	<td>0</td>
 		      	<td>{$list.add_time}</td>
 		    </tr>

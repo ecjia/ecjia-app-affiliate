@@ -50,7 +50,7 @@
 					<div class="controls">
 						<input class="w350" name="level0" type="text" value="{$data.level0}" />&nbsp;%
 						<div class="help-block">
-						{t domain="affiliate"}设置直推店铺产生订单交易后，代理商可获得的佣金比，，此佣金全部从平台佣金中计算。{/t}<br>
+						{t domain="affiliate"}设置直推店铺产生订单交易后，代理商可获得的佣金比，此佣金全部从平台佣金中计算。{/t}<br>
 						{t domain="affiliate"}例：设置直推50%，平台原本抽佣10%，最终代理商可获得分成比例为10% x 50% = 5%{/t}</div>
 					</div>
 				</div> 
