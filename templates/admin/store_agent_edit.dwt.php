@@ -21,29 +21,37 @@
 	<div class="span12">
 		<form method="post" class="form-horizontal" action="{$form_action}" name="theForm">
 			<fieldset>
-				{if $data.id eq ''}
-					<div class="control-group formSep">
-						<label class="control-label">{t domain="affiliate"}会员手机号：{/t}</label>
-						<div class="controls">
-							<input class="w350 user-mobile" name="user_mobile" action='{url path="affiliate/admin_store_agent/validate_acount"}' type="text" value="" />
-							<span class="input-must">*</span>
-							<div class="help-block">{t domain="affiliate"}输入正确手机号，查询会员基本信息。{/t}</div>
-						</div>
-					</div> 
-					
-					<div class="control-group formSep agent_name_css" style="display: none;">
+				<div class="control-group formSep">
+					<label class="control-label">{t domain="affiliate"}会员手机号：{/t}</label>
+					<div class="controls">
+						<input class="w350 user-mobile" name="user_mobile" action='{url path="affiliate/admin_store_agent/validate_acount"}' type="text" value="{$data.user.mobile_phone}" />
+						<span class="input-must">*</span>
+						<div class="help-block">{t domain="affiliate"}输入正确手机号，查询会员基本信息。{/t}</div>
+					</div>
+				</div> 
+				
+				{if $data.id}
+					<div class="control-group formSep user_name_css" >
 						<label class="control-label">{t domain="affiliate"}会员名称：{/t}</label>
-						<div class="controls l_h30 result_agent_name">
+						<div class="controls l_h30 result_user_name">
+						{$data.user.user_name}
 						</div>
 					</div>
 				{else}
-					<div class="control-group formSep">
+					<div class="control-group formSep user_name_css" style="display: none;">
 						<label class="control-label">{t domain="affiliate"}会员名称：{/t}</label>
-						<div class="controls l_h30">
-							{$data.agent_name}[{$data.mobile_phone}]
+						<div class="controls l_h30 result_user_name">
 						</div>
 					</div>
 				{/if}
+				
+				<div class="control-group formSep">
+					<label class="control-label">{t domain="affiliate"}代理商名称：{/t}</label>
+					<div class="controls">
+						<input class="w350" name="agent_name" type="text" value="{$data.agent_name}" />
+						<span class="input-must">*</span>
+					</div>
+				</div>
 
 				<div class="control-group formSep">
 					<label class="control-label">{t domain="affiliate"}直推店铺佣金比：{/t}</label>
@@ -75,8 +83,7 @@
 					<div class="controls">
 						<button class="btn btn-gebo" type="submit">{t domain="affiliate"}确认{/t}</button>
 						<input type="hidden" name="id" value="{$data.id}" />
-						<input type="hidden" name="agent_name" value="" />
-						<input type="hidden" name="user_id" value="" />
+						<input type="hidden" name="user_id" value="{$data.user_id}" />
 					</div>
 				</div>
 			</fieldset>

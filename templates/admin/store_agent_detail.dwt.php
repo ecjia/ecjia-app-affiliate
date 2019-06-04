@@ -30,9 +30,9 @@
 						<tbody class="first-td-no-leftbd">
 							<tr>
 								<td><div align="right"><strong>{t domain="affiliate"}代理商名称：{/t}</strong></div></td>
-								<td>{$data.agent_name}&nbsp;&nbsp;&nbsp;<a target="_blank" href='{url path="user/admin/info" args="id={$data.user_id}"}'>{t domain="affiliate"}查看会员信息{/t}</a></td>
-								<td><div align="right"><strong>{t domain="affiliate"}手机号码：{/t}</strong></div></td>
-								<td>{$data.mobile_phone}</td>
+								<td>{$data.agent_name}</td>
+								<td><div align="right"><strong>{t domain="affiliate"}会员信息：{/t}</strong></div></td>
+								<td>{$data.user.user_name}&nbsp;[{$data.user.mobile_phone}]&nbsp;&nbsp;&nbsp;<a target="_blank" href='{url path="user/admin/info" args="id={$data.user_id}"}'>{t domain="affiliate"}查看会员信息{/t}</a></td>
 							</tr>
 							<tr>
 								<td><div align="right"><strong>{t domain="affiliate"}直推店铺佣金比：{/t}</strong></div></td>

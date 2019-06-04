@@ -60,8 +60,9 @@ return array(
     ),
 		
 	'admin_store_agent_page'  => array(
-		'time_error'    => __('开始时间不能大于或等于结束时间', 'affiliate'),
-		'mobile'        => __('请输入手机号码', 'affiliate'),
+		'time_error'   => __('开始时间不能大于或等于结束时间', 'affiliate'),
+		'mobile'       => __('请输入手机号码', 'affiliate'),
+		'agent_name'   => __('请输入代理商名称', 'affiliate'),
 	),
 
 );

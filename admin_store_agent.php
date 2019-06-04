@@ -119,12 +119,12 @@ class admin_store_agent extends ecjia_admin
     		} else {
     			$result = array(
     				'user_id' 	  => $user_info['user_id'],
-    				'agent_name'  => $user_info['user_name'],
+    				'user_name'   => $user_info['user_name'],
     			);
     			
     			$is_exist_user = RC_DB::table('affiliate_store')->where('user_id', $user_info['user_id'])->count();
     			if ($is_exist_user) {
-    				return $this->showmessage(__('该会员已是店铺代理商。', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('result' => $result));
+    				return $this->showmessage(__('该会员已是店铺代理商', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('result' => $result));
     			}
     			return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('result' => $result));
     		}
@@ -158,23 +158,28 @@ class admin_store_agent extends ecjia_admin
     	
     	$user_id    = intval($_POST['user_id']);
     	$agent_name = trim($_POST['agent_name']);
+    	
     	$user_mobile = empty($_POST['user_mobile']) ? 0 : $_POST['user_mobile'];
     	$check_mobile = Ecjia\App\Sms\Helper::check_mobile($user_mobile);
-    	
     	if (is_ecjia_error($check_mobile)) {
     		return $this->showmessage($check_mobile->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	} 
     	
     	$user_info   = RC_DB::table('users')->where('mobile_phone', $user_mobile)->first();
     	if (empty($user_info)) {
-    		return $this->showmessage(__('该手机号对应的会员信息不存在！', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    		return $this->showmessage(__('该手机号对应的会员信息不存在', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
 
     	$is_exist_user = RC_DB::table('affiliate_store')->where('user_id', $user_id)->count();
     	if ($is_exist_user) {
-    		return $this->showmessage(__('该会员已是店铺代理商。', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    		return $this->showmessage(__('该会员已是店铺代理商', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     	
+    	$is_exist_name = RC_DB::table('affiliate_store')->where('agent_name', $agent_name)->count();
+    	if ($is_exist_name) {
+    		return $this->showmessage(__('代理商名称已存在，请更换', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    	}
+    	 
     	if(!empty($_POST['level0'])) {
     		if (substr($_POST['level0'], -1, 1) == '%') {
     			$intval = substr($_POST['level0'], 0, strlen($_POST['level0'])-1);
@@ -250,7 +255,7 @@ class admin_store_agent extends ecjia_admin
     
     	$id     = intval($_GET['id']);
     	$data   = RC_DB::table('affiliate_store')->where('id', $id)->first();
-    	$data['mobile_phone'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->pluck('mobile_phone');
+    	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$this->assign('data', $data);
     
     	$this->assign('form_action', RC_Uri::url('affiliate/admin_store_agent/update'));
@@ -266,6 +271,30 @@ class admin_store_agent extends ecjia_admin
     
     	$id = intval($_POST['id']);
     	
+    	$user_id    = intval($_POST['user_id']);
+    	$agent_name = trim($_POST['agent_name']);
+    	
+    	$user_mobile = empty($_POST['user_mobile']) ? 0 : $_POST['user_mobile'];
+    	$check_mobile = Ecjia\App\Sms\Helper::check_mobile($user_mobile);
+    	if (is_ecjia_error($check_mobile)) {
+    		return $this->showmessage($check_mobile->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    	}
+    	 
+    	$user_info   = RC_DB::table('users')->where('mobile_phone', $user_mobile)->first();
+    	if (empty($user_info)) {
+    		return $this->showmessage(__('该手机号对应的会员信息不存在！', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    	}
+    	
+    	$is_exist_user = RC_DB::table('affiliate_store')->where('user_id', $user_id)->where('id', '!=', $id)->count();
+    	if ($is_exist_user) {
+    		return $this->showmessage(__('该会员已是店铺代理商', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    	}
+    	
+    	$is_exist_name = RC_DB::table('affiliate_store')->where('agent_name', $agent_name)->where('id', '!=', $id)->count();
+    	if ($is_exist_name) {
+    		return $this->showmessage(__('代理商名称已存在，请更换', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    	}
+
     	if(!empty($_POST['level0'])) {
     		if (substr($_POST['level0'], -1, 1) == '%') {
     			$intval = substr($_POST['level0'], 0, strlen($_POST['level0'])-1);
@@ -310,8 +339,10 @@ class admin_store_agent extends ecjia_admin
     			return $this->showmessage(__('直属下级佣金比为0-100，请修改', 'store'),ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     	}
-    	
+
     	$data_affiliate_store = array(
+    		'user_id'       => $user_id,
+    		'agent_name'    => $agent_name,
     		'level0'		=> (float)$_POST['level0'],
     		'level1'		=> (float)$_POST['level1'],
     		'level2'		=> (float)$_POST['level2'],
@@ -360,7 +391,7 @@ class admin_store_agent extends ecjia_admin
     
     	$id    = intval($_GET['id']);
     	$data  = RC_DB::table('affiliate_store')->where('id', $id)->first();
-    	$data['mobile_phone'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->pluck('mobile_phone');
+    	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$data['add_time_new']  = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
     	$this->assign('data', $data);
     	
@@ -398,7 +429,7 @@ class admin_store_agent extends ecjia_admin
     	$page = new ecjia_page($count, 10, 5);
     
     	$data = $db_data
-    	->select(RC_DB::raw('a.*'),RC_DB::raw('u.mobile_phone'))
+    	->select(RC_DB::raw('a.*'),RC_DB::raw('u.mobile_phone'), RC_DB::raw('u.user_name'))
     	->orderby(RC_DB::raw('a.add_time'), 'desc')
     	->take(10)
     	->skip($page->start_id-1)

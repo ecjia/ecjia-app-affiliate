@@ -55,17 +55,15 @@
                     }
                     $.post(url, data, function (data) {
                         if (data.state == 'error') {
-                        	 $('.agent_name_css').hide();
+                        	 $('.user_name_css').hide();
                         	 if(data.result) {
                         		 $('input[name="user_id"]').val(data.result.user_id);
-                                 $('input[name="agent_name"]').val(data.result.agent_name); 
                         	 } 
                              ecjia.admin.showmessage(data);
                         } else {
-                        	 $('.agent_name_css').show();
-                        	 $('.result_agent_name').html(data.result.agent_name);
+                        	 $('.user_name_css').show();
+                        	 $('.result_user_name').html(data.result.user_name);
                              $('input[name="user_id"]').val(data.result.user_id);
-                             $('input[name="agent_name"]').val(data.result.agent_name);
                         }
                     }, 'json');
                 }
@@ -78,11 +76,17 @@
 	            rules: {
 	            	user_mobile: {
 	                    required: true
+	                },
+	                agent_name: {
+	                    required: true
 	                }
 	            },
 	            messages: {
 	            	user_mobile: {
 	                    required: js_lang.mobile
+	                },
+	                agent_name: {
+	                    required: js_lang.agent_name
 	                }
 	            },
 	            submitHandler: function () {

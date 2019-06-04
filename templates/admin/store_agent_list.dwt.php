@@ -45,7 +45,7 @@
 				<tr>
 				 	<th class="table_checkbox"><input type="checkbox" name="select_rows" data-toggle="selectall" data-children=".checkbox"/></th>
 				    <th class="w150">{t domain='affiliate'}代理商名称{/t}</th>
-				    <th class="w150">{t domain='affiliate'}手机号{/t}</th>
+				    <th class="w150">{t domain='affiliate'}会员信息{/t}</th>
 				    <th class="w100">{t domain='affiliate'}推广统计{/t}</th>
 				    <th class="w150">{t domain='affiliate'}佣金总额{/t}</th>
 				     <th class="w100">{t domain='affiliate'}添加时间{/t}</th>
@@ -64,7 +64,7 @@
 						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate" 1={$list.agent_name}}你确定要删除【%1】吗？{/t}' href='{url path="affiliate/admin_store_agent/remove" args="id={$list.id}"}'>{t domain='affiliate'}删除{/t}</a>
 		    	  	</div>
 		      	</td>
-		      	<td>{$list.mobile_phone}</td>
+		      	<td>{$list.user_name}<br>{$list.mobile_phone}</td>
 		      	<td>{t domain='affiliate'}团队：{/t}
 		      	<br>
 		      	{t domain='affiliate'}店铺：{/t}
@@ -73,7 +73,7 @@
 		      	<td>{$list.add_time}</td>
 		    </tr>
 		    <!-- {foreachelse} -->
-	        <tr><td class="no-records" colspan="5">{t domain='affiliate'}没有找到任何记录{/t}</td></tr>
+	        <tr><td class="no-records" colspan="6">{t domain='affiliate'}没有找到任何记录{/t}</td></tr>
 			<!-- {/foreach} -->
             </tbody>
          </table>
