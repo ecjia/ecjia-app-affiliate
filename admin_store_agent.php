@@ -393,13 +393,79 @@ class admin_store_agent extends ecjia_admin
     	$data  = RC_DB::table('affiliate_store')->where('id', $id)->first();
     	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$data['add_time_new']  = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
+    	$data['team_count']	   = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $id)->count();
+    	
     	$this->assign('data', $data);
     	
     	$this->display('store_agent_detail.dwt');
     }
+    
+    
+    /**
+     * 查看团队列表
+     */
+    public function team_list() {
+    	$this->admin_priv('affiliate_store_manage');
+    
+    	ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('下级代理商列表', 'affiliate')));
+    	$this->assign('ur_here', __('下级代理商列表', 'affiliate'));
+    	
+    	$id = intval($_GET['id']);
+    	$this->assign('action_link', array('text' => __('代理商详情', 'affiliate'), 'href' => RC_Uri::url('affiliate/admin_store_agent/detail',  array('id' => $id))));
+    	
+    	$agent_name = RC_DB::TABLE('affiliate_store')->where('id', $id)->pluck('agent_name');
+    	$this->assign('agent_name', $agent_name);
+    	
+    	$team_count = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $id)->count();
+    	$this->assign('team_count', $team_count);
+    	
+    	$data = $this->get_team_list($id);
+    	$this->assign('data', $data);
+    	$this->assign('filter', $data['filter']);
+    	
+    	$this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/team_list', array('id' => $id)));
+    	
+    	$this->display('team_list.dwt');
+    }
+    
+    
+    /**
+     * 查看店铺列表
+     */
+    public function store_list() {
+    	$this->admin_priv('affiliate_store_manage');
+    
+    	ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('推广店铺列表', 'affiliate')));
+    	$this->assign('ur_here', __('推广店铺列表', 'affiliate'));
+    	
+    	$id = intval($_GET['id']);
+    	$this->assign('id', $id);
+    	$this->assign('action_link', array('text' => __('代理商详情', 'affiliate'), 'href' => RC_Uri::url('affiliate/admin_store_agent/detail', array('id' => $id))));
+    	
+    	$agent_name = RC_DB::TABLE('affiliate_store')->where('id', $id)->pluck('agent_name');
+    	$this->assign('agent_name', $agent_name);
+    	
+    	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
+    	array_push($agent_list_arr, $id);
+    	
+    	$store_count = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->count();
+    	$this->assign('store_count', $store_count);
+
+    	$type = trim($_GET['type']);
+    	$this->assign('type', $type);
+    	
+    	$data = $this->get_store_list($id, $type);
+    	$this->assign('data', $data);
+    	$this->assign('type_count', $data['count']);
+    	$this->assign('filter', $data['filter']);
+    	
+    	$this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/store_list', array('id' => $id)));
+    	
+    	$this->display('store_list.dwt');
+    }
   
     /**
-     * 获取代理商列表
+     * 获取代理商列表数据
      */
     private function get_list() {
     	
@@ -442,6 +508,91 @@ class admin_store_agent extends ecjia_admin
     		}
     	}
     	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc());
+    }
+    
+    /**
+     * 获取B级代理商列表数据
+     */
+    private function get_team_list($id) {
+    	
+    	$db_data = RC_DB::table('affiliate_store as a')
+    	->leftJoin('users as u', RC_DB::raw('a.user_id'), '=', RC_DB::raw('u.user_id'));
+
+    	$db_data->where(RC_DB::raw('a.agent_parent_id'), $id);
+    	 
+    	$filter['keywords']	 = trim($_GET['keywords']);
+    	 
+    	if ($filter['keywords']) {
+    		$db_data ->whereRaw('(a.agent_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or u.mobile_phone like "%'.mysql_like_quote($filter['keywords']).'%")');
+    	}
+    	 
+    	$count = $db_data->count();
+    	$page = new ecjia_page($count, 10, 5);
+    
+    	$data = $db_data
+    	->select(RC_DB::raw('a.*'),RC_DB::raw('u.mobile_phone'), RC_DB::raw('u.user_name'))
+    	->orderby(RC_DB::raw('a.add_time'), 'desc')
+    	->take(10)
+    	->skip($page->start_id-1)
+    	->get();
+    	$list = array();
+    	if (!empty($data)) {
+    		foreach ($data as $row) {
+    			$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+    			$row['store_num'] = RC_DB::TABLE('affiliate_store_record')->where('affiliate_store_id', $row['id'])->whereNotNull('store_id')->count();
+    			$list[] = $row;
+    		}
+    	}
+    	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc());
+    }
+    
+    /**
+     * 获取推广店铺列表数据
+     */
+    private function get_store_list($id, $type = '') {
+
+    	$store_parent_list_arr = RC_DB::table('affiliate_store_record')->where('affiliate_store_id', $id)->whereNotNull('store_id')->lists('store_id');
+    	$store_count['parent'] = RC_DB::table('store_franchisee')->whereIn('store_id', $store_parent_list_arr)->count();
+
+    	
+    	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
+    	$store_next_list_arr = RC_DB::table('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->lists('store_id');
+    	$store_count['next'] = RC_DB::table('store_franchisee')->whereIn('store_id', $store_next_list_arr)->count();
+
+    	$db_data = RC_DB::table('store_franchisee');
+    	if(empty($type)){
+    		$store_list_arr = RC_DB::table('affiliate_store_record')->where('affiliate_store_id', $id)->whereNotNull('store_id')->lists('store_id');
+    		$db_data->whereIn('store_id', $store_list_arr);
+    	} else {
+    		$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
+    		$store_list_arr = RC_DB::table('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->lists('store_id');
+    		$db_data->whereIn('store_id', $store_list_arr);
+    	}
+    	
+    	
+    	$filter['keywords']	 = trim($_GET['keywords']);
+    	if ($filter['keywords']) {
+    		$db_data ->whereRaw('(merchants_name  like  "%'.mysql_like_quote($filter['keywords']).'%")');
+    	}
+
+    	$count = $db_data->count();
+    	$page = new ecjia_page($count, 10, 5);
+    	
+    	$data = $db_data
+    	->select(RC_DB::raw('store_id'),RC_DB::raw('cat_id'),RC_DB::raw('merchants_name'), RC_DB::raw('apply_time'))
+    	->orderby(RC_DB::raw('apply_time'), 'desc')
+    	->take(10)
+    	->skip($page->start_id-1)
+    	->get();
+    	$list = array();
+    	if (!empty($data)) {
+    		foreach ($data as $row) {
+    			$row['apply_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['apply_time']);
+    			$row['cat_name']    = RC_DB::TABLE('store_category')->where('cat_id', $row['cat_id'])->pluck('cat_name');
+    			$list[] = $row;
+    		}
+    	}
+    	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $store_count);
     }
 }
 

@@ -63,18 +63,18 @@
 							<td>
 								<div class="order_number m_t30">
 									<span>
-									{t domain="affiliate"}团队总数：{/t}<font class="ecjiafc-red">{if $leader_info.sales_money}{$leader_info.sales_money}{else}0{/if}</font>
-									<a class="m_l5" target="_blank" href="{RC_Uri::url('finance/admin_account_log/init')}&account_type=user_money&user_id={$leader_info.user_id}">{t domain="affiliate"}查看{/t}</a>
+									{t domain="affiliate"}团队总数：{/t}<font class="ecjiafc-red">{if $data.team_count}{$data.team_count}{else}0{/if}</font>
+									<a class="m_l5" target="_blank" href="{RC_Uri::url('affiliate/admin_store_agent/team_list')}&id={$data.id}">{t domain="affiliate"}查看{/t}</a>
 									</span>
 									
 									<span>
-									{t domain="affiliate"}推广店铺：{/t}<font class="ecjiafc-red">{if $leader_info.sales_money}{$leader_info.sales_money}{else}0{/if}</font>
-									<a class="m_l5" target="_blank" href="{RC_Uri::url('finance/admin_account_log/init')}&account_type=user_money&user_id={$leader_info.user_id}">{t domain="affiliate"}查看{/t}</a>
+									{t domain="affiliate"}推广店铺：{/t}<font class="ecjiafc-red">{if $data.sales_money}{$data.sales_money}{else}0{/if}</font>
+									<a class="m_l5" target="_blank" href="{RC_Uri::url('affiliate/admin_store_agent/store_list')}&id={$data.id}">{t domain="affiliate"}查看{/t}</a>
 									</span>
 									
-									<span>{t domain="affiliate"}佣金总额：{/t}<font class="ecjiafc-red">¥{if $leader_info.total_commission}{$leader_info.total_commission}{else}0{/if}</font></span>
-									<span>{t domain="affiliate"}待分成：{/t}<font class="ecjiafc-red">¥{if $leader_info.frozen_money}{$leader_info.total_commission}{else}0{/if}</font></span>
-									<span>{t domain="affiliate"}已分成：{/t}<font class="ecjiafc-red">¥{if $leader_info.user_money}{$leader_info.total_commission}{else}0{/if}</font></span>
+									<span>{t domain="affiliate"}佣金总额：{/t}<font class="ecjiafc-red">¥{if $data.total_commission}{$data.total_commission}{else}0{/if}</font></span>
+									<span>{t domain="affiliate"}待分成：{/t}<font class="ecjiafc-red">¥{if $data.frozen_money}{$data.total_commission}{else}0{/if}</font></span>
+									<span>{t domain="affiliate"}已分成：{/t}<font class="ecjiafc-red">¥{if $data.user_money}{$data.total_commission}{else}0{/if}</font></span>
 								</div>
 							</td>
 						</tr>
@@ -82,46 +82,14 @@
 				</div>
 			</div>
 			
-			<div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle acc-in" data-toggle="collapse" data-target="#collapseSix"><strong>{t domain="affiliate"}团长订单{/t}</strong></a>
-				</div>
-				<div class="accordion-body in collapse" id="collapseSix">
-					<table class="table table-striped m_b0">
-						<thead>
-							<tr>
-								<td class="w150">{t domain="affiliate"}订单号{/t}</td>
-								<td class="w150">{t domain="affiliate"}商家名称{/t}</td>
-								<td class="w150">{t domain="affiliate"}下单时间{/t}</td>
-								<td class="w200">{t domain="affiliate"}购买者信息{/t}</td>
-								<td class="w100">{t domain="affiliate"}总金额{/t}</td>
-								<td class="w100">{t domain="affiliate"}佣金{/t}</td>
-								<td class="w100">{t domain="affiliate"}团购状态{/t}</td>
-								<td class="w100">{t domain="affiliate"}订单状态{/t}</td>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- {foreach from=$order_list.list item=list} -->
-							<tr>
-								<td>1</td>
-								<td>2</td>
-								<td>3</td>
-								<td>1</td>
-								<td>2</td>
-								<td>3</td>
-								<td>1</td>
-								<td>2</td>
-							</tr>
-							<!-- {foreachelse} -->
-							<tr>
-								<td class="no-records" colspan="8">{t domain="affiliate"}该订单暂无操作记录{/t}</td>
-							</tr>
-							<!-- {/foreach} -->
-						</tbody>
-					</table>
-					 <!-- {$order_list.page} -->
-				</div>
+			<div>
+				<h3 class="heading">{t domain="affiliate"}分成订单{/t}</h3>
 			</div>
+			
+			
+			
+			
+			
 		</div>
 	</div>
 </div>

@@ -33,6 +33,19 @@
             });
         },
     };
+    
+    app.team_list = {
+        init: function () {
+            $(".select-button").click(function () {
+                var url = $("form[name='searchForm']").attr('action');
+                var keywords = $("input[name='keywords']").val();
+                if (keywords != '') {
+                    url += '&keywords=' + keywords;
+                }
+                ecjia.pjax(url);
+            });
+        },
+    };
 
     app.store_agent_info = {
         init: function () {
