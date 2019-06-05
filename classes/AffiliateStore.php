@@ -23,6 +23,10 @@ class AffiliateStore
         return AffiliateStoreModel::where('user_id', $user_id)->first();
     }
 
+    public function getAgentInfo($id) {
+        return AffiliateStoreModel::where('id', $id)->first();
+    }
+
     public function getParentAgentInfoByUserId($user_id) {
         $info = AffiliateStoreModel::where('user_id', $user_id)->first();
         if($info) {

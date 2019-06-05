@@ -47,49 +47,38 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 代理商招募校验
+ * 代理商信息
  * @author huangyuyuan@ecmoban.com
  * @lastupdate 1.32 1.33
+ *
  */
-use Ecjia\App\Affiliate\Models\AffiliateStoreModel;
 use Ecjia\App\Affiliate\AffiliateStore;
 
-class invite_store_agent_validate_module extends api_front implements api_interface
+class invite_store_agent_inviter_module extends api_front implements api_interface
 {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
     {
-        $this->authSession();
-        if ($_SESSION['user_id'] <= 0) {
-            return new ecjia_error(100, 'Invalid session');
-        }
 
         $invite_code = $this->requestData('invite_code');
+
         if (empty($invite_code)) {
             return new ecjia_error('invalid_parameter', __('参数无效', 'affiliate'));
         }
 
-        //校验
-        if(AffiliateStoreModel::where('user_id', $_SESSION['user_id'])->count()) {
-            return new ecjia_error('already_is_agent', __('已成为代理商，不可重复操作', 'affiliate'));
-        }
-        $invite_info = AffiliateStoreModel::where('id', $invite_code)->first();
-        if(empty($invite_info)) {
-            return new ecjia_error('invite_code_error', __('邀请码无效', 'affiliate'));
-        }
-        if($invite_info['agent_parent_id'] != 0 ) {
-            return new ecjia_error('invite_code_error', __('邀请人无邀请资格', 'affiliate'));
+        $info = AffiliateStore::getAgentInfo($invite_code);
+        if(empty($info)) {
+            return new ecjia_error('当前用户非代理商', 'Invalid session');
         }
 
-        //TODO 插入代理，并绑定上级关系
-        AffiliateStore::getAgentInfoByUserId($_SESSION['user_id']);
-        $data = [
-            'user_id' => $_SESSION['user_id'],
-            'agent_parent_id' => $invite_info['id'],
-            'add_time' => RC_Time::gmtime()
-        ];
-        AffiliateStore::insert();
+        $avatar_img = RC_DB::table('users')->where('user_id', $info['user_id'])->pluck('avatar_img');
+        $invite_info = array(
+            'invite_code'           => (string)$invite_code,
+            'agent_name'            => $info['agent_name'],
+            'avatar_img'            => RC_Upload::upload_url($avatar_img),
+            'affiliate_agent_level' => $info['agent_parent_id'] == 0 ? 'level1' : 'level2',
+        );
 
-        return [];
+        return $invite_info;
     }
 }
 

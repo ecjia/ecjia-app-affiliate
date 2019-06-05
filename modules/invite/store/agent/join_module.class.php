@@ -47,17 +47,14 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 代理商招募信息（邀请链接，二维码，邀请码）
+ * 代理商招募校验
  * @author huangyuyuan@ecmoban.com
  * @lastupdate 1.32 1.33
- *
- * 规则：
- * 1.邀请码为代理商id（affiliate_store.id）
- *
  */
+use Ecjia\App\Affiliate\Models\AffiliateStoreModel;
 use Ecjia\App\Affiliate\AffiliateStore;
 
-class invite_store_agent_user_module extends api_front implements api_interface
+class invite_store_agent_join_module extends api_front implements api_interface
 {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
     {
@@ -66,23 +63,38 @@ class invite_store_agent_user_module extends api_front implements api_interface
             return new ecjia_error(100, 'Invalid session');
         }
 
-        $user_invite_code = AffiliateStore::getAgentIdByUserId($_SESSION['user_id']);
-        if(empty($user_invite_code)) {
-            return new ecjia_error('当前用户非代理商', 'Invalid session');
+        $invite_code = $this->requestData('invite_code');
+        $agent_name = $this->requestData('agent_name');
+        if (empty($invite_code) || empty($agent_name)) {
+            return new ecjia_error('invalid_parameter', __('参数无效', 'affiliate'));
         }
 
-        if (ecjia::config('mobile_touch_url') != '') {
-            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
-        } else {
-            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
+        //校验
+        if(AffiliateStoreModel::where('user_id', $_SESSION['user_id'])->count()) {
+            return new ecjia_error('already_is_agent', __('已成为代理商，不可重复操作', 'affiliate'));
         }
-        $invite_info = array(
-            'invite_code'         => (string) $user_invite_code,
-            'invite_qrcode_image' => RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=qrcode&invite_code=' . $user_invite_code,
-            'invite_url'          => $invite_url
-        );
+        $invite_info = AffiliateStoreModel::where('id', $invite_code)->first();
+        if(empty($invite_info)) {
+            return new ecjia_error('invite_code_error', __('邀请码无效', 'affiliate'));
+        }
+        if($invite_info['agent_parent_id'] != 0 ) {
+            return new ecjia_error('invite_code_error', __('邀请人无邀请资格', 'affiliate'));
+        }
+        //校验
+        if(AffiliateStoreModel::where('agent_name', $agent_name)->count()) {
+            return new ecjia_error('repeat_agent_name', __('代理商名称重复，请修改', 'affiliate'));
+        }
 
-        return $invite_info;
+        //TODO 插入代理，并绑定上级关系
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'agent_name' => htmlspecialchars($agent_name),
+            'agent_parent_id' => $invite_info['id'],
+            'add_time' => RC_Time::gmtime()
+        ];
+        AffiliateStoreModel::insert($data);
+
+        return [];
     }
 }
 
