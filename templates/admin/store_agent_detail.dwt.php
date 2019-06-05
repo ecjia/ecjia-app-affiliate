@@ -68,13 +68,11 @@
 									</span>
 									
 									<span>
-									{t domain="affiliate"}推广店铺：{/t}<font class="ecjiafc-red">{if $data.sales_money}{$data.sales_money}{else}0{/if}</font>
+									{t domain="affiliate"}推广店铺：{/t}<font class="ecjiafc-red">{if $data.store_count}{$data.store_count}{else}0{/if}</font>
 									<a class="m_l5" target="_blank" href="{RC_Uri::url('affiliate/admin_store_agent/store_list')}&id={$data.id}">{t domain="affiliate"}查看{/t}</a>
 									</span>
 									
-									<span>{t domain="affiliate"}佣金总额：{/t}<font class="ecjiafc-red">¥{if $data.total_commission}{$data.total_commission}{else}0{/if}</font></span>
-									<span>{t domain="affiliate"}待分成：{/t}<font class="ecjiafc-red">¥{if $data.frozen_money}{$data.total_commission}{else}0{/if}</font></span>
-									<span>{t domain="affiliate"}已分成：{/t}<font class="ecjiafc-red">¥{if $data.user_money}{$data.total_commission}{else}0{/if}</font></span>
+									<span>{t domain="affiliate"}佣金总额：{/t}<font class="ecjiafc-red">¥{if $data.money.agent_amount_total}{$data.money.agent_amount_total}{else}0{/if}</font></span>
 								</div>
 							</td>
 						</tr>
@@ -83,13 +81,39 @@
 			</div>
 			
 			<div>
-				<h3 class="heading">{t domain="affiliate"}分成订单{/t}</h3>
+				<h3 class="heading">{t domain="affiliate"}分佣明细{/t}</h3>
 			</div>
-			
-			
-			
-			
-			
+			<table class="table table-striped smpl_tbl dataTable table-hide-edit">
+				<thead>
+					<tr>
+					    <th class="w150">{t domain="commission"}订单编号{/t}</th>
+					    <th class="w150">{t domain="commission"}商家名称{/t}</th>
+					    <th class="w150">{t domain="commission"}订单金额{/t}</th>
+					    <th class="w150">{t domain="commission"}平台佣金金额{/t}</th>
+					    <th class="w150">{t domain="commission"}分佣比例{/t}</th>
+					    <th class="w150">{t domain="commission"}代理商佣金金额{/t}</th>
+					    <th class="w150">{t domain="commission"}添加时间{/t}</th>
+					 </tr>
+				</thead>
+
+   				<!-- {foreach from=$order_commission_list.list item=list} -->
+				<tr>
+					<td>
+						{assign var=order_url value=RC_Uri::url('quickpay/admin_order/order_info',"order_id={$list.order_id}")}
+					    <a href="{$order_url}" target="_blank">{$list.order_sn}</a>
+					</td>
+				    <td>{$list.merchants_name}</td>
+				    <td>￥{$list.order_amount}</td>
+				    <td>￥{$list.platform_commission}</td>
+				    <td>{$list.percent_value}%</td>
+					<td>￥{$list.agent_amount}</td>
+					<td>{$list.add_time}</td>
+				</tr>
+				<!-- {foreachelse} -->
+			   	<tr><td class="no-records" colspan="7">{t domain="commission"}没有找到任何记录{/t}</td></tr>
+				<!-- {/foreach} -->
+			</table>
+			<!-- {$order_commission_list.page} -->						
 		</div>
 	</div>
 </div>

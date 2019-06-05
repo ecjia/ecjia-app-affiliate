@@ -97,7 +97,7 @@ class admin_store_agent extends ecjia_admin
 		
         $this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/init'));
 
-        $this->display('store_agent_list.dwt');
+        return $this->display('store_agent_list.dwt');
     }
     
     
@@ -147,7 +147,7 @@ class admin_store_agent extends ecjia_admin
         
         $this->assign('form_action', RC_Uri::url('affiliate/admin_store_agent/insert'));
 
-        $this->display('store_agent_edit.dwt');
+        return $this->display('store_agent_edit.dwt');
     }
     
     /**
@@ -260,7 +260,7 @@ class admin_store_agent extends ecjia_admin
     
     	$this->assign('form_action', RC_Uri::url('affiliate/admin_store_agent/update'));
     
-    	$this->display('store_agent_edit.dwt');
+    	return $this->display('store_agent_edit.dwt');
     }
     
     /**
@@ -394,12 +394,18 @@ class admin_store_agent extends ecjia_admin
     	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$data['add_time_new']  = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
     	$data['team_count']	   = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $id)->count();
-    	
+    	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
+    	array_push($agent_list_arr, $id);
+    	$data['store_count'] = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
+    	$data['money'] = RC_DB::TABLE('affiliate_order_commission')->whereIn('affiliate_store_id', $agent_list_arr)->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
     	$this->assign('data', $data);
     	
-    	$this->display('store_agent_detail.dwt');
+    	$order_commission_list = $this->get_order_commission_list($id);
+    	$this->assign('order_commission_list', $order_commission_list);
+    	
+    	return $this->display('store_agent_detail.dwt');
     }
-    
+  
     
     /**
      * 查看团队列表
@@ -425,7 +431,7 @@ class admin_store_agent extends ecjia_admin
     	
     	$this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/team_list', array('id' => $id)));
     	
-    	$this->display('team_list.dwt');
+    	return $this->display('team_list.dwt');
     }
     
     
@@ -448,7 +454,7 @@ class admin_store_agent extends ecjia_admin
     	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
     	array_push($agent_list_arr, $id);
     	
-    	$store_count = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->count();
+    	$store_count = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
     	$this->assign('store_count', $store_count);
 
     	$type = trim($_GET['type']);
@@ -461,7 +467,7 @@ class admin_store_agent extends ecjia_admin
     	
     	$this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/store_list', array('id' => $id)));
     	
-    	$this->display('store_list.dwt');
+    	return $this->display('store_list.dwt');
     }
   
     /**
@@ -503,7 +509,9 @@ class admin_store_agent extends ecjia_admin
     	$list = array();
     	if (!empty($data)) {
     		foreach ($data as $row) {
-    			$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+    			$row['add_time']    = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+                $row['team_count']  = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $row['id'])->count();
+                $row['store_num']   = RC_DB::TABLE('affiliate_store_record')->where('affiliate_store_id', $row['id'])->whereNotNull('store_id')->count();
     			$list[] = $row;
     		}
     	}
@@ -594,6 +602,37 @@ class admin_store_agent extends ecjia_admin
     	}
     	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $store_count);
     }
+    
+    
+
+    /**
+     * 获取推广店铺列表数据
+     */
+    private function get_order_commission_list($id) {
+    
+    	$db_data = RC_DB::TABLE('affiliate_order_commission');
+    	$all_agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
+    	$db_data->whereIn('affiliate_store_id', $all_agent_list_arr);
+    
+    	$count = $db_data->count();
+    	$page = new ecjia_page($count, 10, 5);
+    
+    	$data = $db_data
+    	->orderby(RC_DB::raw('add_time'), 'desc')
+    	->take(10)
+    	->skip($page->start_id-1)
+    	->get();
+    	$list = array();
+    	if (!empty($data)) {
+    		foreach ($data as $row) {
+    			$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+    			$row['merchants_name']  = RC_DB::TABLE('store_franchisee')->where('store_id', $row['store_id'])->pluck('merchants_name');;
+    			$list[] = $row;
+    		}
+    	}
+    	return array('list' => $list, 'page' => $page->show(5), 'desc' => $page->page_desc(), );
+    }
+    
 }
 
 // end

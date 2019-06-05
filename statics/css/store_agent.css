@@ -1,6 +1,11 @@
-.order_number span{
-	margin-left:145px;
+.order_number{
+	text-align:center;
 	font-size: 16px;
+}
+
+.order_number span{
+	font-size: 16px;
+	margin: 0 150px 0 150px;
 }
 .count_box{
 	border-radius: 4px;
