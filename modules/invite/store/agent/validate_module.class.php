@@ -82,6 +82,12 @@ class invite_store_agent_validate_module extends api_front implements api_interf
 
         //TODO 插入代理，并绑定上级关系
         AffiliateStore::getAgentInfoByUserId($_SESSION['user_id']);
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'agent_parent_id' => $invite_info['id'],
+            'add_time' => RC_Time::gmtime()
+        ];
+        AffiliateStore::insert();
 
         return [];
     }
