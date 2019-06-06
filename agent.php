@@ -46,42 +46,65 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 推广店铺信息（邀请链接，二维码，邀请码）
- * @author huangyuyuan@ecmoban.com
- *
- * 规则：
- * 1.先校验代理商资质
- */
-use Ecjia\App\Affiliate\Models\AffiliateStoreModel;
-use Ecjia\App\Affiliate\AffiliateStore;
-class invite_store_module extends api_front implements api_interface
-{
-    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
+//代理商
+class agent extends ecjia_front {
+
+	public function __construct()
     {
-        $this->authSession();
-        if ($_SESSION['user_id'] <= 0) {
-            return new ecjia_error(100, 'Invalid session');
-        }
+		parent::__construct();
 
-        $user_invite_code = with(new AffiliateStore)->getAgentIdByUserId($_SESSION['user_id']);
-        if(empty($user_invite_code)) {
-            return new ecjia_error('invalid_agent', '当前用户非代理商');
-        }
+		$front_url = RC_App::apps_url('statics/front', __FILE__);
+		$front_url = str_replace('sites/api/', '', $front_url);
 
-//        if (ecjia::config('mobile_touch_url') != '') {
-//            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=franchisee&c=index&a=first&invite_code=' . $user_invite_code;
-//        } else {
-//            $invite_url = RC_Uri::site_url() . '/index.php?m=franchisee&c=merchant&a=init&invite_code=' . $user_invite_code;
-//        }
-        $invite_info = array(
-            'invite_code'         => (string) $user_invite_code,
-            'invite_qrcode_image' => RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=qrcode_store&invite_code=' . $user_invite_code,
-            'invite_url'          => AffiliateStore::generateInviteStoreUrl($user_invite_code)
-        );
+  		/* js与css加载路径*/
+  		$this->assign('front_url', $front_url);
+  		$this->assign('title', ecjia::config('shop_name'). __('邀请下级代理商', 'affiliate'));
+//  		_dump(1,1);
+	}
+	
+	public function init()
+    {
 
-        return $invite_info;
+	}
+	
+	public function invite()
+    {
+
+	}
+	
+	/**
+	 * 生成推广二维码图片
+	 */
+	public function qrcode()
+	{
+	    $code = $_GET['invite_code'];
+
+	    $img = with(new Ecjia\App\Affiliate\AffiliateStore)->generateInviteQrcode($code);
+
+	    $this->header('Content-Type', 'image/png');
+
+	    return $this->displayContent($img);
+	}
+
+	public function qrcode_store()
+    {
+        $code = $_GET['invite_code'];
+
+        $img = with(new Ecjia\App\Affiliate\AffiliateStore)->generateInviteStoreQrcode($code);
+
+        $this->header('Content-Type', 'image/png');
+
+        return $this->displayContent($img);
     }
+
+
+	public static function is_weixin()
+    {
+		if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
+			return true;
+		}
+		return false;
+	}
 }
 
 // end

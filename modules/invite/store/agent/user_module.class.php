@@ -71,15 +71,15 @@ class invite_store_agent_user_module extends api_front implements api_interface
             return new ecjia_error('当前用户非代理商', 'Invalid session');
         }
 
-        if (ecjia::config('mobile_touch_url') != '') {
-            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
-        } else {
-            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
-        }
+//        if (ecjia::config('mobile_touch_url') != '') {
+//            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
+//        } else {
+//            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=init&invite_code=' . $user_invite_code;
+//        }
         $invite_info = array(
             'invite_code'         => (string) $user_invite_code,
             'invite_qrcode_image' => RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=qrcode&invite_code=' . $user_invite_code,
-            'invite_url'          => $invite_url
+            'invite_url'          => AffiliateStore::generateInviteUrl($user_invite_code)
         );
 
         return $invite_info;

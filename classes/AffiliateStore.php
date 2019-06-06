@@ -9,6 +9,9 @@
 namespace Ecjia\App\Affiliate;
 
 use Ecjia\App\Affiliate\Models\AffiliateStoreModel;
+use RC_QrCode;
+use RC_Uri;
+use ecjia;
 
 class AffiliateStore
 {
@@ -34,5 +37,45 @@ class AffiliateStore
         } else {
             return [];
         }
+    }
+
+    //生成邀请代理商邀请码url
+    public function generateInviteUrl($invite_code) {
+        if (ecjia::config('mobile_touch_url') != '') {
+            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=agent&a=init&invite_code=' . $invite_code;
+        } else {
+            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=init&invite_code=' . $invite_code;
+        }
+
+        return $invite_url;
+    }
+
+    //生成邀请代理商邀请码二维码
+    public function generateInviteQrcode($code = '', $size = 430) {
+        $img = RC_QrCode::format('png')->size($size)->margin(1)
+            ->errorCorrection('L')
+            ->generate($this->generateInviteUrl($code));
+
+        return $img;
+    }
+
+    //生成邀请店铺入驻邀请码url
+    public function generateInviteStoreUrl($invite_code) {
+        if (ecjia::config('mobile_touch_url') != '') {
+            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=franchisee&c=index&a=first&invite_code=' . $invite_code;
+        } else {
+            $invite_url = RC_Uri::site_url() . '/index.php?m=franchisee&c=merchant&a=init&invite_code=' . $invite_code;
+        }
+
+        return $invite_url;
+    }
+
+    //生成邀请店铺入驻的邀请码二维码
+    public function generateInviteStoreQrcode($code = '', $size = 430) {
+        $img = RC_QrCode::format('png')->size($size)->margin(1)
+            ->errorCorrection('L')
+            ->generate($this->generateInviteStoreUrl($code));
+
+        return $img;
     }
 }
