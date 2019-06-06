@@ -53,7 +53,9 @@
 				<tr>
 				    <th class="w150">{t domain='affiliate'}商家名称{/t}</th>
 				    <th class="w150">{t domain='affiliate'}店铺分类{/t}</th>
+				    {if $type neq ''}
 				    <th class="w100">{t domain='affiliate'}推荐人{/t}</th>
+				    {/if}
 				    <th class="w150">{t domain='affiliate'}成交订单数{/t}</th>
 				    <th class="w100">{t domain='affiliate'}成交总金额{/t}</th>
 				    <th class="w100">{t domain='affiliate'}加入时间{/t}</th>
@@ -64,7 +66,9 @@
 		    <tr>
 		      	<td>{$list.merchants_name}</td>
 		      	<td>{$list.cat_name}</td>
+		      	{if $type neq ''}
 		      	<td>{$agent_name}</td>
+		      	{/if}
 		      	<td>0</td>
 		      	<td>0</td>
 		      	<td>{$list.apply_time}</td>

@@ -67,7 +67,9 @@
 					<label class="control-label">{t domain="affiliate"}团队推荐佣金比：{/t}</label>
 					<div class="controls">
 						<input class="w350" name="level1"  type="text" value="{$data.level1}" />&nbsp;%
-						<div class="help-block">{t domain="affiliate"}设置当前代理商招募的下级代理，在推广店铺入驻后，当前代理商可获得的佣金比，此佣金全部从平台佣金中计算。{/t}</div>
+						<div class="help-block">
+						{t domain="affiliate"}设置当前代理商招募的下级代理，在推广店铺入驻且产生订单交易后，当前代理商可获得的佣金比，此佣金全部从平台佣金中计算。{/t}
+						</div>
 					</div>
 				</div> 
 				
@@ -75,7 +77,9 @@
 					<label class="control-label">{t domain="affiliate"}直属下级佣金比：{/t}</label>
 					<div class="controls">
 						<input class="w350" name="level2" type="text" value="{$data.level2}" />&nbsp;%
-						<div class="help-block">{t domain="affiliate"}设置代理商下级推广店铺入驻后，下级可获得的佣金比，此佣金全部从平台佣金中计算。{/t}</div>
+						<div class="help-block">
+						{t domain="affiliate"}设置代理商下级推广店铺入驻且产生订单交易后，下级可获得的佣金比，此佣金全部从平台佣金中计算。{/t}
+						</div>
 					</div>
 				</div> 
 				

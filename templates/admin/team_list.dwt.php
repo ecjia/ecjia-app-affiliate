@@ -49,7 +49,7 @@
 		      	<td>{$list.agent_name}</td>
 		      	<td>{$list.user_name}<br>{$list.mobile_phone}</td>
 		      	<td>{$list.store_num}</td>
-		      	<td>0</td>
+		      	<td>￥{if $list.money.agent_amount_total}{$list.money.agent_amount_total}{else}0{/if}</td>
 		      	<td>{$list.add_time}</td>
 		    </tr>
 		    <!-- {foreachelse} -->

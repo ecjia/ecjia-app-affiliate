@@ -65,11 +65,11 @@
 		    	  	</div>
 		      	</td>
 		      	<td>{$list.user_name}<br>{$list.mobile_phone}</td>
-		      	<td>{t domain='affiliate'}团队：{/t}
+		      	<td>{t domain='affiliate'}团队：{$list.team_count}{/t}
 		      	<br>
-		      	{t domain='affiliate'}店铺：{/t}
+		      	{t domain='affiliate'}店铺：{$list.store_num}{/t}
 		      	</td>
-		      	<td>0</td>
+		      	<td>{if $list.money.agent_amount_total}￥{$list.money.agent_amount_total}{else}0{/if}</td>
 		      	<td>{$list.add_time}</td>
 		    </tr>
 		    <!-- {foreachelse} -->
