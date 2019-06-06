@@ -44,22 +44,24 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Affiliate\Controllers;
+
+use ecjia_front;
+use Ecjia\App\Affiliate\AffiliateStore;
 
 //代理商
-class agent extends ecjia_front {
+class AgentController extends ecjia_front {
 
 	public function __construct()
     {
 		parent::__construct();
 
-		$front_url = RC_App::apps_url('statics/front', __FILE__);
-		$front_url = str_replace('sites/api/', '', $front_url);
-
-  		/* js与css加载路径*/
-  		$this->assign('front_url', $front_url);
-  		$this->assign('title', ecjia::config('shop_name'). __('邀请下级代理商', 'affiliate'));
-//  		_dump(1,1);
+//		$front_url = RC_App::apps_url('statics/front', __FILE__);
+//		$front_url = str_replace('sites/api/', '', $front_url);
+//
+//  		/* js与css加载路径*/
+//  		$this->assign('front_url', $front_url);
+//  		$this->assign('title', ecjia::config('shop_name'). __('邀请下级代理商', 'affiliate'));
 	}
 	
 	public function init()
@@ -79,7 +81,7 @@ class agent extends ecjia_front {
 	{
 	    $code = $_GET['invite_code'];
 
-	    $img = with(new Ecjia\App\Affiliate\AffiliateStore)->generateInviteQrcode($code);
+	    $img = with(new AffiliateStore)->generateInviteQrcode($code);
 
 	    $this->header('Content-Type', 'image/png');
 
@@ -90,7 +92,7 @@ class agent extends ecjia_front {
     {
         $code = $_GET['invite_code'];
 
-        $img = with(new Ecjia\App\Affiliate\AffiliateStore)->generateInviteStoreQrcode($code);
+        $img = with(new AffiliateStore)->generateInviteStoreQrcode($code);
 
         $this->header('Content-Type', 'image/png');
 
