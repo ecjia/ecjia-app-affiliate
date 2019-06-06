@@ -9,6 +9,7 @@
 namespace Ecjia\App\Affiliate;
 
 use Ecjia\App\Affiliate\Models\AffiliateStoreModel;
+use Ecjia\App\Affiliate\Models\AffiliateStoreRecordModel;
 use RC_QrCode;
 use RC_Uri;
 use ecjia;
@@ -77,5 +78,16 @@ class AffiliateStore
             ->generate($this->generateInviteStoreUrl($code));
 
         return $img;
+    }
+
+
+    //店铺入驻成功更新邀请记录
+    public function updateAgentInviteWithNewStore($store_preaudit_id, $store_id) {
+        if($store_preaudit_id && $store_id) {
+            return AffiliateStoreRecordModel::where('store_preaudit_id', $store_preaudit_id)->update([
+                'store_id' => $store_id,
+                'store_preaudit_id' => null
+            ]);
+        }
     }
 }
