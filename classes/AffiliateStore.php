@@ -14,6 +14,7 @@ use RC_QrCode;
 use RC_Uri;
 use ecjia;
 
+//代理商招募下级，推荐店铺
 class AffiliateStore
 {
 
@@ -89,5 +90,10 @@ class AffiliateStore
                 'store_preaudit_id' => null
             ]);
         }
+    }
+
+    //获得推荐人id-根据store_id
+    public function getAffiliateStoreId($store_id) {
+        return AffiliateStoreRecordModel::where('store_id', $store_id)->pluck('affiliate_store_id');
     }
 }
