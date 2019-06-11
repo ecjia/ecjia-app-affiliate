@@ -95,6 +95,18 @@ class admin_store_agent extends ecjia_admin
 		$this->assign('data', $data);
 		$this->assign('filter', $data['filter']);
 		
+		$url_parames = '';
+		if(!empty($_GET['keywords'])) {
+			$url_parames .= '&keywords='.$_GET['keywords'];
+		}
+		if(!empty($_GET['start_date'])) {
+			$url_parames .= '&start_date='.$_GET['start_date'];
+		}
+		if(!empty($_GET['end_date'])) {
+			$url_parames .= '&end_date='.$_GET['end_date'];
+		}
+		$this->assign('url_parames', $url_parames);
+		
         $this->assign('search_action', RC_Uri::url('affiliate/admin_store_agent/init'));
 
         return $this->display('store_agent_list.dwt');
@@ -255,7 +267,7 @@ class admin_store_agent extends ecjia_admin
     
     	$id     = intval($_GET['id']);
     	$data   = RC_DB::table('affiliate_store')->where('id', $id)->first();
-    	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
+    	$data['user'] = RC_DB::table('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$this->assign('data', $data);
     
     	$this->assign('form_action', RC_Uri::url('affiliate/admin_store_agent/update'));
@@ -391,13 +403,13 @@ class admin_store_agent extends ecjia_admin
     
     	$id    = intval($_GET['id']);
     	$data  = RC_DB::table('affiliate_store')->where('id', $id)->first();
-    	$data['user'] = RC_DB::TABLE('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
+    	$data['user'] = RC_DB::table('users')->where('user_id', $data['user_id'])->select('mobile_phone', 'user_name')->first();
     	$data['add_time_new']  = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
-    	$data['team_count']	   = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $id)->count();
+    	$data['team_count']	   = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->count();
     	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
     	array_push($agent_list_arr, $id);
-    	$data['store_count'] = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
-    	$data['money'] = RC_DB::TABLE('affiliate_order_commission')->where('affiliate_store_id', $id)->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
+    	$data['store_count'] = RC_DB::table('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
+    	$data['money'] = RC_DB::table('affiliate_order_commission')->where('affiliate_store_id', $id)->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
     	$this->assign('data', $data);
     	
     	$order_commission_list = $this->get_order_commission_list($id);
@@ -419,10 +431,10 @@ class admin_store_agent extends ecjia_admin
     	$id = intval($_GET['id']);
     	$this->assign('action_link', array('text' => __('代理商详情', 'affiliate'), 'href' => RC_Uri::url('affiliate/admin_store_agent/detail',  array('id' => $id))));
     	
-    	$agent_name = RC_DB::TABLE('affiliate_store')->where('id', $id)->pluck('agent_name');
+    	$agent_name = RC_DB::table('affiliate_store')->where('id', $id)->pluck('agent_name');
     	$this->assign('agent_name', $agent_name);
     	
-    	$team_count = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $id)->count();
+    	$team_count = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->count();
     	$this->assign('team_count', $team_count);
     	
     	$data = $this->get_team_list($id);
@@ -448,13 +460,13 @@ class admin_store_agent extends ecjia_admin
     	$this->assign('id', $id);
     	$this->assign('action_link', array('text' => __('代理商详情', 'affiliate'), 'href' => RC_Uri::url('affiliate/admin_store_agent/detail', array('id' => $id))));
     	
-    	$agent_name = RC_DB::TABLE('affiliate_store')->where('id', $id)->pluck('agent_name');
+    	$agent_name = RC_DB::table('affiliate_store')->where('id', $id)->pluck('agent_name');
     	$this->assign('agent_name', $agent_name);
     	
     	$agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $id)->lists('id');
     	array_push($agent_list_arr, $id);
     	
-    	$store_count = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
+    	$store_count = RC_DB::table('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
     	$this->assign('store_count', $store_count);
 
     	$type = trim($_GET['type']);
@@ -476,6 +488,7 @@ class admin_store_agent extends ecjia_admin
     private function get_list() {
     	
     	$db_data = RC_DB::table('affiliate_store as a')
+    	->leftJoin('affiliate_order_commission as aoc', RC_DB::raw('a.id'), '=', RC_DB::raw('aoc.affiliate_store_id'))
     	->leftJoin('users as u', RC_DB::raw('a.user_id'), '=', RC_DB::raw('u.user_id'));
     	
     	$db_data->where(RC_DB::raw('a.agent_parent_id'), 0);
@@ -489,36 +502,49 @@ class admin_store_agent extends ecjia_admin
     	}
     	if (!empty($filter['start_date'])) {
     		$start_date = RC_Time::local_strtotime($filter['start_date']);
-    		$db_data->where(RC_DB::raw('a.add_time'), '>=', $start_date);
+    		$db_data->where(RC_DB::raw('aoc.add_time'), '>=', $start_date);
     	}
     	
     	if (!empty($filter['end_date'])) {
     		$end_date = RC_Time::local_strtotime($filter['end_date']);
-    		$db_data->where(RC_DB::raw('a.add_time'), '<', $end_date);
+    		$db_data->where(RC_DB::raw('aoc.add_time'), '<', $end_date);
     	}
         	
     	$count = $db_data->count();
     	$page = new ecjia_page($count, 10, 5);
     
     	$data = $db_data
-    	->select(RC_DB::raw('a.*'),RC_DB::raw('u.mobile_phone'), RC_DB::raw('u.user_name'))
+    	->selectRaw('a.id, a.agent_name,  u.user_name, u.mobile_phone, a.add_time, SUM(aoc.agent_amount) as agent_amount_total')
     	->orderby(RC_DB::raw('a.add_time'), 'desc')
+    	->groupBy(RC_DB::raw('a.id'))
     	->take(10)
     	->skip($page->start_id-1)
     	->get();
     	$list = array();
     	if (!empty($data)) {
     		foreach ($data as $row) {
-    			$row['add_time']    = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
-                $row['team_count']  = RC_DB::TABLE('affiliate_store')->where('agent_parent_id', $row['id'])->count();
+                $row['team_count']  = RC_DB::table('affiliate_store')->where('agent_parent_id', $row['id'])->count();
                 $agent_list_arr = RC_DB::table('affiliate_store')->where('agent_parent_id', $row['id'])->lists('id');
                 array_push($agent_list_arr, $row['id']);
-                $row['store_num']   = RC_DB::TABLE('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
-                $row['money'] = RC_DB::TABLE('affiliate_order_commission')->where('affiliate_store_id', $row['id'])->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
+                $row['store_num']   = RC_DB::table('affiliate_store_record')->whereIn('affiliate_store_id', $agent_list_arr)->whereNotNull('store_id')->count();
+                $row['add_time']    = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
     			$list[] = $row;
     		}
     	}
     	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc());
+    }
+    
+    public function download()
+    {
+    	$data = $this->get_list();
+    	$item = $data['list'];
+    	RC_Excel::load(RC_APP_PATH . 'affiliate' . DIRECTORY_SEPARATOR . 'statics/files/affiliate_store_agent.xls', function ($excel) use ($item) {
+    		$excel->sheet('First sheet', function ($sheet) use ($item) {
+    			foreach ($item as $k => $v) {
+    				$sheet->appendRow($k + 2, $v);
+    			}
+    		});
+    	})->download('xls');
     }
     
     /**
@@ -550,8 +576,8 @@ class admin_store_agent extends ecjia_admin
     	if (!empty($data)) {
     		foreach ($data as $row) {
     			$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
-    			$row['store_num'] = RC_DB::TABLE('affiliate_store_record')->where('affiliate_store_id', $row['id'])->whereNotNull('store_id')->count();
-    			$row['money']     = RC_DB::TABLE('affiliate_order_commission')->where('affiliate_store_id', $row['id'])->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
+    			$row['store_num'] = RC_DB::table('affiliate_store_record')->where('affiliate_store_id', $row['id'])->whereNotNull('store_id')->count();
+    			$row['money']     = RC_DB::table('affiliate_order_commission')->where('affiliate_store_id', $row['id'])->select(RC_DB::raw('SUM(agent_amount) as agent_amount_total'))->first();
     			$list[] = $row;
     		}
     	}
@@ -598,21 +624,19 @@ class admin_store_agent extends ecjia_admin
     	if (!empty($data)) {
     		foreach ($data as $row) {
     			$row['apply_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['apply_time']);
-    			$row['cat_name']    = RC_DB::TABLE('store_category')->where('cat_id', $row['cat_id'])->pluck('cat_name');
+    			$row['cat_name']    = RC_DB::table('store_category')->where('cat_id', $row['cat_id'])->pluck('cat_name');
     			$list[] = $row;
     		}
     	}
     	return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $store_count);
     }
-    
-    
 
     /**
      * 获取推广店铺列表数据
      */
     private function get_order_commission_list($id) {
     	
-    	$db_data = RC_DB::TABLE('affiliate_order_commission');
+    	$db_data = RC_DB::table('affiliate_order_commission');
     	
     	$count = $db_data->count();
     	$page = new ecjia_page($count, 10, 5);
@@ -627,7 +651,7 @@ class admin_store_agent extends ecjia_admin
     	if (!empty($data)) {
     		foreach ($data as $row) {
     			$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
-    			$row['merchants_name']  = RC_DB::TABLE('store_franchisee')->where('store_id', $row['store_id'])->pluck('merchants_name');;
+    			$row['merchants_name']  = RC_DB::table('store_franchisee')->where('store_id', $row['store_id'])->pluck('merchants_name');;
     			$list[] = $row;
     		}
     	}

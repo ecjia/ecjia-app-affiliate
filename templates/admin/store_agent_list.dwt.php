@@ -15,6 +15,7 @@
 		<!-- {if $action_link} -->
 		<a class="btn plus_or_reply data-pjax" href="{$action_link.href}"><i class="fontello-icon-plus"></i>{$action_link.text}</a>
 		<!-- {/if} -->
+		<a class="btn plus_or_reply" id="sticky_a" href='{RC_Uri::url("affiliate/admin_store_agent/download", "{$url_parames}")}'><i class="fontello-icon-download"></i>{t domain="affiliate"}导出结果{/t}</a>
 	</h3>
 </div>
 
@@ -69,7 +70,7 @@
 		      	<br>
 		      	{t domain='affiliate'}店铺：{$list.store_num}{/t}
 		      	</td>
-		      	<td>{if $list.money.agent_amount_total}￥{$list.money.agent_amount_total}{else}0{/if}</td>
+		      	<td>{if $list.agent_amount_total}￥{$list.agent_amount_total}{else}0{/if}</td>
 		      	<td>{$list.add_time}</td>
 		    </tr>
 		    <!-- {foreachelse} -->
