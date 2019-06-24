@@ -44,9 +44,9 @@ class AffiliateStore
     //生成邀请代理商邀请码url
     public function generateInviteUrl($invite_code) {
         if (ecjia::config('mobile_touch_url') != '') {
-            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=agent&a=init&invite_code=' . $invite_code;
+            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=index&a=invite_agent&invite_code=' . $invite_code;
         } else {
-            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=agent&a=init&invite_code=' . $invite_code;
+            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=index&a=invite_agent&invite_code=' . $invite_code;
         }
 
         return $invite_url;
