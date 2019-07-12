@@ -12,15 +12,25 @@
 }
 
 .modal {
-   width: 930px;
+   width: 1000px;
    margin-left: -350px;
    margin-top: 40px;
 }
 .modal-body {
     max-height: 600px;
 }
+.modal-dialog {
+    width: 1000px
+}
 
 
+.ms-container .ms-selectable {
+    margin-right: 4%;
+}
+
+.ms-container .ms-selectable, .ms-container .ms-selection {
+    width: 48%;
+}
 .goods-content {
     margin: 10px;
 }
