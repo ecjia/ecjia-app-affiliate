@@ -1,6 +1,5 @@
-11 // JavaScript Document
-;
-(function (app, $) {
+// JavaScript Document
+;(function (app, $) {
     app.affiliate = {
         init: function () {
             app.affiliate.submit_form();

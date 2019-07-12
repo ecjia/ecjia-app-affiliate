@@ -54,7 +54,13 @@ class affiliate_admin_purview_api extends Component_Event_Api {
     
     public function call(&$options) {
         $purviews = array(
-        	array('action_name' => __('推荐邀请设置', 'affiliate'), 			'action_code' => 'affiliate_config', 			'relevance' => ''),
+        	array('action_name' => __('VIP分销权益管理', 'affiliate'), 	'action_code' => 'vip_interest_manage', 	'relevance' => ''),
+        	array('action_name' => __('VIP分销权益编辑', 'affiliate'), 	'action_code' => 'vip_interest_update', 	'relevance' => ''),
+        	array('action_name' => __('VIP分销权益删除', 'affiliate'), 	'action_code' => 'vip_interest_delete', 	'relevance' => ''),
+        		
+        	array('action_name' => __('分销商管理', 'affiliate'), 	'action_code' => 'distributor_manage', 	'relevance' => ''),
+        		
+        	array('action_name' => __('推荐邀请设置', 'affiliate'), 	'action_code' => 'affiliate_config', 			'relevance' => ''),
             array('action_name' => __('分成比例管理', 'affiliate'), 	'action_code' => 'affiliate_percent_manage', 	'relevance' => ''),
         	array('action_name' => __('分成比例更新', 'affiliate'), 	'action_code' => 'affiliate_percent_update', 	'relevance' => ''),
         	array('action_name' => __('分成比例删除', 'affiliate'), 	'action_code' => 'affiliate_percent_drop', 		'relevance' => ''),
