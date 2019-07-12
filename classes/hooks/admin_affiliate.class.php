@@ -53,15 +53,8 @@ class affiliate_admin_hooks {
 		$menus[] = ecjia_admin::make_admin_menu('affiliate', '推荐邀请设置', RC_Uri::url('affiliate/admin_config/init'), 401)->add_purview('affiliate_config_manage');
 		return $menus;
 	}
-
-
-	//店铺入驻成功后根据邀请记录 关联代理商信息
-	public static function update_agent_invite_with_new_store($store_info) {
-        with(new Ecjia\App\Affiliate\AffiliateStore)->updateAgentInviteWithNewStore($store_info['store_preaudit_id'], $store_info['store_id']);
-    }
 }
 
 RC_Hook::add_action( 'append_admin_setting_group', array('affiliate_admin_hooks', 'append_admin_setting_group') );
-RC_Hook::add_action( 'merchant_signup_success', array('affiliate_admin_hooks', 'update_agent_invite_with_new_store') );
 
 // end

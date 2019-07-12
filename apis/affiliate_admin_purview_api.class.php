@@ -60,11 +60,7 @@ class affiliate_admin_purview_api extends Component_Event_Api {
         	array('action_name' => __('分成比例删除', 'affiliate'), 	'action_code' => 'affiliate_percent_drop', 		'relevance' => ''),
 
         	array('action_name' => __('推荐分成管理', 'affiliate'),	'action_code' => 'affiliate_ck_manage', 'relevance' => ''),
-        	array('action_name' => __('推荐分成更新', 'affiliate'), 		'action_code' => 'affiliate_ck_update', 'relevance' => ''),
-        		
-        	array('action_name' => __('店铺代理商管理', 'affiliate'), 		'action_code' => 'affiliate_store_manage', 'relevance' => ''),
-        	array('action_name' => __('店铺代理商编辑', 'affiliate'), 		'action_code' => 'affiliate_store_update', 'relevance' => ''),
-        	array('action_name' => __('店铺代理商删除', 'affiliate'), 		'action_code' => 'affiliate_store_delete', 'relevance' => '')
+        	array('action_name' => __('推荐分成更新', 'affiliate'), 		'action_code' => 'affiliate_ck_update', 'relevance' => '')
         );
         return $purviews;
     }
