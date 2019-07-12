@@ -2,7 +2,7 @@
 <!-- {extends file="ecjia.dwt.php"} -->
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.admin.vip_interest_info.init();
+	ecjia.admin.distribution_grade_info.init();
 </script>
 <!-- {/block} -->
 
@@ -116,7 +116,7 @@
                     <strong>{t domain="affiliate"}温馨提示：{/t}</strong>{t domain="affiliate"}1、先搜索指定的商品；2、在左侧选中商品；3、预览商品基本信息后“确定”；{/t}
                 </div>
                 
-				<div class="row-fluid searchForm" data-href="{url path='affiliate/admin_vip_interest/search_goods'}">
+				<div class="row-fluid searchForm" data-href="{url path='affiliate/admin_distribution_grade/search_goods'}">
 					<div class="control-group choose_list span12" >
 						<select name="cat_id">
 							<option value="0">{t domain="affiliate"}所有分类{/t}{$cat_list}</option>
@@ -132,7 +132,7 @@
 								<div class="search-header">
 									<input class="span12" id="ms-search" type="text" placeholder='{t domain="affiliate"}筛选搜索到的商品信息{/t}' autocomplete="off">
 								</div>
-								<ul class="ms-list nav-list-ready" data-url="{RC_Uri::url('affiliate/admin_vip_interest/get_goods_info')}">
+								<ul class="ms-list nav-list-ready" data-url="{RC_Uri::url('affiliate/admin_distribution_grade/get_goods_info')}">
 									<li class="ms-elem-selectable disabled"><span>{t domain="affiliate"}暂无内容{/t}</span></li>
 								</ul>
 							</div>

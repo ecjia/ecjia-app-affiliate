@@ -50,7 +50,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 后台VIP分销权益
  * @author songqianqian
  */
-class admin_vip_interest extends ecjia_admin {
+class admin_distribution_grade extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 
@@ -69,49 +69,49 @@ class admin_vip_interest extends ecjia_admin {
 		
 		RC_Style::enqueue_style('affiliate', RC_App::apps_url('statics/css/affiliate.css', __FILE__), array());
 		
-		RC_Script::enqueue_script('admin_vip_interest', RC_App::apps_url('statics/js/admin_vip_interest.js', __FILE__), array(), false, 1);
-		RC_Script::localize_script('admin_vip_interest', 'js_lang', config('app-affiliate::jslang.affiliate_page'));
+		RC_Script::enqueue_script('admin_distribution_grade', RC_App::apps_url('statics/js/admin_distribution_grade.js', __FILE__), array(), false, 1);
+		RC_Script::localize_script('admin_distribution_grade', 'js_lang', config('app-affiliate::jslang.affiliate_page'));
 	}
 	
 	/**
 	 * VIP分销权益
 	 */
 	public function init() {
-		$this->admin_priv('vip_interest_manage');
+		$this->admin_priv('distribution_grade_manage');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('VIP分销权益', 'affiliate')));
 		$this->assign('ur_here', __('VIP分销权益', 'affiliate'));
 		
-		$this->assign('action_link', array('text' => __('分销商权益', 'article'), 'href'=> RC_Uri::url('affiliate/admin_vip_interest/add')));
+		$this->assign('action_link', array('text' => __('分销商权益', 'article'), 'href'=> RC_Uri::url('affiliate/admin_distribution_grade/add')));
 
-        return $this->display('vip_interest_list.dwt');
+        return $this->display('distribution_grade_list.dwt');
 	}
 	
 	/**
 	 * VIP分销权益添加
 	 */
 	public function add() {
-		$this->admin_priv('vip_interest_update');
+		$this->admin_priv('distribution_grade_update');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('添加分销权益', 'affiliate')));
 		
 		$this->assign('ur_here', __('添加分销权益', 'affiliate'));
-		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_vip_interest/init'), 'text' => __('分销商权益列表', 'affiliate')));
+		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distribution_grade/init'), 'text' => __('分销商权益列表', 'affiliate')));
 		
 		$rank_list = $this->get_user_rank_list(true);
 		$this->assign('special_ranks', $rank_list);
 		
 		$this->assign('cat_list', RC_Api::api('goods', 'get_goods_category'));
 		
-		$this->assign('form_action', RC_Uri::url('affiliate/admin_vip_interest/insert'));
-        return $this->display('vip_interest_info.dwt');
+		$this->assign('form_action', RC_Uri::url('affiliate/admin_distribution_grade/insert'));
+        return $this->display('distribution_grade_info.dwt');
 	}
 	
 	/**
 	 * VIP分销权益添加处理
 	 */
 	public function insert() {
-		$this->admin_priv('vip_interest_update');
+		$this->admin_priv('distribution_grade_update');
 		
 		
 	}
@@ -120,15 +120,15 @@ class admin_vip_interest extends ecjia_admin {
 	 * 编辑VIP分销权益
 	 */
 	public function edit() {
-		$this->admin_priv('vip_interest_update');
+		$this->admin_priv('distribution_grade_update');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('编辑分成比例', 'affiliate')));
 		
 		$this->assign('ur_here', __('编辑分成比例', 'affiliate'));
-		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_vip_interest/init'), 'text' => __('分成比例列表', 'affiliate')));
+		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distribution_grade/init'), 'text' => __('分成比例列表', 'affiliate')));
 		
-		$this->assign('form_action', RC_Uri::url('affiliate/admin_vip_interest/update'));
-        return $this->display('affiliate_info.dwt');
+		$this->assign('form_action', RC_Uri::url('affiliate/admin_distribution_grade/update'));
+        return $this->display('distribution_grade_info.dwt');
 	}
 	
 	
@@ -136,7 +136,7 @@ class admin_vip_interest extends ecjia_admin {
 	 *  编辑VIP分销权益处理
 	 */
 	public function update() {
-		$this->admin_priv('vip_interest_update');
+		$this->admin_priv('distribution_grade_update');
 
 	}
 
@@ -144,15 +144,14 @@ class admin_vip_interest extends ecjia_admin {
 	 * 删除VIP分销权益
 	 */
 	public function remove() {
-		$this->admin_priv('vip_interest_delete');
+		$this->admin_priv('distribution_grade_delete');
 		
 	}	
 	
 	/**
 	 * 添加/编辑页搜索商品
 	 */
-	public function search_goods()
-	{
+	public function search_goods() {
 		$cat_id = intval($_POST['cat_id']);
 		$goods_keywords  = remove_xss($_POST['goods_keywords']);
 		$goods_sn        = remove_xss($_POST['goods_sn']);
@@ -199,9 +198,7 @@ class admin_vip_interest extends ecjia_admin {
 		}
 		return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $content));
 	}
-	
 
-	
 	private function get_user_rank_list($is_special = false) {
 		$db_user_rank = RC_DB::table('user_rank');
 	
