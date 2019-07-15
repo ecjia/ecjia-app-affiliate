@@ -1,12 +1,6 @@
 <?php defined('IN_ECJIA') or exit('No permission resources.');?>
 <!-- {extends file="ecjia.dwt.php"} -->
 
-<!-- {block name="footer"} -->
-<script type="text/javascript">
-// 	ecjia.admin.affiliate.init();
-</script>
-<!-- {/block} -->
-
 <!-- {block name="main_content"} -->
 <div>
 	<h3 class="heading">
@@ -25,20 +19,20 @@
 					<th>{t domain="affiliate"}权益名称{/t}</th>
 					<th>{t domain="affiliate"}会员等级{/t}</th>
 					<th>{t domain="affiliate"}分销商数量{/t}</th>
-					<th>{t domain="affiliate"}有效日期{/t}</th>
+					<th>{t domain="affiliate"}有效日期（年）{/t}</th>
 					<th>{t domain="affiliate"}操作{/t}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!-- {foreach from=$data.list item=list} -->
 				<tr>
-					<td>{$list.name}</td>
-					<td>{$list.user_rank}</td>
-					<td>{$list.count_distributor}</td>
-					<td>{$list.date}</td>
+					<td>{$list.grade_name}</td>
+					<td>{$list.rank_name}</td>
+					<td>66</td>
+					<td>{$list.limit_days}</td>
 					<td>
-						<a class="data-pjax" href='{url path="affiliate/admin_interest/edit" args="id={$list.id}"}' title='{t domain="affiliate"}编辑{/t}'><i class="fontello-icon-edit"></i></a>
-						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate"}您确定要删除吗？{/t}' href='{url path="affiliate/admin_interest/remove" args="id={$list.id}"}' title='{t domain="affiliate"}删除{/t}'><i class="fontello-icon-trash"></i></a>
+						<a class="data-pjax" href='{url path="affiliate/admin_distribution_grade/edit" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}编辑{/t}'><i class="fontello-icon-edit"></i></a>
+						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate"}您确定要删除吗？{/t}' href='{url path="affiliate/admin_distribution_grade/remove" args="id={$list.grade_id}"}' title='{t domain="affiliate"}删除{/t}'><i class="fontello-icon-trash"></i></a>
 					</td>
 				</tr>
 			   	<!-- {foreachelse} -->
@@ -48,7 +42,7 @@
 	        	<!-- {/foreach} -->
 			</tbody>
 		</table>
+		<!-- {$data.page} -->
 	</div>
 </div>
-
 <!-- {/block} -->

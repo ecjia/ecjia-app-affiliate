@@ -52,13 +52,15 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 return array(
-
     'affiliate_page' => array(
         'ok'		=> __('确定', 'affiliate'),
         'cancel'	=> __('取消', 'affiliate'),
         'mobile_number_format'	=> __('填写的手机号码格式不正确', 'affiliate'),
-    ),
-
-
+    		
+    	'goods_information_not_found'      => __('未搜索到商品信息', 'affiliate'),
+    	'pls_select_goods'                 => __('需要指定商品', 'affiliate'),
+    	'pls_grade_name'                   => __('权益名称不能为空', 'affiliate'),
+    	'select_user_rank'                 => __('请选择会员等级', 'affiliate'),
+    )
 );
 //end

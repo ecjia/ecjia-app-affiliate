@@ -3,10 +3,10 @@
     app.distribution_grade_info = {
         init: function () {
             app.distribution_grade_info.search_goods();
-            app.distribution_grade_info.submit_form();
-
             app.distribution_grade_info.search_link_opt();
             app.distribution_grade_info.add_link();
+            
+            app.distribution_grade_info.submit_form();
         },
         
         search_goods: function () {
@@ -29,7 +29,6 @@
             $('.select-goods-btn').off('click').on('click', function () {
                 var url = $(".nav-list-ready").attr('data-url'),
                     id = $("input[name='id']").val();
-
                 if (id == '' || id == 0 || id == undefined) {
                     smoke.alert(js_lang.pls_select_goods, {ok: js_lang.ok});
                     return false;
@@ -59,7 +58,7 @@
                     $('.nav-list-ready').append(opt);
                 }
             } else {
-                $('.nav-list-ready').append('<li class="ms-elem-selectable disabled"><span>' + js_lang.product_information_not_found + '</span></li>');
+                $('.nav-list-ready').append('<li class="ms-elem-selectable disabled"><span>' + js_lang.goods_information_not_found + '</span></li>');
             }
 
             app.distribution_grade_info.search_link_opt();
@@ -92,7 +91,7 @@
                 var $this = $(this),
                     id = $this.attr('data-id'),
                     url = $('.nav-list-ready').attr('data-url');
-
+                
                 $('input[name="id"]').val(id);
                 if (!$this.hasClass('disabled')) {
                     $this.addClass('disabled');
@@ -110,23 +109,16 @@
             var $form = $("form[name='theForm']");
             var option = {
                 rules: {
-                    goods_id: {required: true, min: 1},
-                    start_time: {required: true, date: false},
-                    end_time: {required: true, date: false},
-                    price: {required: true, min: 0.01}
+                	grade_name: {
+                        required: true
+                    },
+                    user_rank: {required: true, min: 1}
                 },
                 messages: {
-                    goods_id: {min: js_lang.select_active_products},
-                    start_time: {
-                        required: js_lang.select_event_start_time,
-                    },
-                    end_time: {
-                        required: js_lang.select_event_end_time,
-                    },
-                    price: {
-                        required: js_lang.fill_event_price,
-                        min: js_lang.activity_price_is_at_least_1_cent
-                    },
+                	grade_name: {
+	                    required: js_lang.pls_grade_name,
+	                },
+	                user_rank: {min: js_lang.select_user_rank}
                 },
                 submitHandler: function () {
                     $form.ajaxSubmit({
