@@ -47,159 +47,192 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 后台推荐设置
+ * 后台邀请推广设置
  * @author wutifang
  */
-class admin_config extends ecjia_admin {
-	public function __construct() {
-		parent::__construct();
-		
-		Ecjia\App\Affiliate\Helper::assign_adminlog_content();
-		
-		/* 加载所有全局 js/css */
-		RC_Script::enqueue_script('bootstrap-placeholder');
-		RC_Script::enqueue_script('jquery-validate');
-		RC_Script::enqueue_script('jquery-form');
-		RC_Script::enqueue_script('smoke');
-		RC_Script::enqueue_script('jquery-chosen');
-		RC_Style::enqueue_style('chosen');
-		RC_Script::enqueue_script('jquery-uniform');
-		RC_Style::enqueue_style('uniform-aristo');
-		RC_Script::enqueue_script('bootstrap-editable-script', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js'));
-		RC_Style::enqueue_style('bootstrap-editable-css', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css'));
-		RC_Script::enqueue_script('affiliate', RC_App::apps_url('statics/js/affiliate.js', __FILE__), array(), false, 1);
+class admin_config extends ecjia_admin
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        Ecjia\App\Affiliate\Helper::assign_adminlog_content();
+
+        /* 加载所有全局 js/css */
+        RC_Script::enqueue_script('bootstrap-placeholder');
+        RC_Script::enqueue_script('jquery-validate');
+        RC_Script::enqueue_script('jquery-form');
+        RC_Script::enqueue_script('smoke');
+        RC_Script::enqueue_script('jquery-chosen');
+        RC_Style::enqueue_style('chosen');
+        RC_Script::enqueue_script('jquery-uniform');
+        RC_Style::enqueue_style('uniform-aristo');
+        RC_Script::enqueue_script('bootstrap-editable-script', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js'));
+        RC_Style::enqueue_style('bootstrap-editable-css', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css'));
+        RC_Script::enqueue_script('affiliate', RC_App::apps_url('statics/js/affiliate.js', __FILE__), array(), false, 1);
 
         RC_Script::localize_script('affiliate', 'js_lang', config('app-affiliate::jslang.affiliate_page'));
-	}
-	
-	/**
-	 *推荐设置
-	 */
-	public function init() {
-		$this->admin_priv('affiliate_config');
-		
-		RC_Style::enqueue_style('affiliate-css', RC_App::apps_url('statics/css/affiliate.css', __FILE__));
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('推荐设置', 'affiliate')));
-		
-		$this->assign('ur_here', __('推荐设置', 'affiliate'));
-		$this->assign('separate_config', __('推荐设置', 'affiliate'));
-		$this->assign('add_separate', __('添加分成', 'affiliate'));
+    }
+
+    /**
+     *邀请推广设置
+     */
+    public function init()
+    {
+        $this->admin_priv('affiliate_config');
+
+        RC_Style::enqueue_style('affiliate-css', RC_App::apps_url('statics/css/affiliate.css', __FILE__));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('邀请推广设置', 'affiliate')));
+
+        $this->assign('ur_here', __('分享推广设置', 'affiliate'));
 
         $unit = array(
-            'hour' 	=> __('小时', 'affiliate'),
-            'day' 	=> __('天', 'affiliate'),
-            'week' 	=> __('周', 'affiliate'),
+            'hour' => __('小时', 'affiliate'),
+            'day'  => __('天', 'affiliate'),
+            'week' => __('周', 'affiliate'),
         );
         $this->assign('unit', $unit);
 
-		$config = unserialize(ecjia::config('affiliate'));
+        $config = unserialize(ecjia::config('affiliate'));
 
-		$bonus_type_list = RC_Api::api('bonus', 'bonus_type_list', array('type' => 'allow_send'));
+        $this->assign('config', $config);
+        $this->assign('invite_template', ecjia::config('invite_template'));
+        $this->assign('invite_explain', ecjia::config('invite_explain'));
+        $this->assign('invitee_rule_explain', ecjia::config('invitee_rule_explain'));
 
-		$this->assign('bonus_type_list', $bonus_type_list);
-		$this->assign('config', $config);
-		$this->assign('invite_template', ecjia::config('invite_template'));
-		$this->assign('invite_explain', ecjia::config('invite_explain'));
-		$this->assign('invitee_rule_explain', ecjia::config('invitee_rule_explain'));
-
-		$this->assign('current_code', 'affiliate');
-		$this->assign('form_action', RC_Uri::url('affiliate/admin_config/update'));
+        $this->assign('current_code', 'affiliate');
+        $this->assign('form_action', RC_Uri::url('affiliate/admin_config/update'));
 
         return $this->display('affiliate_config.dwt');
-	}
-	
-	/**
-	 * 修改配置
-	 */
-	public function update() {
-		$this->admin_priv('affiliate_config', ecjia::MSGTYPE_JSON);
+    }
 
-		$config = unserialize(ecjia::config('affiliate'));
+    /**
+     * 修改配置
+     * 删除配置项：
+     * affiliate[
+         * config[
+         *      'separate_by'           		=> $separate_by,                 //分成模式：0、注册 1、订单
+         *		'level_point_all'       		=> $_POST['level_point_all'],    //积分分成比
+         *		'level_register_all'    		=> intval($_POST['level_register_all']), //推荐注册奖励积分
+         *		'level_register_up'     		=> intval($_POST['level_register_up']),  //推荐注册奖励积分上限
+         * ]
+         * intvie_reward[
+         *      intive_reward_by
+         *      intive_reward_type
+         *      intive_reward_value
+         * ]
+         * intviee_reward[
+         *      intivee_reward_by
+         *      intivee_reward_type
+         *      intivee_reward_value
+         * ]
+     * ]
+     * 新增：
+     * affiliate[
+     *  signup_on //邀请注册奖励开关0,1
+     * ]
+     */
+    public function update()
+    {
+        $this->admin_priv('affiliate_config', ecjia::MSGTYPE_JSON);
 
-		$separate_by 		= isset($_POST['separate_by']) 		? intval($_POST['separate_by']) 	: $config['config']['separate_by'];
-		$expire_unit 		= isset($_POST['expire_unit']) 		? $_POST['expire_unit'] 			: $config['config']['expire_unit'];
-		$invite_template	= isset($_POST['invite_template']) 	? trim($_POST['invite_template']) 	: '';
-		$invite_explain		= isset($_POST['invite_explain']) 	? $_POST['invite_explain'] 			: '';
-		$invitee_rule_explain = isset($_POST['invitee_rule_explain']) ? $_POST['invitee_rule_explain'] : '';
+        $config = unserialize(ecjia::config('affiliate'));
 
-		$_POST['expire'] 			= (float)$_POST['expire'];
-		$_POST['level_point_all'] 	= (float)$_POST['level_point_all'];
-		$_POST['level_money_all'] 	= (float)$_POST['level_money_all'];
-		$_POST['level_money_all'] 	> 100 && $_POST['level_money_all'] = 100;
-		$_POST['level_point_all'] 	> 100 && $_POST['level_point_all'] = 100;
-		
-		if (!empty($_POST['level_point_all']) && strpos($_POST['level_point_all'], '%') === false) {
-			$_POST['level_point_all'] .= '%';
-		}
-		if (!empty($_POST['level_money_all']) && strpos($_POST['level_money_all'], '%') === false) {
-			$_POST['level_money_all'] .= '%';
-		}
-		$_POST['level_register_all']			= intval($_POST['level_register_all']);
-		$_POST['level_register_up']				= intval($_POST['level_register_up']);
+        $expire_unit = isset($_POST['expire_unit']) ? $_POST['expire_unit'] : $config['config']['expire_unit'];
+        $invite_template = isset($_POST['invite_template']) ? trim($_POST['invite_template']) : '';
+        $invite_explain = isset($_POST['invite_explain']) ? $_POST['invite_explain'] : '';
+        $invitee_rule_explain = isset($_POST['invitee_rule_explain']) ? $_POST['invitee_rule_explain'] : '';
 
-		$temp = array();
-		$temp['on'] = (intval($_POST['on']) == 1) ? 1 : 0;
-		
-		if ($temp['on'] == 1) {
-			$temp['config'] = array(
-				'expire'                		=> $_POST['expire'],             //COOKIE过期数字
-				'expire_unit'           		=> $expire_unit,        		 //单位：小时、天、周
-				'separate_by'           		=> $separate_by,                 //分成模式：0、注册 1、订单
-				'level_point_all'       		=> $_POST['level_point_all'],    //积分分成比
-				'level_money_all'       		=> $_POST['level_money_all'],    //金钱分成比
-				'level_register_all'    		=> intval($_POST['level_register_all']), //推荐注册奖励积分
-				'level_register_up'     		=> intval($_POST['level_register_up']),  //推荐注册奖励积分上限
-			);
-			
-			/* 邀请人奖励*/
-			$intive_reward_by	= trim($_POST['intive_reward_by']) == 'orderpay' ? 'orderpay' : 'signup';
-			$intive_reward_type = trim($_POST['intive_reward_type']);
-			if ($intive_reward_type == 'bonus') {
-				$intive_reward_value = intval($_POST['intive_reward_type_bonus']);
-			} elseif ($intive_reward_type == 'integral') {
-				$intive_reward_value = intval($_POST['intive_reward_type_integral']);
-			} else {
-				$intive_reward_value = trim($_POST['intive_reward_type_balance']);
-			}
-			
-			/* 受邀人奖励*/
-			$intivee_reward_by	= trim($_POST['intivee_reward_by']) == 'orderpay' ? 'orderpay' : 'signup';
-			$intivee_reward_type = trim($_POST['intivee_reward_type']);
-			if ($intivee_reward_type == 'bonus') {
-				$intivee_reward_value = intval($_POST['intivee_reward_type_bonus']);
-			} elseif ($intivee_reward_type == 'integral') {
-				$intivee_reward_value = intval($_POST['intivee_reward_type_integral']);
-			} else {
-				$intivee_reward_value = trim($_POST['intivee_reward_type_balance']);
-			}
-			
-			$temp['intvie_reward'] = array(
-				'intive_reward_by'		=> $intive_reward_by,
-				'intive_reward_type'	=> $intive_reward_type,
-				'intive_reward_value'	=> $intive_reward_value
-			);
-			
-			$temp['intviee_reward'] = array(
-				'intivee_reward_by'		=> $intivee_reward_by,
-				'intivee_reward_type'	=> $intivee_reward_type,
-				'intivee_reward_value'	=> $intivee_reward_value
-			);
-			
-		} else {
-			$temp['config'] = !empty($config['config']) ? $config['config'] : '';
-		}
-		
-		$temp['item'] = !empty($config['item']) ? $config['item'] : array();
-		
-		ecjia_config::instance()->write_config('affiliate', serialize($temp));
-		ecjia_config::instance()->write_config('invite_template', $invite_template);
-		ecjia_config::instance()->write_config('invite_explain', $invite_explain);
-		ecjia_config::instance()->write_config('invitee_rule_explain', $invitee_rule_explain);
+        $_POST['expire'] = (float)$_POST['expire'];
+        $_POST['level_money_all'] = (float)$_POST['level_money_all'];
+        $_POST['level_money_all'] > 100 && $_POST['level_money_all'] = 100;
 
-		ecjia_admin::admin_log(__('推荐设置', 'affiliate'), 'edit', 'config');
-		
-		return $this->showmessage(__('编辑成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_config/init')));
-	}
+        if (!empty($_POST['level_money_all']) && strpos($_POST['level_money_all'], '%') === false) {
+            $_POST['level_money_all'] .= '%';
+        }
+
+        $temp = array();
+        $temp['on'] = (intval($_POST['on']) == 1) ? 1 : 0;//是否开启邀请订单奖励
+        $temp['signup_on'] = (intval($_POST['signup_on']) == 1) ? 1 : 0;//是否开启邀请注册奖励
+
+            $temp['config'] = array(
+                'expire'          => $_POST['expire'],             //COOKIE过期数字
+                'expire_unit'     => $expire_unit,                 //单位：小时、天、周
+                'level_money_all' => $_POST['level_money_all'],    //金钱分成比
+            );
+
+            $intive_reward_by = trim($_POST['intive_reward_by']) == 'orderpay' ? 'orderpay' : 'signup';//奖励机制
+            /* 邀请人奖励*/
+            $intive_reward_value = trim($_POST['intive_reward_type_balance']);
+            /* 受邀人奖励*/
+            $intivee_reward_value = trim($_POST['intivee_reward_type_balance']);
+
+            $temp['intvie_reward'] = array(
+                'intive_reward_by'    => $intive_reward_by,
+                'intive_reward_value' => $intive_reward_value
+            );
+
+            $temp['intviee_reward'] = array(
+                'intivee_reward_by'    => $intive_reward_by,
+                'intivee_reward_value' => $intivee_reward_value
+            );
+
+            $temp['config'] = !empty($config['config']) ? $config['config'] : '';
+
+//        $temp['item'] = !empty($config['item']) ? $config['item'] : array();
+
+//        _dump($temp,1);
+
+        ecjia_config::instance()->write_config('affiliate', serialize($temp));
+        ecjia_config::instance()->write_config('invite_template', $invite_template);
+        ecjia_config::instance()->write_config('invite_explain', $invite_explain);
+        ecjia_config::instance()->write_config('invitee_rule_explain', $invitee_rule_explain);
+
+        ecjia_admin::admin_log(__('分销推广设置', 'affiliate'), 'edit', 'config');
+
+        return $this->showmessage(__('编辑成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_config/init')));
+    }
+
+    /**
+     * 分销设置
+     */
+    public function distribution()
+    {
+        $this->admin_priv('affiliate_config');
+        $this->assign('ur_here', __('VIP分销设置', 'affiliate'));
+
+        RC_Style::enqueue_style('affiliate-css', RC_App::apps_url('statics/css/affiliate.css', __FILE__));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('邀请推广设置', 'affiliate')));
+
+        $this->assign('distribution_max_number', ecjia::config('distribution_max_number'));
+
+        $this->assign('current_code', 'affiliate-distribution-config');
+        $this->assign('form_action', RC_Uri::url('affiliate/admin_config/update_distribution'));
+
+        return $this->display('affiliate_config_distribution.dwt');
+    }
+
+
+    /**
+     * 修改配置
+     */
+    public function update_distribution()
+    {
+        $this->admin_priv('affiliate_config', ecjia::MSGTYPE_JSON);
+
+        $distribution_max_number = isset($_POST['distribution_max_number']) ? intval($_POST['distribution_max_number']) : 10;
+
+        if (!ecjia::config('distribution_max_number', ecjia::CONFIG_CHECK)) {
+            ecjia_config::instance()->insert_config('hidden', 'distribution_max_number', '', array('type' => 'hidden'));
+        }
+        ecjia_config::instance()->write_config('distribution_max_number', $distribution_max_number);
+
+        ecjia_admin::admin_log(__('分销推广设置', 'affiliate'), 'edit', 'config');
+
+        return $this->showmessage(__('VIP分销设置', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin_config/distribution')));
+
+    }
+
 }
 
 //end
