@@ -129,6 +129,7 @@ class admin_config extends ecjia_admin
      * ]
      * 新增：
      * affiliate[
+     *  vip_on //vip奖励开关
      *  signup_on //邀请注册奖励开关0,1
      * ]
      */
@@ -153,6 +154,7 @@ class admin_config extends ecjia_admin
 
         $temp = array();
         $temp['on'] = (intval($_POST['on']) == 1) ? 1 : 0;//是否开启邀请订单奖励
+        $temp['vip_on'] = (intval($_POST['vip_on']) == 1) ? 1 : 0;//是否开启VIP邀请订单奖励
         $temp['signup_on'] = (intval($_POST['signup_on']) == 1) ? 1 : 0;//是否开启邀请注册奖励
 
             $temp['config'] = array(

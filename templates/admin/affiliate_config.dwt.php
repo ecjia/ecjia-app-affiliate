@@ -75,6 +75,22 @@
                 </div>
             </div>
 
+            <h3 class="heading">{t domain="affiliate"}VIP推荐订单奖励设置{/t}</h3>
+            <div class="control-group ">
+                <label class="control-label">{t domain="affiliate"}是否开启奖励：{/t}</label>
+                <div class="controls chk_radio">
+                    <input type="radio" name="vip_on" value="1" {if $config.vip_on eq 1} checked="true" {/if}>
+                    <span>{t domain="affiliate"}开启{/t}</span>
+                    <input type="radio" name="vip_on" value="0" {if !$config.vip_on || $config.vip_on eq 0} checked="true" {/if}>
+                    <span>{t domain="affiliate"}关闭{/t}</span>
+                    <div class="help-block">
+                        VIP推荐订单奖励开启的情况下，并且会员是分销商时，优先发放VIP奖励；<br>
+                        VIP推荐订单奖励和普通推荐订单奖励同时开启的情况下，分销商优先发放VIP奖励，普通会员只发放普通奖励，奖励只计算一种，不重复计算。
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
 
             <h3 class="heading">{t domain="affiliate"}邀请注册奖励设置{/t}</h3>
             <div class="control-group formSep">

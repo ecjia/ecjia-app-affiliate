@@ -17,7 +17,7 @@
                 <label class="control-label">{t domain="affiliate"}分销商数量上限：{/t}</label>
                 <div class="controls chk_radio">
                     <input type="text" name="distribution_max_number" value="{$distribution_max_number}"/> 个
-                    <div class="help-block">{t domain="affiliate"}设置所有商家默认最多可添加的分销商数量。{/t}</div>
+                    <div class="help-block">{t domain="affiliate"}设置每个商家最多可添加的分销商数量。{/t}</div>
                 </div>
             </div>
             <div class="control-group">
