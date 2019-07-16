@@ -32,8 +32,7 @@
 					<label class="control-label">{t domain="affiliate"}会员等级：{/t}</label>
 					<div class="controls">
 						<select class="w350" name="user_rank">
-							<option value="0">{t domain="affiliate"}非特殊等级{/t}</option>
-							<!-- {html_options options=$special_ranks selected=$user.user_rank} -->
+							<!-- {html_options options=$special_ranks selected=$data.user_rank} -->
 						</select>
 						<div class="help-block">{t domain="affiliate"}升级到此等级的分销商，能够同时成为设置的会员等级{/t}</div>
 					</div>
@@ -88,13 +87,13 @@
 
 				<div class="control-group">
 					<div class="controls">
-						<input type="hidden" name="id" value="{$goods.goods_id}"/>
+						<input type="hidden" name="goods_id" value="{$goods.goods_id}"/>
 						<input type="hidden" name="grade_id" value="{$data.grade_id}"/>
-						<!-- {if $data.grade_id} -->
-						<button class="btn btn-gebo" type="submit">{t domain="affiliate"}更新{/t}</button>
-						<!-- {else} -->
-						<button class="btn btn-gebo" type="submit">{t domain="affiliate"}确定{/t}</button>
-						<!-- {/if} -->
+                        <!-- {if $grade_id} -->
+                        <input type="submit" value='{t domain="affiliate"}更新{/t}' class="btn btn-info"/>
+                        <!-- {else} -->
+                        <input type="submit" value='{t domain="affiliate"}确定{/t}' class="btn btn-info"/>
+                        <!-- {/if} -->
 					</div>
 				</div>
 			</fieldset>

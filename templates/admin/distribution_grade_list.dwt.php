@@ -32,7 +32,7 @@
 					<td>{$list.limit_days}</td>
 					<td>
 						<a class="data-pjax" href='{url path="affiliate/admin_distribution_grade/edit" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}编辑{/t}'><i class="fontello-icon-edit"></i></a>
-						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate"}您确定要删除吗？{/t}' href='{url path="affiliate/admin_distribution_grade/remove" args="id={$list.grade_id}"}' title='{t domain="affiliate"}删除{/t}'><i class="fontello-icon-trash"></i></a>
+						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate"}您确定要删除该分销权益吗？{/t}' href='{url path="affiliate/admin_distribution_grade/remove" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}删除{/t}'><i class="fontello-icon-trash"></i></a>
 					</td>
 				</tr>
 			   	<!-- {foreachelse} -->
