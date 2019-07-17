@@ -84,7 +84,14 @@
 						</div>
 					</div>
 				</div>
-
+				
+				<div class="control-group formSep">
+					<label class="control-label">{t domain="affiliate"}排序：{/t}</label>
+					<div class="controls">
+						<input class="w350" type="text" name="sort_order" value="{$data.sort_order}"/>
+					</div>
+				</div>
+				
 				<div class="control-group">
 					<div class="controls">
 						<input type="hidden" name="goods_id" value="{$goods.goods_id}"/>

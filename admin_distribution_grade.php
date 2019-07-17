@@ -104,6 +104,7 @@ class admin_distribution_grade extends ecjia_admin {
 		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distribution_grade/init'), 'text' => __('分销商权益列表', 'affiliate')));
 		
 		$data['limit_days'] = 1;
+		$data['sort_order'] = 10;
 		$this->assign('data', $data);
 		
 		$this->assign('special_ranks', get_user_rank_list(true));
@@ -125,8 +126,10 @@ class admin_distribution_grade extends ecjia_admin {
 		$user_rank  = !empty($_POST['user_rank'])       ? intval($_POST['user_rank']) 		    : 0;
 		$goods_id   = !empty($_POST['goods_id'])        ? intval($_POST['goods_id'])            : 0;
 		$limit_days = !empty($_POST['limit_days'])      ? intval($_POST['limit_days'])          : 1;
+		$sort_order = !empty($_POST['sort_order'])      ? intval($_POST['sort_order'])          : 10;
 		$user_card_intro    = !empty($_POST['user_card_intro'])     ? trim($_POST['user_card_intro'])   : '';
 		$grade_intro   		= !empty($_POST['grade_intro'])         ? trim($_POST['grade_intro'])       : '';
+	
 		
 		if (RC_DB::table('affiliate_grade')->where('grade_name', $grade_name)->count() > 0) {
 			return $this->showmessage(sprintf(__('权益名称 %s 已经存在。', 'affiliate'), $grade_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -143,6 +146,7 @@ class admin_distribution_grade extends ecjia_admin {
 			'limit_days'   	  => $limit_days,
 			'user_card_intro' => $user_card_intro,
 			'grade_intro'  	  => $grade_intro,
+			'sort_order'  	  => $sort_order,
 			'add_time'     	  => RC_Time::gmtime(),
 		);
 			
@@ -198,6 +202,7 @@ class admin_distribution_grade extends ecjia_admin {
 		$user_rank  = !empty($_POST['user_rank'])       ? intval($_POST['user_rank']) 		    : 0;
 		$goods_id   = !empty($_POST['goods_id'])        ? intval($_POST['goods_id'])            : 0;
 		$limit_days = !empty($_POST['limit_days'])      ? intval($_POST['limit_days'])          : 1;
+		$sort_order = !empty($_POST['sort_order'])      ? intval($_POST['sort_order'])          : 10;
 		$user_card_intro    = !empty($_POST['user_card_intro'])     ? trim($_POST['user_card_intro'])   : '';
 		$grade_intro   		= !empty($_POST['grade_intro'])         ? trim($_POST['grade_intro'])       : '';
 		
@@ -216,6 +221,7 @@ class admin_distribution_grade extends ecjia_admin {
 			'limit_days'   	  => $limit_days,
 			'user_card_intro' => $user_card_intro,
 			'grade_intro'  	  => $grade_intro,
+			'sort_order'  	  => $sort_order,
 			'add_time'     	  => RC_Time::gmtime(),
 		);
 			
@@ -313,7 +319,8 @@ class admin_distribution_grade extends ecjia_admin {
 		$list = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {
-				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['add_time']  		   = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['distributor_count']  = RC_DB::table('affiliate_distributor')->where('grade_id', $row['grade_id'])->count();
 				$list[] = $row;
 			}
 		}

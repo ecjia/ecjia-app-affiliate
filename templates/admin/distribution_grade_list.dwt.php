@@ -28,7 +28,7 @@
 				<tr>
 					<td>{$list.grade_name}</td>
 					<td>{$list.rank_name}</td>
-					<td>66</td>
+					<td>{$list.distributor_count}</td>
 					<td>{$list.limit_days}</td>
 					<td>
 						<a class="data-pjax" href='{url path="affiliate/admin_distribution_grade/edit" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}编辑{/t}'><i class="fontello-icon-edit"></i></a>
