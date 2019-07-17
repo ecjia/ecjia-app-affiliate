@@ -55,6 +55,7 @@ class admin_distribution_grade extends ecjia_admin {
 		parent::__construct();
 		
 		RC_Loader::load_app_func('admin_category', 'goods');
+		RC_Loader::load_app_func('admin_user', 'user');
 		
 		/* 加载所需js */
 		RC_Script::enqueue_script('smoke');
@@ -103,10 +104,10 @@ class admin_distribution_grade extends ecjia_admin {
 		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distribution_grade/init'), 'text' => __('分销商权益列表', 'affiliate')));
 		
 		$data['limit_days'] = 1;
+		$data['sort_order'] = 10;
 		$this->assign('data', $data);
 		
-		$rank_list = $this->get_user_rank_list(true);
-		$this->assign('special_ranks', $rank_list);
+		$this->assign('special_ranks', get_user_rank_list(true));
 		
 		$this->assign('cat_list', RC_Api::api('goods', 'get_goods_category'));
 		
@@ -123,17 +124,19 @@ class admin_distribution_grade extends ecjia_admin {
 		
 		$grade_name = !empty($_POST['grade_name'])      ? trim($_POST['grade_name'])            : '';
 		$user_rank  = !empty($_POST['user_rank'])       ? intval($_POST['user_rank']) 		    : 0;
-		$goods_id   = !empty($_POST['id'])        		? intval($_POST['id'])            : 0;
+		$goods_id   = !empty($_POST['goods_id'])        ? intval($_POST['goods_id'])            : 0;
 		$limit_days = !empty($_POST['limit_days'])      ? intval($_POST['limit_days'])          : 1;
+		$sort_order = !empty($_POST['sort_order'])      ? intval($_POST['sort_order'])          : 10;
 		$user_card_intro    = !empty($_POST['user_card_intro'])     ? trim($_POST['user_card_intro'])   : '';
 		$grade_intro   		= !empty($_POST['grade_intro'])         ? trim($_POST['grade_intro'])       : '';
+	
 		
 		if (RC_DB::table('affiliate_grade')->where('grade_name', $grade_name)->count() > 0) {
 			return $this->showmessage(sprintf(__('权益名称 %s 已经存在。', 'affiliate'), $grade_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
 		if (empty($goods_id)) {
-			return $this->showmessage(__('请选指定商品', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage(__('请先指定商品', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
 		$data = array(
@@ -143,6 +146,7 @@ class admin_distribution_grade extends ecjia_admin {
 			'limit_days'   	  => $limit_days,
 			'user_card_intro' => $user_card_intro,
 			'grade_intro'  	  => $grade_intro,
+			'sort_order'  	  => $sort_order,
 			'add_time'     	  => RC_Time::gmtime(),
 		);
 			
@@ -170,6 +174,16 @@ class admin_distribution_grade extends ecjia_admin {
 		
 		$grade_id = intval($_GET['grade_id']);
 		$data = RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->first();
+		$this->assign('data', $data);
+		
+		$goods = RC_DB::table('goods')->where('goods_id', $data['goods_id'])->first();
+		$goods['goods_thumb']           = !empty($goods['goods_thumb']) && file_exists(RC_Upload::upload_path($goods['goods_thumb'])) ? RC_Upload::upload_url($goods['goods_thumb']) : RC_Uri::admin_url('statics/images/nopic.png');
+		$goods['formated_shop_price']   = ecjia_price_format($goods['shop_price']);
+		$goods['formated_market_price'] = ecjia_price_format($goods['market_price']);
+		$goods['formated_cost_price'] 	= ecjia_price_format($goods['cost_price']);
+		$this->assign('goods', $goods);
+		
+		$this->assign('special_ranks', get_user_rank_list(true));
 		
 		$this->assign('form_action', RC_Uri::url('affiliate/admin_distribution_grade/update'));
 		
@@ -182,7 +196,43 @@ class admin_distribution_grade extends ecjia_admin {
 	 */
 	public function update() {
 		$this->admin_priv('distribution_grade_update');
-
+		
+		$grade_id   = !empty($_POST['grade_id'])       	? intval($_POST['grade_id'])           	: 0;
+		$grade_name = !empty($_POST['grade_name'])      ? trim($_POST['grade_name'])            : '';
+		$user_rank  = !empty($_POST['user_rank'])       ? intval($_POST['user_rank']) 		    : 0;
+		$goods_id   = !empty($_POST['goods_id'])        ? intval($_POST['goods_id'])            : 0;
+		$limit_days = !empty($_POST['limit_days'])      ? intval($_POST['limit_days'])          : 1;
+		$sort_order = !empty($_POST['sort_order'])      ? intval($_POST['sort_order'])          : 10;
+		$user_card_intro    = !empty($_POST['user_card_intro'])     ? trim($_POST['user_card_intro'])   : '';
+		$grade_intro   		= !empty($_POST['grade_intro'])         ? trim($_POST['grade_intro'])       : '';
+		
+		if (RC_DB::table('affiliate_grade')->where('grade_id', '!=', $grade_id)->where('grade_name', $grade_name)->count() > 0) {
+			return $this->showmessage(sprintf(__('权益名称 %s 已经存在。', 'affiliate'), $grade_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
+		
+		if (empty($goods_id)) {
+			return $this->showmessage(__('请先指定商品', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
+		
+		$data = array(
+			'grade_name'   	  => $grade_name,
+			'user_rank'    	  => $user_rank,
+			'goods_id'     	  => $goods_id,
+			'limit_days'   	  => $limit_days,
+			'user_card_intro' => $user_card_intro,
+			'grade_intro'  	  => $grade_intro,
+			'sort_order'  	  => $sort_order,
+			'add_time'     	  => RC_Time::gmtime(),
+		);
+			
+		RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->update($data);
+		
+		$pjaxurl = RC_Uri::url('affiliate/admin_distribution_grade/edit', array('grade_id' => $grade_id));
+		if($grade_id) {
+			return $this->showmessage(__('分销权益编辑成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array(pjaxurl => $pjaxurl));
+		} else {
+			return $this->showmessage(__('分销权益编辑失败', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
 	}
 
 	/**
@@ -191,6 +241,9 @@ class admin_distribution_grade extends ecjia_admin {
 	public function remove() {
 		$this->admin_priv('distribution_grade_delete');
 		
+		$grade_id = intval($_GET['grade_id']);
+		RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->delete();
+		return $this->showmessage(__('删除分销权益成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}	
 	
 	/**
@@ -227,42 +280,25 @@ class admin_distribution_grade extends ecjia_admin {
 	}
 	
 	public function get_goods_info() {
-		$goods_id = intval($_POST['id']);
+		$goods_id = intval($_POST['goods_id']);
 		
 		$goods = RC_DB::table('goods')->where('goods_id', $goods_id)->first();
 		$goods['goods_thumb']           = !empty($goods['goods_thumb']) && file_exists(RC_Upload::upload_path($goods['goods_thumb'])) ? RC_Upload::upload_url($goods['goods_thumb']) : RC_Uri::admin_url('statics/images/nopic.png');
 		$goods['formated_shop_price']   = ecjia_price_format($goods['shop_price']);
 		$goods['formated_market_price'] = ecjia_price_format($goods['market_price']);
+		$goods['formated_cost_price'] 	= ecjia_price_format($goods['cost_price']);
 		$this->assign('goods', $goods);
-	
+		
 		$type = remove_xss($_POST['type']);
 		if ($type == 'add') {
-			$content = $this->fetch('goods.dwt');
+			$content = $this->fetch('library/goods.lbi');
 		} else {
-			$content = $this->fetch('goods_info.dwt');
+			$content = $this->fetch('library/goods_info.lbi');
 		}
+		
 		return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $content));
 	}
 
-	private function get_user_rank_list($is_special = false) {
-		$db_user_rank = RC_DB::table('user_rank');
-	
-		$rank_list = array();
-		if ($is_special) {
-			$db_user_rank->where('special_rank', 1);
-		}
-	
-		$data = $db_user_rank->select('rank_id', 'rank_name')->orderBy('min_points', 'asc')->get();
-	
-		if (!empty($data)) {
-			foreach ($data as $row) {
-				$rank_list[$row['rank_id']] = $row['rank_name'];
-			}
-		}
-		return $rank_list;
-	}
-	
-	
 	/**
 	 * 获取权益列表
 	 */
@@ -283,7 +319,8 @@ class admin_distribution_grade extends ecjia_admin {
 		$list = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {
-				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['add_time']  		   = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['distributor_count']  = RC_DB::table('affiliate_distributor')->where('grade_id', $row['grade_id'])->count();
 				$list[] = $row;
 			}
 		}

@@ -21,20 +21,20 @@
                     'goods_sn': goods_sn
                 };
                 $.post(searchURL, filters, function (data) {
-                    $("input[name='id']").val('');
+                    $("input[name='goods_id']").val('');
                     app.distribution_grade_info.goods_list(data);
                 }, "JSON");
             });
 
             $('.select-goods-btn').off('click').on('click', function () {
                 var url = $(".nav-list-ready").attr('data-url'),
-                    id = $("input[name='id']").val();
-                if (id == '' || id == 0 || id == undefined) {
+                	goods_id = $("input[name='goods_id']").val();
+                if (goods_id == '' || goods_id == 0 || goods_id == undefined) {
                     smoke.alert(js_lang.pls_select_goods, {ok: js_lang.ok});
                     return false;
                 }
                 var json = {
-                    'id': id,
+                    'goods_id': goods_id,
                     'type': 'add'
                 };
                 $.post(url, json, function (data) {
@@ -54,7 +54,7 @@
             if (data.content.length > 0) {
                 for (var i = 0; i < data.content.length; i++) {
                     var disable = $('.nav-list-content .ms-elem-selection').find('input[value="' + data.content[i].value + '"]').length ? 'disabled' : '';
-                    var opt = '<li class="ms-elem-selectable ' + disable + '" data-id="' + data.content[i].goods_id + '"><span>' + data.content[i].goods_name + '</span></li>'
+                    var opt = '<li class="ms-elem-selectable ' + disable + '" data-goods-id="' + data.content[i].goods_id + '"><span>' + data.content[i].goods_name + '</span></li>'
                     $('.nav-list-ready').append(opt);
                 }
             } else {
@@ -89,16 +89,16 @@
         add_link: function () {
             $('.nav-list-ready li').on('click', function () {
                 var $this = $(this),
-                    id = $this.attr('data-id'),
+                	goods_id = $this.attr('data-goods-id'),
                     url = $('.nav-list-ready').attr('data-url');
                 
-                $('input[name="id"]').val(id);
+                $('input[name="goods_id"]').val(goods_id);
                 if (!$this.hasClass('disabled')) {
                     $this.addClass('disabled');
                     $this.siblings('li').removeClass('disabled');
 
                     $('.nav-list-content').html('');
-                    $.post(url, {id: id}, function (data) {
+                    $.post(url, {goods_id: goods_id}, function (data) {
                         $('.nav-list-content').html(data.content);
                     });
                 }
