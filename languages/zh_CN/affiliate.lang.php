@@ -64,11 +64,11 @@ return array(
 	'level_register_all' 	=> '注册积分分成数：',
 	'level_register_up' 	=> '成长值分成上限：',
 	'level_point' 			=> '积分分成百分比',
-	'level_money' 			=> '现金分成百分比',
+	'level_money' 			=> '现金分成比例',
 		
 
 	'label_level_point'		=> '积分分成百分比：',
-	'label_level_money' 	=> '现金分成百分比：',
+	'label_level_money' 	=> '现金分成比例：',
 		
 	'edit_ok' 				=> '操作成功',
 	'level_error'		 	=> '最多可以设5个级别！',
@@ -107,8 +107,8 @@ return array(
 	'affiliate_percent_list' => '分成比例列表',
 	'level_point_empty'	=> '请输入积分分成百分比',
 	'level_point_wrong'	=> '积分分成百分比格式不正确，应为数字类型',
-	'level_money_empty'	=> '请输入现金分成百分比',
-	'level_money_wrong'	=> '现金分成百分比格式不正确，应为数字类型',
+	'level_money_empty'	=> '请输入现金分成比例',
+	'level_money_wrong'	=> '现金分成比例格式不正确，应为数字类型',
 	'add_success'		=> '添加成功',
 	'level_point_is'	=> '积分百分比为 ',
 	'level_money_is'	=> '现金百分比为 ',
@@ -118,7 +118,7 @@ return array(
 	'remove_fail'		=> '删除失败',
 	'affiliate_type'	=> '推荐分成类型：',
 	'edit_level_point'	=> '编辑积分分成百分比',
-	'edit_level_money'	=> '编辑现金分成百分比',
+	'edit_level_money'	=> '编辑现金分成比例',
 	
 	'affiliate_config'		=> '推荐邀请设置',
 	'affiliate_manage'		=> '推荐管理',
