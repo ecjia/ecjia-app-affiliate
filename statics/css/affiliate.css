@@ -220,6 +220,30 @@
 }
 
 
+.order_number{
+	text-align:center;
+	font-size: 16px;
+}
+
+.order_number span{
+	font-size: 16px;
+	margin: 0 48px 0 64px;
+}
+.count_box{
+	border-radius: 4px;
+	background-color: #e7e7e7;
+	height:50px;
+	margin-bottom:10px;
+}
+.count_box p{
+	line-height:50px;
+	margin-left:10px;
+}
+.count_box span{
+	font-weight:bold;
+}
+
+
 
 
 

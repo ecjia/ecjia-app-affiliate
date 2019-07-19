@@ -5,38 +5,46 @@
         </div>
         <div class="right">
             <div class="name">{$goods.goods_name}</div>
-            <div class="goods_sn">{t domain="promotion"}货号：{/t}{$goods.goods_sn}</div>
+            <div class="goods_sn">{t domain="affiliate"}货号：{/t}{$goods.goods_sn}</div>
             <div class="info">
                 <span class="price">{$goods.formated_shop_price}</span>
-                <span class="market_price">{t domain="promotion"}市场价：{/t}{$goods.formated_market_price}</span>
-                <span class="goods_number">{t domain="promotion"}库存：{/t}{$goods.goods_number}</span>
+                <span class="market_price">{t domain="affiliate"}市场价：{/t}{$goods.formated_market_price}</span>
+                <span class="goods_number">{t domain="affiliate"}库存：{/t}{$goods.goods_number}</span>
             </div>
-            <div><a target="_blank" href='{url path="goods/merchant/preview" args="id={$goods.goods_id}"}'>{t domain="promotion"}预览>>{/t}</a>
+            <div><a target="_blank" href='{url path="goods/merchant/preview" args="id={$goods.goods_id}"}'>{t domain="affiliate"}预览>>{/t}</a>
             </div>
         </div>
     </div>
 
-    {if $products}
     <div class="product-info">
-        <div class="title">{t domain="promotion"}货品SKU{/t}</div>
-        {foreach from=$products item=val}
+    	{if $data_grade or $brokerage}
+        	<div class="title">{t domain="affiliate"}推广佣金{/t}</div>
+        {/if}
+        
         <div class="goods-info m_b10">
-            <div class="left">
-                <img src="{$val.product_thumb}" alt="">
-            </div>
-            <div class="right">
-                <div class="name">{$val.product_name} {$val.attr_value}</div>
-                <div class="goods_sn">
-                	{t domain="promotion"}货号：{/t}{$val.product_sn}
-                    {if $val.product_bar_code}<br><span class="goods_number">{t domain="promotion"}条形码：{/t}{$val.product_bar_code}</span>{/if}
-                </div>
-                <div class="info">
-                    <span class="price">{$val.formated_attr_price}</span>
-                    <span class="goods_number">{t domain="promotion"}库存：{/t}{$val.product_number}</span>
-                </div>
-            </div>
+         	 {if $brokerage}
+             	<label>{t domain="affiliate"}门店佣金：{/t}{$brokerage}</label>
+			 {/if}	
+			 
+        	 {if $data_grade}	
+             <label class="w10">{t domain="affiliate"}分销权益：{/t}</label>
+             <table class="table table-striped">
+				<thead>
+					<tr>
+						<th>{t domain="affiliate"}分销等级{/t}</th>
+						<th>{t domain="affiliate"}佣金{/t}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- {foreach from=$data_grade item=val} -->
+					<tr>
+						<td>{$val.grade_name}</td>
+						<td>{$val.formated_grade_price}</td>
+					</tr>
+		        	<!-- {/foreach} -->
+				</tbody>
+			 </table>
+             {/if}
         </div>
-        {/foreach}
     </div>
-    {/if}
 </div>

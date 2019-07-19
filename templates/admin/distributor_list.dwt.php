@@ -54,7 +54,7 @@
 		      	<td class="hide-edit-area">
 					{$list.user_name}<br>{$list.mobile_phone}
 		     	  	<div class="edit-list">
-						<a class="data-pjax" href='{url path="affiliate/admin_distributor/detail" args="id={$list.user_id}"}' title='{t domain="affiliate"}查看详情{/t}' >{t domain="affiliate"}查看详情{/t}</a>
+						<a class="data-pjax" href='{url path="affiliate/admin_distributor/detail" args="user_id={$list.user_id}"}' title='{t domain="affiliate"}查看详情{/t}' >{t domain="affiliate"}查看详情{/t}</a>
 		    	  	</div>
 		      	</td>
 		      	

@@ -66,6 +66,8 @@ class admin_distributor extends ecjia_admin {
 		RC_Style::enqueue_style('bootstrap-editable', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css'));
 		RC_Script::enqueue_script('bootstrap-editable.min', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js'));
 		
+		RC_Style::enqueue_style('affiliate', RC_App::apps_url('statics/css/affiliate.css', __FILE__), array());
+		
 		RC_Script::enqueue_script('admin_distributor', RC_App::apps_url('statics/js/admin_distributor.js', __FILE__));
 	}
 	
@@ -87,10 +89,73 @@ class admin_distributor extends ecjia_admin {
 	}
 	
 	/**
-	 * 获取权益列表
+	 * 分销商详情
+	 */
+	public function detail() {
+		$this->admin_priv('distribution_grade_manage');
+	
+		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distributor/init'), 'text' => __('分销商列表', 'affiliate')));
+		
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分销商详情', 'affiliate')));
+		$this->assign('ur_here', __('分销商详情', 'affiliate'));
+
+		$user_id = intval($_GET['user_id']);
+		$db_distributor_view = RC_DB::table('affiliate_distributor as ad')
+		->leftJoin('affiliate_grade as ag', RC_DB::raw('ad.grade_id'), '=', RC_DB::raw('ag.grade_id'))
+		->leftJoin('users as u', RC_DB::raw('ad.user_id'), '=', RC_DB::raw('u.user_id'));
+		
+		$data = $db_distributor_view
+		->where(RC_DB::raw('ad.user_id'), $user_id)
+		->select(RC_DB::raw('ad.*'), RC_DB::raw('ag.grade_name'), RC_DB::raw('u.mobile_phone'), RC_DB::raw('u.user_name'), RC_DB::raw('u.user_rank'))
+		->first();
+		$data['rank_name'] = RC_DB::table('user_rank')->where('rank_id', $data['user_rank'])->pluck('rank_name');
+		$data['formatted_order_amount_total']      = ecjia_price_format($data['order_amount_total']);
+		$data['formatted_brokerage_amount_total']  = ecjia_price_format($data['brokerage_amount_total']);
+		$data['add_time']     = RC_Time::local_date('Y-m-d H:i:s', $data['add_time']);
+		$data['expiry_time']  = RC_Time::local_date('Y-m-d H:i:s', $data['expiry_time']);
+		if($data['parent_id']) {
+			$data['parent_name'] = RC_DB::table('users')->where('user_id', $data['parent_id'])->pluck('user_name');
+		}
+		
+		$data['team_count'] = RC_DB::table('affiliate_distributor')->where('parent_id', $user_id)->count();
+		$this->assign('data', $data);
+		
+		return $this->display('distributor_detail.dwt');
+	}
+	
+	/**
+	 * 团队列表
+	 */
+	public function team_list() {
+		$this->admin_priv('distribution_grade_manage');
+		
+		$user_id = intval($_GET['user_id']);
+		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin_distributor/detail', array('user_id' => $user_id)), 'text' => __('分销商详情', 'affiliate')));
+		
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分销商详情', 'affiliate')));
+		$this->assign('ur_here', __('团队列表', 'affiliate'));
+		
+		$distributor_name = RC_DB::table('users')->where('user_id', $user_id)->pluck('user_name');
+		$this->assign('distributor_name', $distributor_name);
+		 
+		$team_count = RC_DB::table('affiliate_distributor')->where('parent_id', $user_id)->count();
+		$this->assign('team_count', $team_count);
+		 
+		$data = $this->get_team_list($user_id);
+		$this->assign('data', $data);
+		
+		$this->assign('filter', $data['filter']);
+		 
+		$this->assign('search_action', RC_Uri::url('affiliate/admin_distributor/team_list', array('user_id' => $user_id)));
+
+		return $this->display('team_list.dwt');
+	}
+	
+	/**
+	 * 获取分销商列表
 	 */
 	private function get_distributor_list() {
-		$db_grade_view = RC_DB::table('affiliate_distributor as ad')
+		$db_distributor_view = RC_DB::table('affiliate_distributor as ad')
 		->leftJoin('affiliate_grade as ag', RC_DB::raw('ad.grade_id'), '=', RC_DB::raw('ag.grade_id'))
 		->leftJoin('users as u', RC_DB::raw('ad.user_id'), '=', RC_DB::raw('u.user_id'));
 		
@@ -98,25 +163,25 @@ class admin_distributor extends ecjia_admin {
 		$filter['keywords'] = trim($_GET['keywords']);
 		
 		if ($filter['keywords']) {
-			$db_grade_view->whereRaw('(u.user_name  like  "%' . mysql_like_quote($filter['keywords']) . '%"  or u.mobile_phone like "%' . mysql_like_quote($filter['keywords']) . '%")');
+			$db_distributor_view->whereRaw('(u.user_name  like  "%' . mysql_like_quote($filter['keywords']) . '%"  or u.mobile_phone like "%' . mysql_like_quote($filter['keywords']) . '%")');
 		}
 		
 		$time = RC_Time::gmtime();
 
-		$distributor_count = $db_grade_view->select(
+		$distributor_count = $db_distributor_view->select(
 				RC_DB::raw('SUM(IF(expiry_time >' . $time . ', 1, 0)) as can_use'),
 				RC_DB::raw('SUM(IF(expiry_time <' . $time . ', 1, 0)) as expiry'))->first();
 		
 		if ($filter['distributor_type'] == 'expiry') {//已过期
-			$db_grade_view->where(RC_DB::raw('expiry_time'), '<=', $time);
+			$db_distributor_view->where(RC_DB::raw('expiry_time'), '<=', $time);
 		} else {
-			$db_grade_view->where(RC_DB::raw('expiry_time'), '>=', $time);
+			$db_distributor_view->where(RC_DB::raw('expiry_time'), '>=', $time);
 		} 
 	
-		$count = $db_grade_view->count();
+		$count = $db_distributor_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		
-		$data = $db_grade_view
+		$data = $db_distributor_view
 		->select(RC_DB::raw('ad.*'), RC_DB::raw('ag.grade_name'), RC_DB::raw('u.user_rank'), RC_DB::raw('u.user_name'), RC_DB::raw('u.mobile_phone'))
 		->orderby(RC_DB::raw('ag.grade_id'), 'desc')
 		->take(10)
@@ -128,7 +193,6 @@ class admin_distributor extends ecjia_admin {
 			foreach ($data as $row) {
 				$row['formatted_order_amount_total']      = ecjia_price_format($row['order_amount_total']);
 				$row['formatted_brokerage_amount_total']  = ecjia_price_format($row['brokerage_amount_total']);
-				$row['rank_name']    = RC_DB::table('user_rank')->where('rank_id', $row['user_rank'])->pluck('rank_name');
 				$row['add_time']     = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
 				$row['expiry_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['expiry_time']);
 				$row['rank_name']    = RC_DB::table('user_rank')->where('rank_id', $row['user_rank'])->pluck('rank_name');
@@ -139,6 +203,42 @@ class admin_distributor extends ecjia_admin {
 			}
 		}
 		return array('list' => $list, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'filter' => $filter, 'distributor_count' => $distributor_count);
+	}
+	
+	/**
+	 * 获取团队列表
+	 */
+	private function get_team_list($user_id) {
+		$db_data = RC_DB::table('affiliate_distributor as ad')
+		->leftJoin('users as u', RC_DB::raw('ad.user_id'), '=', RC_DB::raw('u.user_id'));
+	
+		$db_data->where(RC_DB::raw('ad.parent_id'), $user_id);
+	
+		$filter['keywords']	 = trim($_GET['keywords']);
+	
+		if ($filter['keywords']) {
+			$db_data ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or u.mobile_phone like "%'.mysql_like_quote($filter['keywords']).'%")');
+		}
+	
+		$count = $db_data->count();
+		$page = new ecjia_page($count, 10, 5);
+	
+		$data = $db_data
+		->select(RC_DB::raw('ad.*'), RC_DB::raw('u.mobile_phone'), RC_DB::raw('u.user_name'))
+		->orderby(RC_DB::raw('ad.add_time'), 'desc')
+		->take(10)
+		->skip($page->start_id-1)
+		->get();
+		$list = array();
+		if (!empty($data)) {
+			foreach ($data as $row) {
+				$row['add_time']     = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['formatted_order_amount_total']      = ecjia_price_format($row['order_amount_total']);
+				$row['formatted_brokerage_amount_total']  = ecjia_price_format($row['brokerage_amount_total']);
+				$list[] = $row;
+			}
+		}
+		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc());
 	}
 }
 

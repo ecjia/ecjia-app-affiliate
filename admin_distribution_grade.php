@@ -174,6 +174,13 @@ class admin_distribution_grade extends ecjia_admin {
 		
 		$grade_id = intval($_GET['grade_id']);
 		$data = RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->first();
+		
+		if (!empty($data['user_card_intro'])) {
+			$data['user_card_intro'] = stripslashes($data['user_card_intro']);
+		}
+		if (!empty($data['grade_intro'])) {
+			$data['grade_intro'] = stripslashes($data['grade_intro']);
+		}
 		$this->assign('data', $data);
 		
 		$goods = RC_DB::table('goods')->where('goods_id', $data['goods_id'])->first();
@@ -288,6 +295,25 @@ class admin_distribution_grade extends ecjia_admin {
 		$goods['formated_market_price'] = ecjia_price_format($goods['market_price']);
 		$goods['formated_cost_price'] 	= ecjia_price_format($goods['cost_price']);
 		$this->assign('goods', $goods);
+		
+		$brokerage = RC_DB::table('affiliate_goods_brokerage')->where('goods_id', $goods_id)->where('store_id', $goods['store_id'])->pluck('brokerage');
+		if($brokerage > 0) {
+			$this->assign('brokerage', ecjia_price_format($brokerage));
+		}
+		
+		$data_grade = RC_DB::table('affiliate_grade_price')->select('grade_id', 'grade_price')->where('goods_id', $goods_id)->get();
+		if (!empty($data_grade)) {
+			foreach ($data_grade as $key => $row) {
+				if ($row['grade_price'] > 0) {
+					$data_grade[$key]['grade_name'] 			= RC_DB::table('affiliate_grade')->where('grade_id', $row['grade_id'])->pluck('grade_name');
+					$data_grade[$key]['formated_grade_price']	= ecjia_price_format($row['grade_price']);;
+				} else {
+					unset($data_grade[$key]);
+				}
+				
+			}
+		}
+		$this->assign('data_grade', $data_grade);
 		
 		$type = remove_xss($_POST['type']);
 		if ($type == 'add') {

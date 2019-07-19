@@ -3,9 +3,9 @@
         <thead>
             <tr>
                 <th class="w250">{t domain="affiliate"}店铺+商品信息{/t}</th>
-                <th>{t domain="affiliate"}编号{/t}</th>
-                <th class="w110">{t domain="affiliate"}成本价{/t}</th>
-                <th class="w110">{t domain="affiliate"}等级佣金{/t}</th>
+                <th class="w100">{t domain="affiliate"}编号{/t}</th>
+                <th class="w100">{t domain="affiliate"}成本价{/t}</th>
+                <th class="w200">{t domain="affiliate"}等级佣金{/t}</th>
                 <th class="w130">{t domain="affiliate"}门店佣金{/t}</th>
             </tr>
         </thead>
@@ -30,8 +30,16 @@
                 </div>
             </td>
             <td>{$goods.formated_cost_price}</td>
-            <td>00</td>
-            <td>00</td>
+            <td>
+	            {if $data_grade}
+	            <!-- {foreach from=$data_grade item=val} -->
+					{$val.grade_name}：{$val.formated_grade_price}<br>
+			    <!-- {/foreach} -->
+			    {else}
+			    	未设置
+			    {/if}
+		    </td>
+            <td>{if $brokerage}{$brokerage}{else}未设置{/if}</td>
         </tr>
     </table>
 </div>
