@@ -253,6 +253,7 @@ class admin_distribution_grade extends ecjia_admin {
 		return $this->showmessage(__('删除分销权益成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}	
 	
+	
 	/**
 	 * 添加/编辑页搜索商品
 	 */
@@ -336,7 +337,8 @@ class admin_distribution_grade extends ecjia_admin {
 		$page = new ecjia_page($count, 10, 5);
 		
 		$data = $db_grade
-		->select(RC_DB::raw('ag.grade_id'), RC_DB::raw('ag.grade_name'), RC_DB::raw('ag.limit_days'), RC_DB::raw('ur.rank_name'))
+		->select(RC_DB::raw('ag.grade_id'), RC_DB::raw('ag.grade_name'), RC_DB::raw('ag.limit_days'), RC_DB::raw('ag.sort_order'), RC_DB::raw('ur.rank_name'))
+		->orderBy(RC_DB::raw('ag.sort_order'), 'asc')
 		->orderby(RC_DB::raw('ag.grade_id'), 'desc')
 		->take(10)
 		->skip($page->start_id-1)

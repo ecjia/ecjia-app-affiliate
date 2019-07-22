@@ -20,6 +20,7 @@
 					<th>{t domain="affiliate"}会员等级{/t}</th>
 					<th>{t domain="affiliate"}分销商数量{/t}</th>
 					<th>{t domain="affiliate"}有效日期（年）{/t}</th>
+					<th>{t domain="affiliate"}排序{/t}</th>
 					<th>{t domain="affiliate"}操作{/t}</th>
 				</tr>
 			</thead>
@@ -30,6 +31,7 @@
 					<td>{$list.rank_name}</td>
 					<td>{$list.distributor_count}</td>
 					<td>{$list.limit_days}</td>
+					<td>{$list.sort_order}</td>
 					<td>
 						<a class="data-pjax" href='{url path="affiliate/admin_distribution_grade/edit" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}编辑{/t}'><i class="fontello-icon-edit"></i></a>
 						<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg='{t domain="affiliate"}您确定要删除该分销权益吗？{/t}' href='{url path="affiliate/admin_distribution_grade/remove" args="grade_id={$list.grade_id}"}' title='{t domain="affiliate"}删除{/t}'><i class="fontello-icon-trash"></i></a>
