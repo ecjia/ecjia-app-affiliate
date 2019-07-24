@@ -39,7 +39,7 @@
 				</tr>
 			   	<!-- {foreachelse} -->
 				<tr>
-					<td class="dataTables_empty" colspan="5">{t domain="affiliate"}没有找到任何记录{/t}</td>
+					<td class="dataTables_empty" colspan="6">{t domain="affiliate"}没有找到任何记录{/t}</td>
 				</tr>
 	        	<!-- {/foreach} -->
 			</tbody>

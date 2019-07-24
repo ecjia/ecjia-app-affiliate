@@ -68,7 +68,7 @@ class affiliate_grade_module extends api_front implements api_interface {
 
         $gradeList = AffiliateGradeModel::with([
             'goods_model' => function($query) {
-                $query->select('goods_id', 'goods_sn', 'goods_name', 'market_price', 'shop_price', 'goods_thumb', 'goods_img', 'original_img');
+                $query->select('goods_id', 'store_id', 'goods_sn', 'goods_name', 'market_price', 'shop_price', 'goods_thumb', 'goods_img', 'original_img');
             }
         ])->orderBy('sort_order', 'asc')->get()->toArray();
 
@@ -79,6 +79,7 @@ class affiliate_grade_module extends api_front implements api_interface {
             if ($item['goods_model']) {
                 $goods = [
                     'id'                     => $item['goods_model']['goods_id'],
+                    'store_id'               => $item['goods_model']['store_id'],
                     'name'                   => $item['goods_model']['goods_name'],
                     'goods_sn'               => $item['goods_model']['goods_sn'],
                     'market_price'           => $item['goods_model']['market_price'],

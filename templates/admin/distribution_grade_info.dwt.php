@@ -95,6 +95,7 @@
 				<div class="control-group">
 					<div class="controls">
 						<input type="hidden" name="goods_id" value="{$goods.goods_id}"/>
+						<input type="hidden" name="old_goods_id" value="{$goods.goods_id}"/>
 						<input type="hidden" name="grade_id" value="{$data.grade_id}"/>
                         <!-- {if $grade_id} -->
                         <input type="submit" value='{t domain="affiliate"}更新{/t}' class="btn btn-info"/>

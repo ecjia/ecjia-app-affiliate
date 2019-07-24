@@ -154,6 +154,7 @@ class admin_distribution_grade extends ecjia_admin {
 		
 		$pjaxurl = RC_Uri::url('affiliate/admin_distribution_grade/edit', array('grade_id' => $grade_id));
 		if($grade_id) {
+			RC_DB::table('goods')->where('goods_id', $goods_id)->update(array('extension_code' => 'affiliate'));
 			return $this->showmessage(__('分销权益添加成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array(pjaxurl => $pjaxurl));
 		} else {
 			return $this->showmessage(__('分销权益添加失败', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -190,6 +191,23 @@ class admin_distribution_grade extends ecjia_admin {
 		$goods['formated_cost_price'] 	= ecjia_price_format($goods['cost_price']);
 		$this->assign('goods', $goods);
 		
+		$data_grade = RC_DB::table('affiliate_grade_price')->select('grade_id', 'grade_price')->where('goods_id', $goods['goods_id'])->get();
+		if (!empty($data_grade)) {
+			foreach ($data_grade as $key => $row) {
+				if ($row['grade_price'] > 0) {
+					$data_grade[$key]['grade_name'] 			= RC_DB::table('affiliate_grade')->where('grade_id', $row['grade_id'])->pluck('grade_name');
+					$data_grade[$key]['formated_grade_price']	= ecjia_price_format($row['grade_price']);;
+				} else {
+					unset($data_grade[$key]);
+				}
+		
+			}
+		}
+		$this->assign('data_grade', $data_grade);
+		
+		$brokerage = RC_DB::table('affiliate_goods_brokerage')->where('goods_id', $goods['goods_id'])->where('store_id', $goods['store_id'])->pluck('brokerage');
+		$this->assign('brokerage', ecjia_price_format($brokerage));
+		
 		$this->assign('special_ranks', get_user_rank_list(true));
 		
 		$this->assign('form_action', RC_Uri::url('affiliate/admin_distribution_grade/update'));
@@ -212,6 +230,7 @@ class admin_distribution_grade extends ecjia_admin {
 		$sort_order = !empty($_POST['sort_order'])      ? intval($_POST['sort_order'])          : 10;
 		$user_card_intro    = !empty($_POST['user_card_intro'])     ? trim($_POST['user_card_intro'])   : '';
 		$grade_intro   		= !empty($_POST['grade_intro'])         ? trim($_POST['grade_intro'])       : '';
+		$old_goods_id   	= !empty($_POST['old_goods_id'])		? intval($_POST['old_goods_id'])    : 0;
 		
 		if (RC_DB::table('affiliate_grade')->where('grade_id', '!=', $grade_id)->where('grade_name', $grade_name)->count() > 0) {
 			return $this->showmessage(sprintf(__('权益名称 %s 已经存在。', 'affiliate'), $grade_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -236,6 +255,10 @@ class admin_distribution_grade extends ecjia_admin {
 		
 		$pjaxurl = RC_Uri::url('affiliate/admin_distribution_grade/edit', array('grade_id' => $grade_id));
 		if($grade_id) {
+			if($goods_id != $old_goods_id) {
+				RC_DB::table('goods')->where('goods_id', $old_goods_id)->update(array('extension_code' => null));
+				RC_DB::table('goods')->where('goods_id', $goods_id)->update(array('extension_code' => 'affiliate'));
+			}
 			return $this->showmessage(__('分销权益编辑成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array(pjaxurl => $pjaxurl));
 		} else {
 			return $this->showmessage(__('分销权益编辑失败', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -249,7 +272,10 @@ class admin_distribution_grade extends ecjia_admin {
 		$this->admin_priv('distribution_grade_delete');
 		
 		$grade_id = intval($_GET['grade_id']);
-		RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->delete();
+		$goods_id = RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->pluck('goods_id');
+		if(RC_DB::table('affiliate_grade')->where('grade_id', $grade_id)->delete()) {
+			RC_DB::table('goods')->where('goods_id', $goods_id)->update(array('extension_code' => null));
+		}
 		return $this->showmessage(__('删除分销权益成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}	
 	
