@@ -36,9 +36,9 @@ class AffiliateOrderEnum extends Enum
     protected function __statusMap()
     {
         return [
-            self::UNSEPARATE    => __('未参与分成', 'affiliate'),
-            self::SEPARATED     => __('已参与分成', 'affiliate'),
-            self::CANCELE    	=> __('取消可参与分成', 'affiliate'),
+            self::UNSEPARATE    => __('待分成', 'affiliate'),
+            self::SEPARATED     => __('已分成', 'affiliate'),
+            self::CANCELE    	=> __('无效', 'affiliate'),
         ];
     }
 

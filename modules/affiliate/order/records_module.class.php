@@ -66,20 +66,68 @@ class affiliate_order_records_module extends api_front implements api_interface
         $status = $this->requestData('status', '');
 
         $status_arr = array('await_separate', 'separated');
-        if (empty($status) || !in_array($status, $status_arr)) {
-            return new ecjia_error('invalid_parameter', sprintf(__('请求接口%s参数无效', 'affiliate'), __CLASS__));
-        }
 
         if ($status == 'await_separate') {
             $log_list = $this->get_await_separate($user_id, $page, $size);
-        } else {
+        } else if($status == 'separated') {
             $log_list = $this->get_separated($user_id, $page, $size);
+        } else {
+            $log_list = $this->get_orders($user_id, $page, $size);
         }
+
 
         $list  = $log_list['list'];
         $pager = $log_list['page'];
 
         return array('data' => $list, 'pager' => $pager);
+    }
+
+    private function get_status_code($status) {
+        $code = [
+            0 => 'await_separate',
+            1 => 'separated',
+            2 => 'cancel_separated',
+        ];
+
+        return array_get($code, $status);
+    }
+
+    private function get_orders($user_id, $page, $size) {
+        $db = RC_DB::table('order_info as oi')->leftJoin('users as u', RC_DB::raw('oi.user_id'), '=', RC_DB::raw('u.user_id'));
+
+        $db->where(RC_DB::raw('u.parent_id'), $user_id);
+
+        $count    = $db->count(RC_DB::raw('oi.order_id'));
+        $page_row = new ecjia_page($count, $size, 6, '', $page);
+        $log_list = $db->take($size)->skip($page_row->start_id - 1)->orderBy(RC_DB::raw('add_time'), 'desc')->select(RC_DB::raw('oi.*'))->get();
+
+        //没有订单
+        if (empty($count)) {
+            return array('list' => [], 'page' => array('total' => 0, 'count' => 0, 'more' => 0));
+        }
+        $list = [];
+        if (!empty($log_list)) {
+            foreach ($log_list as $val) {
+                $order_goods_list = $this->_get_order_goods($val['order_id']);
+                $list[]           = array(
+                    'order_id'                    => intval($val['order_id']),
+                    'order_sn'                    => trim($val['order_sn']),
+                    'formatted_order_time'        => RC_Time::local_date(ecjia::config('time_format'), $val['add_time']),
+                    'affiliated_amount'           => 0,
+                    'formatted_affiliated_amount' => '',
+                    'separate_status'             => self::get_status_code($val['separate_type']),
+                    'label_separate_status'       => \Ecjia\App\Affiliate\Enums\AffiliateOrderEnum::transValue($val['separate_type']),
+                    'goods_list'                  => $order_goods_list
+                );
+            }
+        }
+        $pager = array(
+            'total' => $page_row->total_records,
+            'count' => $page_row->total_records,
+            'more'  => $page_row->total_pages <= $page ? 0 : 1,
+        );
+
+        return ['list' => $list, 'page' => $pager];
     }
 
 
@@ -143,9 +191,9 @@ class affiliate_order_records_module extends api_front implements api_interface
 
         $count    = $db->count(RC_DB::raw('ag.log_id'));
         $page_row = new ecjia_page($count, $size, 6, '', $page);
-        $log_list = $db->take($size)->skip($page_row->start_id - 1)->orderBy(RC_DB::raw('oi.add_time'), 'desc')->select(RC_DB::raw('oi.*, u.user_name as buyer, ag.money'))->get();
+        $log_list = $db->take($size)->skip($page_row->start_id - 1)->orderBy(RC_DB::raw('oi.add_time'), 'desc')->select(RC_DB::raw('oi.*, oi.consignee as buyer, ag.money'))->get();
 
-        //没有待分成订单
+        //没有订单
         if (empty($count)) {
             return array('list' => [], 'page' => array('total' => 0, 'count' => 0, 'more' => 0));
         }
