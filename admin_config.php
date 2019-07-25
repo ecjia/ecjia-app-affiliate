@@ -171,11 +171,13 @@ class admin_config extends ecjia_admin
 
             $temp['intvie_reward'] = array(
                 'intive_reward_by'    => $intive_reward_by,
+                'intive_reward_type' => 'balance',
                 'intive_reward_value' => $intive_reward_value
             );
 
             $temp['intviee_reward'] = array(
                 'intivee_reward_by'    => $intive_reward_by,
+                'intivee_reward_type' => 'balance',
                 'intivee_reward_value' => $intivee_reward_value
             );
 

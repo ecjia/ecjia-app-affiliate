@@ -80,15 +80,16 @@ class invite_record_module extends api_front implements api_interface {
 			->count();
 		//实例化分页
 		$page_row = new ecjia_page($count, $size, 6, '', $page);
-		$list_result = RC_DB::table('invite_reward')
+		$list_result = RC_DB::table('invite_reward as i')
+            ->leftJoin('users as u', RC_DB::raw('i.invitee_id'), '=', RC_DB::raw('u.user_id'))
 			->where('invite_id', $_SESSION['user_id'])
-			->where(RC_DB::raw("FROM_UNIXTIME(add_time, '%Y-%m')"), $date)
+			->where(RC_DB::raw("FROM_UNIXTIME(i.add_time, '%Y-%m')"), $date)
+            ->select(RC_DB::raw('i.*, u.mobile_phone, u.avatar_img'))
 			->take($size)
 			->skip($page_row->start_id-1)
-			->orderBy('add_time', 'desc')
+			->orderBy(RC_DB::raw('i.add_time'), 'desc')
 			->get();
 
-		
 		$list = array();
 		foreach ($list_result as $val) {
 			if ($val['reward_type'] == 'bonus') {
@@ -103,6 +104,8 @@ class invite_record_module extends api_front implements api_interface {
 			
 			$list[] = array(
 				'invitee_name'		=> $val['invitee_name'],
+				'invitee_mobile'    => substr_replace($val['mobile_phone'], '****', 3, 4),
+                'avatar_img'        => !empty($val['avatar_img']) ? RC_Upload::upload_url($val['avatar_img']) : '',
 				'label_reward_type'	=> sprintf(__("邀请%s成功，奖励%s", 'affiliate'), $val['invitee_name'],$reward_type),
 				'reward_type'		=> $val['reward_type'],
 				'give_reward'		=> $val['reward_value'],
