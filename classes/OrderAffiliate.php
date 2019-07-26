@@ -163,9 +163,9 @@ class OrderAffiliate
         }
 
         //普通订单商品
-        $order_goods_list = self::get_order_goods($options['order_id']);
+//        $order_goods_list = self::get_order_goods($options['order_id']);
 
-        $total_affiliate_money = self::order_goods_total_affliate_money($order_goods_list, $affiliate_goods_percent); //订单商品总分佣金额
+        $total_affiliate_money = self::order_affiliate_money($options, $affiliate_goods_percent); //订单总分佣金额
         //订单特殊商品
 //        $order_special_goods_list = self::get_order_special_goods($options['order_id']);
 //        $special_affiliate_money  = self::order_goods_total_affliate_money($order_special_goods_list); //订单特殊商品总分佣金额
@@ -329,6 +329,13 @@ class OrderAffiliate
     		}
     	}
     	return $total_affiliate_money;
+    }
+
+    public static function order_affiliate_money($order_info, $affiliate_percent = 0) {
+        $total = $order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['insure_fee'] + $order_info['pay_fee']
+        + $order_info['pack_fee'] + $order_info['card_fee'] + $order_info['tax']
+        - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount'];
+        return $total * $affiliate_percent / 100;
     }
 
     public static function order_goods_total_affliate_money_vip($order_goods_list = array()) {
