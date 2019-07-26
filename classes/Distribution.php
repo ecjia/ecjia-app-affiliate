@@ -108,6 +108,19 @@ class Distribution
             RC_DB::table('affiliate_distributor')->insert($data);
         }
 
+        RC_DB::table('users')->where('user_id', $order_info['user_id'])->update(['user_rank' => $grade_with_goods['user_rank']]);
+
+        //特殊商品支付成功后，更新订单状态
+        RC_DB::table('order_info')->where('order_id', $order_info['order_id'])->update(array('order_status' => OS_SPLITED, 'pay_status' => PS_PAYED, 'shipping_status' => SS_RECEIVED));
+
+        RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
+        //配货
+        OrderStatusLog::generate_delivery_orderInvoice(array('order_id' => $order_info['order_id'], 'order_sn' => $order_info['order_sn']));
+        //发货
+        OrderStatusLog::delivery_ship_finished(array('order_id' => $order_info['order_id'], 'order_sn' => $order_info['order_sn']));
+        //确认提货
+        OrderStatusLog::affirm_picked(array('order_id' => $order_info['order_id'], 'order_sn' => $order_info['order_sn']));
+
         return true;
     }
 }
