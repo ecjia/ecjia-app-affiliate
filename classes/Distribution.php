@@ -44,24 +44,70 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Affiliate;
 
-class affiliate_api_hooks {
-	
-	public static function insert_affiliate_log($order_info) {
-	    //付款后插入分佣记录
-        //普通订单支付成功后，先生成分成记录
-        Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateDo($order_info);
+use RC_DB;
+use RC_Time;
+use ecjia;
+use RC_Api;
+use RC_Logger;
+use RC_Loader;
+use ecjia_admin;
 
-	}
+/**
+ * 分销商
+ *
+ */
+class Distribution
+{
+    public function __construct()
+    {
 
-	//购买特殊商品成为vip分销商-重复调用问题
-//    public static function buy_vip_goods($order_info) {
-//        Ecjia\App\Affiliate\Distribution::buy_vip_goods($order_info);
-//    }
+    }
+
+
+    public function buy_vip_goods($order_info) {
+        $time = RC_Time::gmtime();
+        if(empty($order_info['user_id'])) {
+            return new \ecjia_error('invalid_parameter', sprintf(__('请求接口%s参数无效', 'affiliate'), __CLASS__));
+        }
+        $goods_id = RC_DB::table('order_goods')->where('order_id', $order_info['order_id'])->pluck('goods_id');
+
+        $grade_with_goods = RC_DB::table('affiliate_grade')->where('goods_id', $goods_id)->first();
+        if(empty($grade_with_goods)) {
+            return new \ecjia_error('not_vip_goods', '非vip商品');
+        }
+
+        //判断当前用户是否是分销商
+        $distribution = RC_DB::table('affiliate_distributor')->where('user_id', $order_info['user_id'])->first();
+        if($distribution) {
+            $data = [
+                'grade_id' => $grade_with_goods['grade_id'],
+                'limit_days_buy' => $distribution['limit_days_buy'] + $grade_with_goods['limit_days'],
+            ];
+            //判断是否过期（重新计算时间），还是续费（累加）
+            if($distribution['expiry_time'] > $time) {
+                //续费
+                $data['expiry_time'] = $distribution['expiry_time'] + $grade_with_goods['limit_days'] * 86400 * 365;
+            } else {
+                //过期用户购买
+                $data['expiry_time'] = $time + $grade_with_goods['limit_days'] * 86400 * 365;
+            }
+            RC_DB::table('affiliate_distributor')->where('user_id', $order_info['user_id'])->update($data);
+
+        } else {
+            //新购
+            $data = [
+                'user_id' => $order_info['user_id'],
+                'parent_id' => 0,
+                'grade_id' => $grade_with_goods['grade_id'],
+                'limit_days_buy' => $grade_with_goods['limit_days'],
+                'expiry_time' => $time + $grade_with_goods['limit_days'] * 86400 * 365,
+                'add_time' => $time,
+            ];
+            RC_DB::table('affiliate_distributor')->insert($data);
+        }
+
+        return true;
+    }
 }
-
-//RC_Hook::add_action( 'order_payed_do_something', array('affiliate_api_hooks', 'buy_vip_goods') );
-RC_Hook::add_action( 'order_payed_do_something', array('affiliate_api_hooks', 'insert_affiliate_log') );
-
-// end
