@@ -76,6 +76,11 @@ class admin_separate extends ecjia_admin {
 	 * 分成管理列表页
 	 */
 	public function init() {
+//
+//	    $order_info = RC_Api::api('orders', 'order_info', ['order_sn' => '102019072614081234136931']);
+//        $rs = Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateDo($order_info);
+//        _dump($rs,1);
+
 		$this->admin_priv('affiliate_ck_manage');
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分成管理', 'affiliate')));
 		$this->assign('ur_here', __('分成管理', 'affiliate'));
@@ -261,12 +266,12 @@ class admin_separate extends ecjia_admin {
         $db_order_info_view->whereRaw($where);
 
 		$type_count = $db_order_info_view->select(RC_DB::raw('count(*) as count'),
-            RC_DB::raw('SUM(is_separate = 0) as await_pay'),
-            RC_DB::raw('SUM(is_separate = 1) as payed'),
-            RC_DB::raw('SUM(is_separate = 2) as canceled'))->first();
+            RC_DB::raw('SUM(separate_type = 0) as await_pay'),
+            RC_DB::raw('SUM(separate_type = 1) as payed'),
+            RC_DB::raw('SUM(separate_type = 2) as canceled'))->first();
 //		_dump($db_order_info_view->toSql(),1);
 
-        $db_order_info_view->where(RC_DB::raw('o.is_separate'), $filter['status']);
+        $db_order_info_view->where(RC_DB::raw('separate_type'), $filter['status']);
 
 		$count = $db_order_info_view->count();
 		
@@ -295,19 +300,19 @@ class admin_separate extends ecjia_admin {
                 $rt['total_fee_formatted'] = ecjia_price_format($rt['total_fee']);
                 $rt['money_formatted'] = ecjia_price_format($rt['money']);
 
-				if (empty($separate_by) && $rt['up'] > 0) {
-					//按推荐注册分成
-					$rt['separate_able'] = 1;
-				} elseif (!empty($separate_by) && $rt['parent_id'] > 0) {
-					//按推荐订单分成
-					$rt['separate_able'] = 1;
-				}
+//				if (empty($separate_by) && $rt['up'] > 0) {
+//					//按推荐注册分成
+//					$rt['separate_able'] = 1;
+//				} elseif (!empty($separate_by) && $rt['parent_id'] > 0) {
+//					//按推荐订单分成
+//					$rt['separate_able'] = 1;
+//				}
 				if (!empty($rt['suid'])) {
 					//在affiliate_log有记录
 					$rt['info'] = sprintf(__('用户ID %s ( %s ), 分成:金钱 %s', 'affiliate'), $rt['suid'], $rt['auser'], $rt['money']);
 					if ($rt['separate_type'] == -1 || $rt['separate_type'] == -2) {
 						//已被撤销
-						$rt['is_separate'] = 3;
+//						$rt['is_separate'] = 3;
 						$rt['info'] = "<s>" . $rt['info'] . "</s>";
 					}
 				}

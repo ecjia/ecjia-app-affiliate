@@ -65,10 +65,10 @@
 			  	<tr align="center">
 			  		<td class="hide-edit-area"><a href='{url path="orders/admin/info" args="order_sn={$log.order_sn}"}' target="_blank">{$log.order_sn}</a>
                         <div class="edit-list">
-                            <!-- {if $log.is_separate eq 0 && $log.separate_able eq 1 && $on eq 1} -->
+                            <!-- {if $log.separate_type eq 0 && $on eq 1} -->
                             <a class="toggle_view" href='{url path="affiliate/admin_separate/separate" args="id={$log.log_id}"}'  data-msg='{t domain="affiliate"}您确定要分成吗？{/t}' data-pjax-url='{url path="affiliate/admin_separate/init" args="page={$logdb.current_page}{if $filter.status}&status={$filter.status}{/if}"}' data-val="separate">{t domain="affiliate"}分成{/t}</a>&nbsp;|&nbsp;
                             <a class="toggle_view ecjiafc-red" href='{url path="affiliate/admin_separate/cancel" args="id={$log.log_id}&order_id={$log.order_id}"}'  data-msg='{t domain="affiliate"}您确定要取消分成吗？此操作不能撤销。{/t}' data-pjax-url='{url path="affiliate/admin_separate/init" args="page={$logdb.current_page}{if $filter.status}&status={$filter.status}{/if}"}' data-val="cancel">{t domain="affiliate"}取消{/t}</a>
-                            <!-- {elseif $log.is_separate eq 1} -->
+                            <!-- {elseif $log.separate_type eq 1} -->
                             <a class="toggle_view ecjiafc-red" href='{url path="affiliate/admin_separate/rollback" args="id={$log.log_id}"}'  data-msg='{t domain="affiliate"}您确定要撤销此次分成吗？{/t}' data-pjax-url='{url path="affiliate/admin_separate/init" args="page={$logdb.current_page}{if $filter.status}&status={$filter.status}{/if}"}' data-val="rollback">{t domain="affiliate"}撤销{/t}</a>
                             <!-- {else} -->
                             -
@@ -79,7 +79,7 @@
                     <td>{$log.consignee}</td>
                     <td>{$log.total_fee_formatted}</td>
                     <td>{$log.money_formatted}</td>
-			  		<td>{$sch_stats[$log.is_separate]}</td>
+			  		<td>{$sch_stats[$log.separate_type]}</td>
 			  		<td>{$log.info}</td>
                     <!--<td>{$order_stats[$log.order_status]}</td>
 			  		<td>{$separate_by[$log.separate_type]}</td>-->

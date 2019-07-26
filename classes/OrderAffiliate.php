@@ -96,8 +96,9 @@ class OrderAffiliate
         $data = array(
             'is_separate' => '1'
         );
-        ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$options['order_sn'], 'do', 'affiliate');
         RC_DB::table('order_info')->where('order_id', $options['order_id'])->update($data);
+
+//        ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$options['order_sn'], 'do', 'affiliate');
 
         return true;
     }
@@ -165,14 +166,12 @@ class OrderAffiliate
         $order_goods_list = self::get_order_goods($options['order_id']);
 
         $total_affiliate_money = self::order_goods_total_affliate_money($order_goods_list, $affiliate_goods_percent); //订单商品总分佣金额
-
         //订单特殊商品
 //        $order_special_goods_list = self::get_order_special_goods($options['order_id']);
 //        $special_affiliate_money  = self::order_goods_total_affliate_money($order_special_goods_list); //订单特殊商品总分佣金额
 
         //获取下单会员的3级直属上级
         $three_parent_ids = self::get_three_parent_id($options['user_id']);
-
         //如果当前购买用户没有上级，则直接返回
         // if(empty($three_parent_ids['one'])){
         //     return true;
@@ -188,27 +187,26 @@ class OrderAffiliate
                     if (!empty($v)) {
                         //防止重复分佣
                         $count = RC_DB::table('affiliate_log')->where('user_id', $v)->where('order_id', $options['order_id'])->count();
-                        if($count) {
-                            countinue;
-                        }
-                        //当前角色的等级，及是第几级直属上级；获取最终分成比例
-                        if ($k) {
-                            $percent = self::get_percent($k);
-                        }
+                        if($count == 0) {
+                            //当前角色的等级，及是第几级直属上级；获取最终分成比例
+                            if ($k) {
+                                $percent = self::get_percent($k);
+                            }
 
-                        $affiliate_amount = $total_affiliate_money * ($percent/100);
+                            $affiliate_amount = $total_affiliate_money * ($percent/100);
 
-                        if ($affiliate_amount > 0) {
-                            //分成记录
-                            $log = array(
-                                'order_id'      => $options['order_id'],
-                                'time'          => RC_Time::gmtime(),
-                                'user_id'       => $v,
-                                'user_name'     => empty($user_info['user_name']) ? '' : $user_info['user_name'],
-                                'money'         => sprintf("%.2f", $affiliate_amount),
-                                'separate_type' => 0,
-                            );
-                            RC_DB::table('affiliate_log')->insert($log);
+                            if ($affiliate_amount > 0) {
+                                //分成记录
+                                $log = array(
+                                    'order_id'      => $options['order_id'],
+                                    'time'          => RC_Time::gmtime(),
+                                    'user_id'       => $v,
+                                    'user_name'     => empty($user_info['user_name']) ? '' : $user_info['user_name'],
+                                    'money'         => sprintf("%.2f", $affiliate_amount),
+                                    'separate_type' => 0,
+                                );
+                                RC_DB::table('affiliate_log')->insert($log);
+                            }
                         }
                     }
                 }
@@ -281,7 +279,7 @@ class OrderAffiliate
      * @return array
      */
     public static function get_order_goods ($order_id = 0) {
-    	$field = 'og.*, g.affiliate_percent, g.goods_thumb, g.goods_img, g.original_img';
+    	$field = 'og.*, g.goods_thumb, g.goods_img, g.original_img';
     	
     	$order_goods = RC_DB::table('order_goods as og')->leftJoin('goods as g', RC_DB::raw('og.goods_id'), '=', RC_DB::raw('g.goods_id'))
     						->where(RC_DB::raw('og.order_id'), $order_id)
@@ -301,18 +299,6 @@ class OrderAffiliate
             ->select(RC_DB::raw($field))
             ->get();
         return $order_goods;
-    }
-    
-    /**
-     * 获取单个商品分佣比例
-     * @param int $goods_id
-     */
-    public static function get_goods_affliate_percent($goods_id = 0) {
-    	$percent = 0;
-    	if (!empty($goods_id)) {
-    		$percent = RC_DB::table('goods')->where('goods_id', $goods_id)->pluck('affiliate_percent');
-    	}
-    	return $percent;
     }
     
     /**

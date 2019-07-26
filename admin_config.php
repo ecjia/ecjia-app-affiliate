@@ -157,31 +157,31 @@ class admin_config extends ecjia_admin
         $temp['vip_on'] = (intval($_POST['vip_on']) == 1) ? 1 : 0;//是否开启VIP邀请订单奖励
         $temp['signup_on'] = (intval($_POST['signup_on']) == 1) ? 1 : 0;//是否开启邀请注册奖励
 
-            $temp['config'] = array(
-                'expire'          => $_POST['expire'],             //COOKIE过期数字
-                'expire_unit'     => $expire_unit,                 //单位：小时、天、周
-                'level_money_all' => $_POST['level_money_all'],    //金钱分成比
-            );
+        $temp['config'] = array(
+            'expire'          => $_POST['expire'],             //COOKIE过期数字
+            'expire_unit'     => $expire_unit,                 //单位：小时、天、周
+            'level_money_all' => $_POST['level_money_all'],    //金钱分成比
+        );
 
-            $intive_reward_by = trim($_POST['intive_reward_by']) == 'orderpay' ? 'orderpay' : 'signup';//奖励机制
-            /* 邀请人奖励*/
-            $intive_reward_value = trim($_POST['intive_reward_type_balance']);
-            /* 受邀人奖励*/
-            $intivee_reward_value = trim($_POST['intivee_reward_type_balance']);
+        $intive_reward_by = trim($_POST['intive_reward_by']) == 'orderpay' ? 'orderpay' : 'signup';//奖励机制
+        /* 邀请人奖励*/
+        $intive_reward_value = trim($_POST['intive_reward_type_balance']);
+        /* 受邀人奖励*/
+        $intivee_reward_value = trim($_POST['intivee_reward_type_balance']);
 
-            $temp['intvie_reward'] = array(
-                'intive_reward_by'    => $intive_reward_by,
-                'intive_reward_type' => 'balance',
-                'intive_reward_value' => $intive_reward_value
-            );
+        $temp['intvie_reward'] = array(
+            'intive_reward_by'    => $intive_reward_by,
+            'intive_reward_type' => 'balance',
+            'intive_reward_value' => $intive_reward_value
+        );
 
-            $temp['intviee_reward'] = array(
-                'intivee_reward_by'    => $intive_reward_by,
-                'intivee_reward_type' => 'balance',
-                'intivee_reward_value' => $intivee_reward_value
-            );
+        $temp['intviee_reward'] = array(
+            'intivee_reward_by'    => $intive_reward_by,
+            'intivee_reward_type' => 'balance',
+            'intivee_reward_value' => $intivee_reward_value
+        );
 
-            $temp['config'] = !empty($config['config']) ? $config['config'] : '';
+        $temp['config'] = !empty($temp['config']) ? $temp['config'] : [];
 
         $temp['item'] = !empty($config['item']) ? $config['item'] : array();
 
