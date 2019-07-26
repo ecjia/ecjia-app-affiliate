@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 发放推荐注册绑定
+ * 发放奖励  根据推荐注册绑定
  * @author will.chen
  */
 class affiliate_invite_reward_api extends Component_Event_Api {
@@ -56,7 +56,7 @@ class affiliate_invite_reward_api extends Component_Event_Api {
      * @param  $options['invite_code'] 受邀码
      * @return array|ecjia_error
      */
-	public function call(&$options) {	
+	public function call(&$options) {
 	    if (!is_array($options) 
 	        || !isset($options['invite_type'])
 	    	|| !isset($options['user_id'])

@@ -86,7 +86,7 @@ class admin extends ecjia_admin {
 		
 		$config = unserialize(ecjia::config('affiliate'));
 
-		if (count($config['item']) < 5) {
+		if (count($config['item']) < 3) {
 			$this->assign('add_percent', array('href' => RC_Uri::url('affiliate/admin/add'), 'text' => __('添加分成比例', 'affiliate')));
 		}
 		

@@ -183,7 +183,7 @@ class admin_config extends ecjia_admin
 
             $temp['config'] = !empty($config['config']) ? $config['config'] : '';
 
-//        $temp['item'] = !empty($config['item']) ? $config['item'] : array();
+        $temp['item'] = !empty($config['item']) ? $config['item'] : array();
 
 //        _dump($temp,1);
 
