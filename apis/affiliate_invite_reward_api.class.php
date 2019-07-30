@@ -68,7 +68,7 @@ class affiliate_invite_reward_api extends Component_Event_Api {
 	    $invitee_name = $user_info['user_name'];
 	    /* 推荐处理 */
 	    $affiliate = unserialize(ecjia::config('affiliate'));
-	    if (isset($affiliate['on']) && $affiliate['on'] == 1 && $invite_id > 0) {
+	    if (isset($affiliate['signup_on']) && $affiliate['signup_on'] == 1 && $invite_id > 0) {
 	    	/* 是否允许奖励*/
 	    	$is_reward = true;
 	    	if ($options['invite_type'] == 'orderpay') {

@@ -108,6 +108,31 @@ class admin_config extends ecjia_admin
 
     /**
      * 修改配置
+     * 完整配置：
+     * affiliate[
+     *  [on] => 1//推荐订单奖励开关
+        [vip_on] => 1//VIP推荐订单奖励开关
+        [signup_on] => 0//邀请注册奖励开关
+        [config] => Array
+        (
+            [expire] => 24
+            [expire_unit] => day
+            [level_money_all] => 10%
+        )
+        [intvie_reward] => Array
+        (
+            [intive_reward_by] => orderpay
+            [intive_reward_type] => balance
+            [intive_reward_value] => 11
+        )
+        [intviee_reward] => Array
+        (
+            [intivee_reward_by] => orderpay
+            [intivee_reward_type] => balance
+            [intivee_reward_value] => 10
+        )
+        [item] => Array//不同等级分销比例设置
+     * ]
      * 删除配置项：
      * affiliate[
          * config[
@@ -115,16 +140,6 @@ class admin_config extends ecjia_admin
          *		'level_point_all'       		=> $_POST['level_point_all'],    //积分分成比
          *		'level_register_all'    		=> intval($_POST['level_register_all']), //推荐注册奖励积分
          *		'level_register_up'     		=> intval($_POST['level_register_up']),  //推荐注册奖励积分上限
-         * ]
-         * intvie_reward[
-         *      intive_reward_by
-         *      intive_reward_type
-         *      intive_reward_value
-         * ]
-         * intviee_reward[
-         *      intivee_reward_by
-         *      intivee_reward_type
-         *      intivee_reward_value
          * ]
      * ]
      * 新增：

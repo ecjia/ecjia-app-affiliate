@@ -49,7 +49,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 use Ecjia\App\Affiliate\Models\AffiliateDistributorModel;
 /**
  * 代理用户信息
- * @author zrl
+ * @author huangyuyuan@ecmoban.com
  */
 class affiliate_user_userinfo_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	

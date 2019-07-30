@@ -63,7 +63,7 @@ class invite_validate_module extends api_front implements api_interface
         /* 推荐处理 */
         $affiliate = unserialize(ecjia::config('affiliate'));
 
-        if (isset($affiliate['on']) && $affiliate['on'] == 1) {
+        if (isset($affiliate['signup_on']) && $affiliate['signup_on'] == 1) {
             $invite_id = RC_DB::table('invitee_record')
                 ->where('invitee_phone', $mobile)
                 ->where('is_registered', 0)

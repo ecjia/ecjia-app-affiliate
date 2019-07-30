@@ -87,7 +87,7 @@ class affiliate_user_invite_module extends api_front implements api_interface
         }
         /* 推荐处理 */
         $affiliate = unserialize(ecjia::config('affiliate'));
-        if (isset($affiliate['on']) && $affiliate['on'] == 1) {
+        if (isset($affiliate['signup_on']) && $affiliate['signup_on'] == 1) {
         	$count = RC_DB::table('users')->where('mobile_phone', $mobile)->count();
         	if ($count > 0) {
         		return new ecjia_error('mobile_registered', __('该手机号已注册！', 'affiliate'));
