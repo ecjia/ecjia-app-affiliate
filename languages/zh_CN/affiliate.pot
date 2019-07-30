@@ -89,7 +89,7 @@ msgstr ""
 
 #: admin_separate.php:80 admin_separate.php:81
 #: apis/affiliate_admin_menu_api.class.php:60
-msgid "分成管理"
+msgid "分成订单"
 msgstr ""
 
 #: admin_separate.php:92
@@ -220,7 +220,7 @@ msgid "分成比例删除"
 msgstr ""
 
 #: apis/affiliate_admin_purview_api.class.php:62
-msgid "推荐分成管理"
+msgid "推荐分成订单"
 msgstr ""
 
 #: apis/affiliate_admin_purview_api.class.php:63

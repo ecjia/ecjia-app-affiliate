@@ -73,7 +73,7 @@ class admin_separate extends ecjia_admin {
 	}
 	
 	/**
-	 * 分成管理列表页
+	 * 分成订单列表页
 	 */
 	public function init() {
 //
@@ -82,8 +82,8 @@ class admin_separate extends ecjia_admin {
 //        _dump($rs,1);
 
 		$this->admin_priv('affiliate_ck_manage');
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分成管理', 'affiliate')));
-		$this->assign('ur_here', __('分成管理', 'affiliate'));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分成订单', 'affiliate')));
+		$this->assign('ur_here', __('分成订单', 'affiliate'));
 		
 		$affiliate = unserialize(ecjia::config('affiliate'));
 		empty($affiliate) && $affiliate = array();

@@ -8,7 +8,7 @@
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
-<!-- 分成管理-->
+<!-- 分成订单-->
 <div>
 	<h3 class="heading">
 		<!-- {if $ur_here}{$ur_here}{/if} -->

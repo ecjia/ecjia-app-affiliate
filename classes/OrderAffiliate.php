@@ -369,7 +369,8 @@ class OrderAffiliate
                 'user_note'    => $change_desc,
                 'amount'       => $affiliate_log['money'],
                 'from_type'    => 'system',
-                'from_value'   => ''
+                'from_value'   => '',
+                'is_paid'      => 1,
             );
             RC_Loader::load_app_func('admin_user', 'finance');
             //插入会员账目明细

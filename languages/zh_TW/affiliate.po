@@ -92,8 +92,8 @@ msgstr "周"
 
 #: admin_separate.php:80 admin_separate.php:81
 #: apis/affiliate_admin_menu_api.class.php:60
-msgid "分成管理"
-msgstr "分成管理"
+msgid "分成订单"
+msgstr "分成订单"
 
 #: admin_separate.php:92
 msgid "订单状态"
@@ -223,8 +223,8 @@ msgid "分成比例删除"
 msgstr "分成比例刪除"
 
 #: apis/affiliate_admin_purview_api.class.php:62
-msgid "推荐分成管理"
-msgstr "推薦分成管理"
+msgid "推荐分成订单"
+msgstr "推薦分成订单"
 
 #: apis/affiliate_admin_purview_api.class.php:63
 msgid "推荐分成更新"
