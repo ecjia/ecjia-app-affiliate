@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 分成订单管理
+ * 分成管理
  * @author wutifang
  */
 class admin_separate extends ecjia_admin {
@@ -73,17 +73,12 @@ class admin_separate extends ecjia_admin {
 	}
 	
 	/**
-	 * 分成订单列表页
+	 * 分成管理列表页
 	 */
 	public function init() {
-//
-//	    $order_info = RC_Api::api('orders', 'order_info', ['order_sn' => '102019072614081234136931']);
-//        $rs = Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateDo($order_info);
-//        _dump($rs,1);
-
-		$this->admin_priv('affiliate_ck_manage');
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分成订单', 'affiliate')));
-		$this->assign('ur_here', __('分成订单', 'affiliate'));
+		$this->admin_priv('affiliate_ck_manage');		
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('分成管理', 'affiliate')));
+		$this->assign('ur_here', __('分成管理', 'affiliate'));
 		
 		$affiliate = unserialize(ecjia::config('affiliate'));
 		empty($affiliate) && $affiliate = array();
@@ -92,8 +87,6 @@ class admin_separate extends ecjia_admin {
 		
 		$logdb = $this->get_affiliate_ck();
 		$this->assign('logdb', $logdb);
-        $this->assign('filter', $logdb['filter']);
-        $this->assign('type_count', $logdb['type_count']);
 
         $order_stats = array(
             'name' 	=> __('订单状态', 'affiliate'),
@@ -116,45 +109,131 @@ class admin_separate extends ecjia_admin {
         );
 		$this->assign('sch_stats', $sch_stats);
 
-//        $separate_by = array(
-//            '0' 	=> __('推荐注册分成', 'affiliate'),
-//            '1' 	=> __('推荐订单分成', 'affiliate'),
-//            '-1' 	=> __('推荐注册分成', 'affiliate'),
-//            '-2' 	=> __('推荐订单分成', 'affiliate')
-//        );
-//		$this->assign('separate_by', $separate_by);
+        $separate_by = array(
+            '0' 	=> __('推荐注册分成', 'affiliate'),
+            '1' 	=> __('推荐订单分成', 'affiliate'),
+            '-1' 	=> __('推荐注册分成', 'affiliate'),
+            '-2' 	=> __('推荐订单分成', 'affiliate')
+        );
+		$this->assign('separate_by', $separate_by);
 		$this->assign('search_action', RC_Uri::url('affiliate/admin_separate/init'));
 
         return $this->display('affiliate_ck_list.dwt');
 	}
+	
+	/**
+	 * 分成
+	 */
+	public function admin_separate() {
+		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
+	
+		$affiliate = unserialize(ecjia::config('affiliate'));
+		empty($affiliate) && $affiliate = array();
+		$separate_by = $affiliate['config']['separate_by'];
+		$oid = (int)$_GET['id'];
+		$row = RC_DB::table('order_info')->where('order_id', $oid)->select(RC_DB::raw('order_id, extension_code, extension_id, order_sn, is_separate, (goods_amount - discount) as goods_amount, user_id'))->first();
+		$order_sn = $row['order_sn'];
+		
+		if (empty($row['is_separate'])) {
+			$affiliate['config']['level_point_all'] = (float)$affiliate['config']['level_point_all'];
+			$affiliate['config']['level_money_all'] = (float)$affiliate['config']['level_money_all'];
+			if ($affiliate['config']['level_point_all']) {
+				$affiliate['config']['level_point_all'] /= 100;
+			}
+			if ($affiliate['config']['level_money_all']) {
+				$affiliate['config']['level_money_all'] /= 100;
+			}
+			$money = round($affiliate['config']['level_money_all'] * $row['goods_amount'],2);
+			//$integral = RC_Api::api('orders', 'order_integral', array('order_id' => $oid, 'extension_code' => ''));
+			RC_Loader::load_app_func('admin_order', 'orders');
+			$integral = array();
+			if (!empty($row)) {
+				$integral = integral_to_give($row);
+			}
+			$point = round($affiliate['config']['level_point_all'] * intval($integral['rank_points']), 0);
+			$integral_name = ecjia::config('integral_name');
+	        if (empty($integral_name)) {
+	        	$integral_name = __('积分', 'affiliate');
+	        }
+			if (empty($separate_by)) {
+				//推荐注册分成
+				$num = count($affiliate['item']);
+				for ($i = 0; $i < $num; $i++) {
+					$affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];
+					$affiliate['item'][$i]['level_money'] = (float)$affiliate['item'][$i]['level_money'];
+					if ($affiliate['item'][$i]['level_point']) {
+						$affiliate['item'][$i]['level_point'] /= 100;
+					}
+					if ($affiliate['item'][$i]['level_money']) {
+						$affiliate['item'][$i]['level_money'] /= 100;
+					}
+					$setmoney = round($money * $affiliate['item'][$i]['level_money'], 2);
+					$setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
+					
+					$user_info = RC_Api::api('user', 'user_info', array('user_id' => $row['user_id']));
+					$row = RC_Api::api('user', 'user_info', array('user_id' => $user_info['parent_id']));
 
-    /**
-     * 分成
-     */
-    public function separate()
-    {
-        $this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
-
-        $log_id = intval($_GET['id']);
-
-        $affiliate_log = RC_DB::table('affiliate_log')->where('log_id', $log_id)->first();
-        if ($affiliate_log['separate_type'] == 1) {
-            return $this->showmessage('该订单已分成', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-        Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateChangeAccount($affiliate_log);
-
-        return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-    }
-
-
+					$up_uid = $row['user_id'];
+					if (empty($up_uid) || empty($row['user_name'])) {
+						break;
+					} else {
+						//$info = sprintf(RC_Lang::get('affiliate::affiliate_ck.separate_info'), $order_sn, $setmoney, $setpoint);
+						$info = __('订单号', 'affiliate').$order_sn.__('分成:金钱', 'affiliate').$setmoney.$integral_name.$setpoint;
+						$arr = array(
+							'user_id'		=> $up_uid,
+							'user_money'	=> $setmoney,
+							'frozen_money'	=> 0,
+							'rank_points'	=> $setpoint,
+							'pay_points'	=> 0,
+							'change_desc'	=> $info
+						);
+						RC_Api::api('user', 'account_change_log', $arr);
+						$this->write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
+					}
+				}
+			} else {
+				//推荐订单分成
+				$row = RC_DB::table('order_info as o')
+					->leftJoin('users as u', RC_DB::raw('o.user_id'), '=', RC_DB::raw('u.user_id'))
+					->where(RC_DB::raw('o.order_id'), $oid)
+					->select(RC_DB::raw('o.parent_id, u.user_name'))
+					->first();
+				
+				$up_uid = $row['parent_id'];
+				if (!empty($up_uid) && $up_uid > 0) {
+					//$info = sprintf(RC_Lang::get('affiliate::affiliate_ck.separate_info'), $order_sn, $money, $point);
+					$info = __('订单号', 'affiliate').$order_sn.__('分成:金钱', 'affiliate').$money.$integral_name.$point;
+					
+					$arr = array(
+						'user_id'		=> $up_uid,
+						'user_money'	=> $money,
+						'frozen_money'	=> 0,
+						'rank_points'	=> $point,
+						'pay_points'	=> 0,
+						'change_desc'	=> $info
+					);
+					RC_Api::api('user', 'account_change_log', $arr);
+					$this->write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
+				} else {
+					return $this->showmessage(__('操作失败', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+				}
+			}
+			$data = array(
+				'is_separate' => '1'
+			);
+			ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$order_sn, 'do', 'affiliate');
+			RC_DB::table('order_info')->where('order_id', $oid)->update($data);
+		}
+		return $this->showmessage(__('操作成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+	}
+	
 	/**
 	 * 取消分成，不再能对该订单进行分成
 	 */
 	public function cancel() {
 		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
 		
-		$id = (int)$_GET['id'];
-        $oid = (int)$_GET['order_id'];
+		$oid = (int)$_GET['id'];
 		$info = RC_DB::table('order_info')->where('order_id', $oid)->first();
 		
 		if (empty($info['is_separate'])) {
@@ -164,8 +243,6 @@ class admin_separate extends ecjia_admin {
 			ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$info['order_sn'], 'cancel', 'affiliate');
 			RC_DB::table('order_info')->where('order_id', $oid)->update($data);
 		}
-        //更新分成记录金额状态
-        RC_DB::table('affiliate_log')->where('log_id', $id)->update(array('separate_type' => 2));
 		return $this->showmessage(__('取消成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
@@ -178,25 +255,13 @@ class admin_separate extends ecjia_admin {
 		$logid = (int)$_GET['id'];
 		$stat = RC_DB::table('affiliate_log')->where('log_id', $logid)->first();
 		if (!empty($stat)) {
-            $change_desc = '取消推荐订单分成';
-
-            $order_sn = ecjia_order_affiliate_sn();
-
-            /* 变量初始化 */
-            $surplus = array(
-                'user_id'      => $stat['user_id'],
-                'order_sn'     => $order_sn,
-                'process_type' => SURPLUS_AFFILIATE,
-                'payment_id'   => 0,
-                'user_note'    => $change_desc,
-                'amount'       => $stat['money'] * -1,
-                'from_type'    => 'system',
-                'from_value'   => ''
-            );
-            RC_Loader::load_app_func('admin_user', 'finance');
-            //插入会员账目明细
-            $surplus['account_id'] = insert_user_account($surplus, $stat['money']);
-
+			if ($stat['separate_type'] == 1) {
+				//推荐订单分成
+				$flag = -2;
+			} else {
+				//推荐注册分成
+				$flag = -1;
+			}
 			$arr = array(
 				'user_id'		=> $stat['user_id'],
 				'user_money'	=> -$stat['money'],
@@ -206,14 +271,8 @@ class admin_separate extends ecjia_admin {
 				'change_desc'	=> __('分成被管理员取消！', 'affiliate')
 			);
 			RC_Api::api('user', 'account_change_log', $arr);
-
-            $data = array(
-                'is_separate' => 2,
-            );
-            RC_DB::table('order_info')->where('order_id', $stat['order_id'])->update($data);
-
 			$data = array(
-				'separate_type' => 2
+				'separate_type' => $flag
 			);
 			$order_info = RC_Api::api('orders', 'order_info', array('order_id' => $stat['order_id'], 'order_sn' => ''));
 			ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$order_info['order_sn'], 'rollback', 'affiliate');
@@ -228,32 +287,27 @@ class admin_separate extends ecjia_admin {
 	 * @return array
 	 */
 	private function get_affiliate_ck() {
-
-        $filter['status'] = isset($_GET['status']) ? intval($_GET['status']) : 0;
-        $filter['order_sn'] = isset($_GET['order_sn']) ? remove_xss($_GET['order_sn']) : null;
-        $filter['auid'] = isset($_GET['auid']) ? intval($_GET['auid']) : 0;
-
-		$db_order_info_view = RC_DB::table('affiliate_log as a')
-            ->leftJoin('order_info as o', RC_DB::raw('o.order_id'), '=', RC_DB::raw('a.order_id'))
-            ->leftJoin('store_franchisee as s', RC_DB::raw('s.store_id'), '=', RC_DB::raw('o.store_id'))
-			->leftJoin('users as u', RC_DB::raw('o.user_id'), '=', RC_DB::raw('u.user_id'));
+		$db_order_info_view = RC_DB::table('order_info as o')
+			->leftJoin('users as u', RC_DB::raw('o.user_id'), '=', RC_DB::raw('u.user_id'))
+			->leftJoin('affiliate_log as a', RC_DB::raw('o.order_id'), '=', RC_DB::raw('a.order_id'));
 		
 		$affiliate = unserialize(ecjia::config('affiliate'));
 		empty($affiliate) && $affiliate = array();
 		$separate_by = $affiliate['config']['separate_by'];
 	
 		$sqladd = '';
-//        $sqladd .= ' AND o.is_separate = ' . $filter['status'];
-
-		if (!empty($filter['order_sn'])) {
-			$sqladd .= ' AND o.order_sn LIKE \'%' . trim($filter['order_sn']) . '%\'';
+		if (isset($_GET['status'])) {
+			$sqladd = ' AND o.is_separate = ' . (int)$_GET['status'];
 		}
 	
-		if (!empty($filter['auid'])) {
-			$sqladd .= ' AND a.user_id=' . $filter['auid'];
+		if (isset($_GET['order_sn'])) {
+			$sqladd = ' AND o.order_sn LIKE \'%' . trim($_GET['order_sn']) . '%\'';
 		}
-
-		//TODO
+	
+		if (isset($_GET['auid'])) {
+			$sqladd = ' AND a.user_id=' . $_GET['auid'];
+		}
+		
 		if (!empty($affiliate['on'])) {
 			if (empty($separate_by)) {
 				$where = "o.user_id > 0 AND (u.parent_id > 0 AND o.is_separate = 0 OR o.is_separate > 0) $sqladd";
@@ -263,63 +317,49 @@ class admin_separate extends ecjia_admin {
 		} else {
 			$where = "o.user_id > 0 AND o.is_separate > 0 $sqladd";
 		}
-        $db_order_info_view->whereRaw($where);
-
-		$type_count = $db_order_info_view->select(RC_DB::raw('count(*) as count'),
-            RC_DB::raw('SUM(separate_type = 0) as await_pay'),
-            RC_DB::raw('SUM(separate_type = 1) as payed'),
-            RC_DB::raw('SUM(separate_type = 2) as canceled'))->first();
-//		_dump($db_order_info_view->toSql(),1);
-
-        $db_order_info_view->where(RC_DB::raw('separate_type'), $filter['status']);
-
-		$count = $db_order_info_view->count();
+		$count = $db_order_info_view->whereRaw($where)->count();
 		
 		$page = new ecjia_page($count, 15, 5);
 		$logdb = array();
 	
-		$field = "o.*, (o.goods_amount + o.shipping_fee + o.insure_fee + o.pay_fee + o.pack_fee + o.card_fee + o.tax - o.integral_money - o.bonus - o.discount) as total_fee,
-		 s.merchants_name, a.log_id, a.user_id as suid, a.user_name as auser, a.money, a.point, a.separate_type, u.parent_id as up";
-//		if (!empty($affiliate['on'])) {
-//			//开启
-//			if (empty($separate_by)) {
-//				//推荐注册分成
-//				$where = "o.user_id > 0 AND (u.parent_id > 0 AND o.is_separate = 0 OR o.is_separate > 0) $sqladd ";
-//			} else {
-//				//推荐订单分成
-//				$where = "o.user_id > 0 AND (o.parent_id > 0 AND o.is_separate = 0 OR o.is_separate > 0) $sqladd ";
-//			}
-//		} else {
-//			//关闭
-//			$where = "o.user_id > 0 AND o.is_separate > 0 $sqladd ";
-//		}
-		$data = $db_order_info_view->select(RC_DB::raw($field))->take(15)->skip($page->start_id-1)->orderBy(RC_DB::raw('o.order_id'), 'desc')->get();
+		$field = "o.*, a.log_id, a.user_id as suid, a.user_name as auser, a.money, a.point, a.separate_type, u.parent_id as up";
+		if (!empty($affiliate['on'])) {
+			//开启
+			if (empty($separate_by)) {
+				//推荐注册分成
+				$where = "o.user_id > 0 AND (u.parent_id > 0 AND o.is_separate = 0 OR o.is_separate > 0) $sqladd ";
+			} else {
+				//推荐订单分成
+				$where = "o.user_id > 0 AND (o.parent_id > 0 AND o.is_separate = 0 OR o.is_separate > 0) $sqladd ";
+			}
+		} else {
+			//关闭
+			$where = "o.user_id > 0 AND o.is_separate > 0 $sqladd ";
+		}
+		$data = $db_order_info_view->select(RC_DB::raw($field))->whereRaw($where)->take(15)->skip($page->start_id-1)->orderBy(RC_DB::raw('o.order_id'), 'desc')->get();
 		
 		if (!empty($data)) {
 			foreach ($data as $rt) {
-                $rt['total_fee_formatted'] = ecjia_price_format($rt['total_fee']);
-                $rt['money_formatted'] = ecjia_price_format($rt['money']);
-
-//				if (empty($separate_by) && $rt['up'] > 0) {
-//					//按推荐注册分成
-//					$rt['separate_able'] = 1;
-//				} elseif (!empty($separate_by) && $rt['parent_id'] > 0) {
-//					//按推荐订单分成
-//					$rt['separate_able'] = 1;
-//				}
+				if (empty($separate_by) && $rt['up'] > 0) {
+					//按推荐注册分成
+					$rt['separate_able'] = 1;
+				} elseif (!empty($separate_by) && $rt['parent_id'] > 0) {
+					//按推荐订单分成
+					$rt['separate_able'] = 1;
+				}
 				if (!empty($rt['suid'])) {
 					//在affiliate_log有记录
-					$rt['info'] = sprintf(__('用户ID %s ( %s ), 分成:金钱 %s', 'affiliate'), $rt['suid'], $rt['auser'], $rt['money']);
+					$rt['info'] = sprintf(__('用户ID %s ( %s ), 分成:金钱 %s 积分 %s', 'affiliate'), $rt['suid'], $rt['auser'], $rt['money'], $rt['point']);
 					if ($rt['separate_type'] == -1 || $rt['separate_type'] == -2) {
 						//已被撤销
-//						$rt['is_separate'] = 3;
+						$rt['is_separate'] = 3;
 						$rt['info'] = "<s>" . $rt['info'] . "</s>";
 					}
 				}
 				$logdb[] = $rt;
 			}
 		}
-		return array('item' => $logdb, 'page' => $page->show(5), 'type_count' => $type_count, 'filter' => $filter, 'desc' => $page->page_desc(), 'current_page' => $page->current_page);
+		return array('item' => $logdb, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'current_page' => $page->current_page);
 	}
 	
 	

@@ -59,14 +59,14 @@ class invite_reward_module extends api_front implements api_interface
             return new ecjia_error(100, 'Invalid session');
         }
         $invite_count           = RC_DB::table('users')->where('parent_id', $_SESSION['user_id'])->count();
-//        $invite_bouns_reward    = RC_DB::table('invite_reward')->where('invite_id', $_SESSION['user_id'])->where('reward_type', 'bonus')->count();
-//        $invite_integral_reward = RC_DB::table('invite_reward')->where('invite_id', $_SESSION['user_id'])->where('reward_type', 'integral')->SUM('reward_value');
+        $invite_bouns_reward    = RC_DB::table('invite_reward')->where('invite_id', $_SESSION['user_id'])->where('reward_type', 'bonus')->count();
+        $invite_integral_reward = RC_DB::table('invite_reward')->where('invite_id', $_SESSION['user_id'])->where('reward_type', 'integral')->SUM('reward_value');
         $invite_balance_reward  = RC_DB::table('invite_reward')->where('invite_id', $_SESSION['user_id'])->where('reward_type', 'balance')->SUM('reward_value');
 
         $invite_reward['invite_total'] = array(
             'invite_count'           => $invite_count,
-            'invite_bouns_reward'    => 0,//$invite_bouns_reward,
-            'invite_integral_reward' => 0,//intval($invite_integral_reward),
+            'invite_bouns_reward'    => $invite_bouns_reward,
+            'invite_integral_reward' => intval($invite_integral_reward),
             'invite_balance_reward'  => empty($invite_balance_reward) ? '0.00' : number_format($invite_balance_reward, 2, '.', ''),
         );
         /* 便利循环12个月的数据*/
@@ -75,17 +75,17 @@ class invite_reward_module extends api_front implements api_interface
             $time = RC_Time::local_strtotime("-" . $i . " month");
             $date = RC_Time::local_date('Y-m', $time);
 
-//            $invite_bouns_reward = RC_DB::table('invite_reward')
-//                ->where('invite_id', $_SESSION['user_id'])
-//                ->where('reward_type', 'bonus')
-//                ->where(RC_DB::raw("FROM_UNIXTIME(add_time, '%Y-%m')"), $date)
-//                ->count();
-//
-//            $invite_integral_reward = RC_DB::table('invite_reward')
-//                ->where('invite_id', $_SESSION['user_id'])
-//                ->where('reward_type', 'integral')
-//                ->where(RC_DB::raw("FROM_UNIXTIME(add_time, '%Y-%m')"), $date)
-//                ->SUM('reward_value');
+            $invite_bouns_reward = RC_DB::table('invite_reward')
+                ->where('invite_id', $_SESSION['user_id'])
+                ->where('reward_type', 'bonus')
+                ->where(RC_DB::raw("FROM_UNIXTIME(add_time, '%Y-%m')"), $date)
+                ->count();
+
+            $invite_integral_reward = RC_DB::table('invite_reward')
+                ->where('invite_id', $_SESSION['user_id'])
+                ->where('reward_type', 'integral')
+                ->where(RC_DB::raw("FROM_UNIXTIME(add_time, '%Y-%m')"), $date)
+                ->SUM('reward_value');
 
             $invite_balance_reward = RC_DB::table('invite_reward')
                 ->where('invite_id', $_SESSION['user_id'])
@@ -96,8 +96,8 @@ class invite_reward_module extends api_front implements api_interface
             $invite_reward['invite_record'][] = array(
                 'label_invite_data'      => RC_Time::local_date('Y 年 m 月', $time),
                 'invite_data'            => $date,
-                'invite_bouns_reward'    => 0,//$invite_bouns_reward,
-                'invite_integral_reward' => 0,//intval($invite_integral_reward),
+                'invite_bouns_reward'    => $invite_bouns_reward,
+                'invite_integral_reward' => intval($invite_integral_reward),
                 'invite_balance_reward'  => empty($invite_balance_reward) ? '0.00' : number_format($invite_balance_reward, 2, '.', ''),
             );
         }

@@ -29,19 +29,18 @@
 		 				<span>{$level}</span>
 					</div>	
 				</div>
-                <!--<div class="control-group formSep">
-                    <label class="control-label">{t domain="affiliate"}积分分成百分比：{/t}</label>
-                    <div class="controls">
-                         <input type="text" name="level_point" value="{$affiliate_percent.level_point}" />&nbsp;%
-                         <label class="input-must">*</label>
-                    </div>
-                </div>-->
 				<div class="control-group formSep">
-					<label class="control-label">{t domain="affiliate"}现金分成比例：{/t}</label>
+					<label class="control-label">{t domain="affiliate"}积分分成百分比：{/t}</label>
+					<div class="controls">
+		 				<input type="text" name="level_point" value="{$affiliate_percent.level_point}" />&nbsp;%
+		 				<label class="input-must">*</label>
+					</div>	
+				</div>
+				<div class="control-group formSep">
+					<label class="control-label">{t domain="affiliate"}现金分成百分比：{/t}</label>
 					<div class="controls">
 		 				<input type="text" name="level_money" value="{$affiliate_percent.level_money}" />&nbsp;%
 		 				<label class="input-must">*</label>
-                        <span class="help-block">例：订单金额 ¥100.00，总的分成比例20%（由商店设置-分销推广设置），级别分成比例10%，那么订单成交后，当前级别会员可获得佣金=100x20%x10%=2</span>
 					</div>	
 				</div>
 				<div class="control-group">

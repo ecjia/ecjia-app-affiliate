@@ -86,7 +86,7 @@ class admin extends ecjia_admin {
 		
 		$config = unserialize(ecjia::config('affiliate'));
 
-		if (count($config['item']) < 3) {
+		if (count($config['item']) < 5) {
 			$this->assign('add_percent', array('href' => RC_Uri::url('affiliate/admin/add'), 'text' => __('添加分成比例', 'affiliate')));
 		}
 		
@@ -105,8 +105,8 @@ class admin extends ecjia_admin {
 		$this->assign('action_link', array('href' =>RC_Uri::url('affiliate/admin/init'), 'text' => __('分成比例列表', 'affiliate')));
 		$config = unserialize(ecjia::config('affiliate'));
 		
-		if (count($config['item']) >= 3) {
-			return $this->showmessage(__('最多可以设3个级别！', 'affiliate'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
+		if (count($config['item']) >= 5) {
+			return $this->showmessage(__('最多可以设5个级别！', 'affiliate'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
 			
 		}
 		
@@ -123,35 +123,35 @@ class admin extends ecjia_admin {
 		$this->admin_priv('affiliate_percent_update', ecjia::MSGTYPE_JSON);
 		
 		//检查输入值是否正确
-//		if (empty($_POST['level_point'])) {
-//			return $this->showmessage(__('请输入积分分成百分比', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//		} else {
-//			if (substr($_POST['level_point'], -1, 1) == '%') {
-//				$intval = substr($_POST['level_point'], 0, strlen($_POST['level_point'])-1);
-//				if (!preg_match("/^[0-9]+$/", $intval)) {
-//					return $this->showmessage(__('积分分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//				}
-//			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_point'])) {
-//				return $this->showmessage(__('积分分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//			}
-//		}
+		if (empty($_POST['level_point'])) {
+			return $this->showmessage(__('请输入积分分成百分比', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		} else {
+			if (substr($_POST['level_point'], -1, 1) == '%') {
+				$intval = substr($_POST['level_point'], 0, strlen($_POST['level_point'])-1);
+				if (!preg_match("/^[0-9]+$/", $intval)) {
+					return $this->showmessage(__('积分分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_point'])) {
+				return $this->showmessage(__('积分分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			}
+		}
 		
 		if (empty($_POST['level_money'])) {
-			return $this->showmessage(__('请输入现金分成比例', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage(__('请输入现金分成百分比', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		} else {
 			if (substr($_POST['level_money'], -1, 1) == '%') {
 				$intval = substr($_POST['level_money'], 0, strlen($_POST['level_money'])-1);
 				if (!preg_match("/^[0-9]+$/", $intval)) {
-					return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+					return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_money'])) {
-				return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 			}
 		}
 		
 		$config = unserialize(ecjia::config('affiliate'));
 		//下线不能超过5层
-		if (count($config['item']) < 3) {
+		if (count($config['item']) < 5) {
 			$_POST['level_point'] = (float)$_POST['level_point'];
 			$_POST['level_money'] = (float)$_POST['level_money'];
 			$maxpoint = $maxmoney = 100;
@@ -173,12 +173,12 @@ class admin extends ecjia_admin {
 			$config['config']['separate_by'] = 0;
 			
 			ecjia_config::instance()->write_config('affiliate', serialize($config));
-			ecjia_admin::admin_log(/*__('积分百分比为 ', 'affiliate').$_POST['level_point'].'，'.*/__('现金百分比为 ', 'affiliate').$_POST['level_money'], 'add', 'affiliate_percent');
+			ecjia_admin::admin_log(__('积分百分比为 ', 'affiliate').$_POST['level_point'].'，'.__('现金百分比为 ', 'affiliate').$_POST['level_money'], 'add', 'affiliate_percent');
 			
 			return $this->showmessage(__('添加成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('affiliate/admin/init')));
 			
 		} else {
-			return $this->showmessage(__('最多可以设3个级别！', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage(__('最多可以设5个级别！', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 	}
 	
@@ -227,15 +227,15 @@ class admin extends ecjia_admin {
 		}
 		
 		if (empty($_POST['level_money'])) {
-			return $this->showmessage(__('请输入现金分成比例', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage(__('请输入现金分成百分比', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		} else {
 			if (substr($_POST['level_money'], -1, 1) == '%') {
 				$intval = substr($_POST['level_money'], 0, strlen($_POST['level_money'])-1);
 				if (!preg_match("/^[0-9]+$/", $intval)) {
-					return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+					return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			} elseif (!preg_match("/^[0-9]+$/", $_POST['level_money'])) {
-				return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 			}
 		}
 		
@@ -322,7 +322,7 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 * 编辑现金分成比例
+	 * 编辑现金分成百分比
 	 */
 	public function edit_money() {
 		$this->admin_priv('affiliate_percent_update', ecjia::MSGTYPE_JSON);
@@ -333,15 +333,15 @@ class admin extends ecjia_admin {
 		
 		//检查输入值是否正确
 		if (empty($_POST['value']) && $val != 0) {
-			return $this->showmessage(__('请输入现金分成比例', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage(__('请输入现金分成百分比', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		} else {
 			if (substr($_POST['value'], -1, 1) == '%') {
 				$intval = substr($_POST['value'], 0, strlen($_POST['value'])-1);
 				if (!preg_match("/^[0-9]+$/", $intval)) {
-					return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+					return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			} elseif (!preg_match("/^[0-9]+$/", $_POST['value'])) {
-				return $this->showmessage(__('现金分成比例格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				return $this->showmessage(__('现金分成百分比格式不正确，应为数字类型', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 			}
 		}
 		

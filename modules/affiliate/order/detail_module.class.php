@@ -61,7 +61,7 @@ class affiliate_order_detail_module extends api_front implements api_interface
             return new ecjia_error(100, 'Invalid session');
         }
         /* 获取订单id*/
-        $order_id = $this->requestData('order_id', 0);
+        $order_id = $this->requestData('order_id', '15');
 
         if (empty($order_id)) {
             return new ecjia_error('invalid_parameter', sprintf(__('请求接口%s参数无效', 'affiliate'), __CLASS__));
