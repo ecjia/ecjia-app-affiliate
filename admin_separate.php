@@ -233,25 +233,47 @@ class admin_separate extends ecjia_admin {
 		}
 		return $this->showmessage(__('操作成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
-	
-	/**
-	 * 取消分成，不再能对该订单进行分成
-	 */
-	public function cancel() {
-		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
-		
-		$oid = (int)$_GET['id'];
-		$info = RC_DB::table('order_info')->where('order_id', $oid)->first();
-		
-		if (empty($info['is_separate'])) {
-			$data = array(
-				'is_separate' => '2'
-			);
-			ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$info['order_sn'], 'cancel', 'affiliate');
-			RC_DB::table('order_info')->where('order_id', $oid)->update($data);
-		}
-		return $this->showmessage(__('取消成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-	}
+
+
+    /**
+     * 分成
+     */
+    public function separate()
+    {
+        $this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
+
+        $log_id = intval($_GET['id']);
+
+        $affiliate_log = RC_DB::table('affiliate_log')->where('log_id', $log_id)->first();
+        if ($affiliate_log['separate_type'] == 1) {
+            return $this->showmessage('该订单已分成', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+        Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateChangeAccount($affiliate_log);
+
+        return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
+    
+    /**
+     * 取消分成，不再能对该订单进行分成
+     */
+    public function cancel() {
+        $this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
+
+        $id = (int)$_GET['id'];
+        $oid = (int)$_GET['order_id'];
+        $info = RC_DB::table('order_info')->where('order_id', $oid)->first();
+
+        if (empty($info['is_separate'])) {
+            $data = array(
+                'is_separate' => '2'
+            );
+            ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$info['order_sn'], 'cancel', 'affiliate');
+            RC_DB::table('order_info')->where('order_id', $oid)->update($data);
+        }
+        //更新分成记录金额状态
+        RC_DB::table('affiliate_log')->where('log_id', $id)->update(array('separate_type' => 2));
+        return $this->showmessage(__('取消成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
 	
 	/**
 	 * 撤销某次分成，将已分成的收回来
