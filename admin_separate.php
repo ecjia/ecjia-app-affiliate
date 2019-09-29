@@ -277,40 +277,60 @@ class admin_separate extends ecjia_admin {
         return $this->showmessage(__('取消成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
 
-	/**
-	 * 撤销某次分成，将已分成的收回来
-	 */
-	public function rollback() {
-		$this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
+    /**
+     * 撤销某次分成，将已分成的收回来
+     */
+    public function rollback() {
+        $this->admin_priv('affiliate_ck_update', ecjia::MSGTYPE_JSON);
 
-		$logid = (int)$_GET['id'];
-		$stat = RC_DB::table('affiliate_log')->where('log_id', $logid)->first();
-		if (!empty($stat)) {
-			if ($stat['separate_type'] == 1) {
-				//推荐订单分成
-				$flag = -2;
-			} else {
-				//推荐注册分成
-				$flag = -1;
-			}
-			$arr = array(
-				'user_id'		=> $stat['user_id'],
-				'user_money'	=> -$stat['money'],
-				'frozen_money'	=> 0,
-				'rank_points'	=> -$stat['point'],
-				'pay_points'	=> 0,
-				'change_desc'	=> __('分成被管理员取消！', 'affiliate')
-			);
-			RC_Api::api('user', 'account_change_log', $arr);
-			$data = array(
-				'separate_type' => $flag
-			);
-			$order_info = RC_Api::api('orders', 'order_info', array('order_id' => $stat['order_id'], 'order_sn' => ''));
-			ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$order_info['order_sn'], 'rollback', 'affiliate');
-			RC_DB::table('affiliate_log')->where('log_id', $logid)->update($data);
-		}
-		return $this->showmessage(__('撤销成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-	}
+        $logid = (int)$_GET['id'];
+        $stat = RC_DB::table('affiliate_log')->where('log_id', $logid)->first();
+        if (!empty($stat)) {
+            $change_desc = '取消推荐订单分成';
+
+            $order_sn = ecjia_order_affiliate_sn();
+
+            /* 变量初始化 */
+            $surplus = array(
+                'user_id'      => $stat['user_id'],
+                'order_sn'     => $order_sn,
+                'process_type' => SURPLUS_AFFILIATE,
+                'payment_id'   => 0,
+                'user_note'    => $change_desc,
+                'amount'       => $stat['money'] * -1,
+                'from_type'    => 'system',
+                'from_value'   => '',
+                'is_paid'      => 1,
+            );
+            RC_Loader::load_app_func('admin_user', 'finance');
+            //插入会员账目明细
+            $surplus['account_id'] = insert_user_account($surplus, $surplus['amount']);
+
+            $arr = array(
+                'user_id'		=> $stat['user_id'],
+                'user_money'	=> $stat['money'] * -1,
+                'rank_points'	=> -$stat['point'],
+                'change_type'   => ACT_AFFILIATE,
+                'change_desc'	=> __('分成被管理员取消！', 'affiliate')
+            );
+            RC_Api::api('user', 'account_change_log', $arr);
+
+            $data = array(
+                'is_separate' => 2,
+            );
+            RC_DB::table('order_info')->where('order_id', $stat['order_id'])->update($data);
+
+            $data = array(
+                'separate_type' => 2
+            );
+            $order_info = RC_Api::api('orders', 'order_info', array('order_id' => $stat['order_id'], 'order_sn' => ''));
+            ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$order_info['order_sn'], 'rollback', 'affiliate');
+            RC_DB::table('affiliate_log')->where('log_id', $logid)->update($data);
+            //分成统计更新
+            Ecjia\App\Affiliate\OrderAffiliate::update_affiliate_count($stat['user_id']);
+        }
+        return $this->showmessage(__('撤销成功', 'affiliate'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
 
     /**
      * 获取分成列表
