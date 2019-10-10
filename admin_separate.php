@@ -461,7 +461,7 @@ class admin_separate extends ecjia_admin {
         RC_Excel::load(RC_APP_PATH . 'affiliate' . DIRECTORY_SEPARATOR .'statics/files/order_affiliate.xls', function($excel) use ($list){
             $excel->sheet('Sheet1', function($sheet) use ($list) {
                 foreach ($list as $key => $item) {
-                    $sheet->appendRow($key+3, $item);
+                    $sheet->appendRow($key+3, "/t" . $item . "/t");
                 }
             });
         })->download('xls');
