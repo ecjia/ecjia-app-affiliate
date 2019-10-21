@@ -26,7 +26,7 @@
 </div>
 <!-- {/if} -->
 
-<div class="alert alert-warning"><a data-dismiss="alert" class="close">×</a>分成比例大于三个时只取前三个</div>
+<div class="alert alert-warning"><a data-dismiss="alert" class="close">×</a>级别多于3个时，只取前3个级别进行分成</div>
 
 <div class="row-fluid edit-page">
     <div class="span12">
