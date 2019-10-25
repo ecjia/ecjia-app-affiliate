@@ -57,32 +57,32 @@ class GenerateInviteCode
      * @var string
      */
     protected $code;
-    
+
     public function __construct($code)
     {
         $this->code = $code;
     }
-    
+
     public function content()
     {
         $args = [
             'invite_code'      => $this->code
         ];
-        return RC_Uri::url('affiliate/mobile/init', $args);
+        return RC_Uri::url('affiliate/index/init', $args);
     }
-    
+
     /**
      * 创建二维码
      * @param number $size
      */
     public function createQrcode($size = 430)
     {
-    
+
         $img = RC_QrCode::format('png')->size($size)->margin(1)
-                                ->errorCorrection('L')
-                                ->generate($this->content());
-    
-    
+            ->errorCorrection('L')
+            ->generate($this->content());
+
+
         return $img;
     }
 
