@@ -30,20 +30,16 @@
                         if (e) {
                             $.post(url, option, function(data){
                                 ecjia.admin.showmessage(data);
-                                if (pjaxurl != undefined) {
-                                    ecjia.pjax(pjaxurl);
-                                }
                             },'json');
                         }
                     }, {ok:js_lang.ok, cancel:js_lang.cancel});
                 } else {
                     $.post(url, option, function(data){
                         ecjia.admin.showmessage(data);
-                        if (pjaxurl != undefined) {
-                            ecjia.pjax(pjaxurl);
-                        }
                     },'json');
                 }
+                var options = $.extend(ecjia.admin.defaultOptions.validate, option);
+                $form.validate(options);
 
             });
         },
