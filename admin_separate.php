@@ -46,6 +46,7 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
+use Ecjia\App\Finance\AccountConstant;
 /**
  * 分成管理
  * @author wutifang
@@ -285,6 +286,11 @@ class admin_separate extends ecjia_admin {
 
         $logid = (int)$_GET['id'];
         $stat = RC_DB::table('affiliate_log')->where('log_id', $logid)->first();
+        $change_type = AccountConstant::BALANCE_AFFILIATE_REFUND;
+        $order_info = RC_Api::api('orders', 'order_info', array('order_id' => $stat['order_id'], 'order_sn' => ''));
+        if($order_info['agencysale_store_id']) {
+            $change_type = AccountConstant::BALANCE_AGENCYSALE_AFFILIATE_REFUND;
+        }
         if (!empty($stat)) {
             $change_desc = '取消推荐订单分成';
 
@@ -310,7 +316,7 @@ class admin_separate extends ecjia_admin {
                 'user_id'		=> $stat['user_id'],
                 'user_money'	=> $stat['money'] * -1,
                 'rank_points'	=> -$stat['point'],
-                'change_type'   => ACT_AFFILIATE,
+                'change_type'   => $change_type,
                 'change_desc'	=> __('分成被管理员取消！', 'affiliate')
             );
             RC_Api::api('user', 'account_change_log', $arr);
@@ -323,7 +329,6 @@ class admin_separate extends ecjia_admin {
             $data = array(
                 'separate_type' => 2
             );
-            $order_info = RC_Api::api('orders', 'order_info', array('order_id' => $stat['order_id'], 'order_sn' => ''));
             ecjia_admin::admin_log(__('订单号为 ', 'affiliate').$order_info['order_sn'], 'rollback', 'affiliate');
             RC_DB::table('affiliate_log')->where('log_id', $logid)->update($data);
             //分成统计更新
