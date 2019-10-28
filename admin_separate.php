@@ -77,8 +77,15 @@ class admin_separate extends ecjia_admin {
      * 分成订单列表页
      */
     public function init() {
-//
-//	    $order_info = RC_Api::api('orders', 'order_info', ['order_sn' => '102019072614081234136931']);
+
+        //结算后代理分佣
+//        RC_Loader::load_app_func('admin_order', 'orders');
+//        $order_info = order_info(97);
+//        $order_info['order_type'] = 'buy';
+//        $rs = with(new Ecjia\App\Affiliate\AffiliateStoreCommission($order_info['store_id'], $order_info))->run();
+//        _dump($rs,1);
+////
+//	    $order_info = RC_Api::api('orders', 'order_info', ['order_sn' => '102019102117151133315647']);
 //        $rs = Ecjia\App\Affiliate\OrderAffiliate::OrderAffiliateDo($order_info);
 //        _dump($rs,1);
 
@@ -427,6 +434,9 @@ class admin_separate extends ecjia_admin {
                 $rt['total_fee_formatted'] = ecjia_price_format($rt['total_fee']);
                 $rt['money_formatted'] = ecjia_price_format($rt['money']);
                 $rt['pay_time_formatted'] = RC_Time::local_date(ecjia::config('time_format'), $rt['pay_time']);
+                if($rt['agencysale_store_id']) {
+                    $rt['agencysale'] = 1;
+                }
 
                 if (!empty($rt['suid'])) {
                     //在affiliate_log有记录
