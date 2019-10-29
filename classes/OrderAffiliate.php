@@ -72,30 +72,30 @@ class OrderAffiliate
             return new \ecjia_error('invalid_parameter', sprintf(__('请求接口%s参数无效', 'affiliate'), __CLASS__));
         }
 
-        RC_Logger::getlogger('info')->info('OrderAffiliateDo');
-        RC_Logger::getlogger('info')->info([
-            'line' => __LINE__,
-            'orderinfo' => json_encode($options)
-        ]);
+//        RC_Logger::getlogger('info')->info('OrderAffiliateDo');
+//        RC_Logger::getlogger('info')->info([
+//            'line' => __LINE__,
+//            'orderinfo' => json_encode($options)
+//        ]);
 
         $time = RC_Time::gmtime();
 
         //判断用户上级
         $user_info = RC_DB::table('users')->where('user_id', $options['user_id'])->first();
-        RC_Logger::getlogger('info')->info([
-            'line' => __LINE__,
-            'user_info' => json_encode($user_info)
-        ]);
+//        RC_Logger::getlogger('info')->info([
+//            'line' => __LINE__,
+//            'user_info' => json_encode($user_info)
+//        ]);
         $parent_id = $user_info['parent_id'];
         $parent_info = RC_DB::table('users')->where('user_id', $parent_id)->first();
         if(empty($parent_id)) {
             return new \ecjia_error('parent_not_exists', '不存在上级');
         }
         $distributor = RC_DB::table('affiliate_distributor')->where('user_id', $parent_id)->where('expiry_time', '>', $time)->first();
-        RC_Logger::getlogger('info')->info([
-            'line' => __LINE__,
-            'distributor' => json_encode($distributor)
-        ]);
+//        RC_Logger::getlogger('info')->info([
+//            'line' => __LINE__,
+//            'distributor' => json_encode($distributor)
+//        ]);
 //        if(!empty($distributor)) {
 //            //vip分销商
 //            $distributor['user_name'] = $parent_info['user_name'];
@@ -202,14 +202,14 @@ class OrderAffiliate
 //            //特殊商品分佣
 //            self::special_goods_affiliate_do($three_parent_ids, $special_affiliate_money, $options, $store_affiliate_role, $can_affiliate_role);
 //        } else {
-        RC_Logger::getlogger('info')->info([
-            'line' => __LINE__,
-            'affiliate_amount' => $total_affiliate_money
-        ]);
-        RC_Logger::getlogger('info')->info([
-            'line' => __LINE__,
-            'three_parent_ids' => json_encode($three_parent_ids)
-        ]);
+//        RC_Logger::getlogger('info')->info([
+//            'line' => __LINE__,
+//            'affiliate_amount' => $total_affiliate_money
+//        ]);
+//        RC_Logger::getlogger('info')->info([
+//            'line' => __LINE__,
+//            'three_parent_ids' => json_encode($three_parent_ids)
+//        ]);
         if (!empty($three_parent_ids)) {
             foreach ($three_parent_ids as $k => $v) {
                 $percent = 0;
