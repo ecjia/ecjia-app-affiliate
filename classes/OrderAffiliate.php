@@ -96,14 +96,14 @@ class OrderAffiliate
             'line' => __LINE__,
             'distributor' => json_encode($distributor)
         ]);
-        if(!empty($distributor)) {
-            //vip分销商
-            $distributor['user_name'] = $parent_info['user_name'];
-            $handel = self::separate_vip($options, $distributor);
-        } else {
+//        if(!empty($distributor)) {
+//            //vip分销商
+//            $distributor['user_name'] = $parent_info['user_name'];
+//            $handel = self::separate_vip($options, $distributor);
+//        } else {
             //普通分销
             $handel = self::separate_normal($options, $user_info);
-        }
+//        }
         if(is_ecjia_error($handel)) {
             RC_Logger::getlogger('error')->error('orderAffiliate:'.$handel->get_error_message());
             return $handel;
