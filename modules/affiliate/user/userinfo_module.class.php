@@ -153,7 +153,7 @@ class affiliate_user_userinfo_module extends api_front implements api_interface 
                 ->where('pay_status', PS_PAYED)
                 ->leftJoin('order_info as oi', RC_DB::raw('oi.order_id'), '=', RC_DB::raw('al.order_id'))
                 ->select(RC_DB::Raw('SUM(goods_amount + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee + tax - integral_money - bonus - discount) as total_amount'))
-                ->first();dd($amount);
+                ->first();
             $amount = $amount['total_amount'] > 0 ? $amount['total_amount'] : 0;
 		}
 		return $amount;
