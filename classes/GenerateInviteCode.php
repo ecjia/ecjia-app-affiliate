@@ -70,13 +70,13 @@ class GenerateInviteCode
             'invite_code'      => $this->code
         ];
 
-        if (ecjia::config('mobile_touch_url') != '') {
-            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=index&a=init';
+      	if (ecjia::config('mobile_touch_url') != '') {
+            $invite_url = ecjia::config('mobile_touch_url') . 'index.php?m=affiliate&c=index&a=init&invite_code=' . $this->code;
         } else {
-            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=mobile&a=init';
+            $invite_url = RC_Uri::site_url() . '/index.php?m=affiliate&c=mobile&a=init&invite_code=' . $this->code;
         }
 
-        return RC_Uri::url($invite_url, $args);
+        return $invite_url;
     }
 
     /**
